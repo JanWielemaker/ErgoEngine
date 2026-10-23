@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,25 +23,25 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_In-House_1
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
-istAsserted(UniversalVocabularyMt, isa(temporalBoundsIntersectInSituationType, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporalBoundsIntersectInSituationType, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyVocabularyMt, MicrobiologicalChemistryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyVocabularyMt, BiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(ProprietaryMtFn(BiologyMt), BiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BiologyVocabularyMt, ProprietaryMtFn(BiologyMt))).
-istAsserted(UniversalVocabularyMt, isa(Telophase, MitosisSubprocessType)).
+istAsserted(UniversalVocabularyMt, cycIsa(Telophase, MitosisSubprocessType)).
 istAsserted(BiologyMt, superEventTypes(Mitosis, MitoticPhaseOfCellCycle)).
 istAsserted(BiologyMt, superEventTypes(MitoticPhaseOfCellCycle, EukaryoticCellCycle)).
-istAsserted(UniversalVocabularyMt, isa(superEventTypes, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(superEventTypes, TransitiveBinaryPredicate)).
 istAsserted(BiologyMt, uniqueProperSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle)).
 istAsserted(BiologyMt, startsDuringInSituationType(MitoticPhaseOfCellCycle, Cytokinesis, Telophase)).
 istAsserted(UniversalVocabularyMt, relationAllInstance(superEventTypes, MitosisSubprocessType, Mitosis)).
@@ -51,8 +52,8 @@ istAsserted(UniversalVocabularyMt, genls(SeriesOfCellDivisionRounds, 'Biological
 istAsserted(BiologyMt, genls(MitoticPhaseOfCellCycle, SeriesOfCellDivisionRounds)).
 
 // Implicit Background Rules
-forwardSentence(superEventTypes(?PHASE, Mitosis)) :- removalSentence(isa(?PHASE, MitosisSubprocessType)).
-forwardSentence(superEventTypes(?COLL, Mitosis)) :- removalSentence(isa(?COLL, MitosisSubprocessType)).
+forwardSentence(superEventTypes(?PHASE, Mitosis)) :- removalSentence(cycIsa(?PHASE, MitosisSubprocessType)).
+forwardSentence(superEventTypes(?COLL, Mitosis)) :- removalSentence(cycIsa(?COLL, MitosisSubprocessType)).
 forwardSentence(startsDuringInSituationType(?SUPER, ?SUB_SIT_TYPE_1, ?SUB_SIT_TYPE_2)) :- removalSentence(assertedSentence(startsDuringInSituationType(?SIT_TYPE, ?SUB_SIT_TYPE_1, ?SUB_SIT_TYPE_2))), removalSentence(assertedSentence(superEventTypes(?SIT_TYPE, ?SUPER))), removalSentence(uniqueProperSubEventTypes(?SUPER, ?SIT_TYPE)).
 forwardSentence(temporalBoundsIntersectInSituationType(?TYPE, ?SUB_TYPE_1, ?SUB_TYPE_2)) :- removalSentence(startsDuringInSituationType(?TYPE, ?SUB_TYPE_1, ?SUB_TYPE_2)).
 forwardSentence(startsDuringInSituationType(?SUPER, ?SUB1, ?SUB2)) :- removalSentence(startsDuringInSituationType(?TYPE, ?SUB1, ?SUB2)), removalSentence(superEventTypes(?TYPE, ?SUPER)).
@@ -97,8 +98,8 @@ proof(2285, 2005) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(2285, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), BiologyMt).
 proof(2285, 2007) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 proof(2285, 2008) :- genls(MitoticPhaseOfCellCycle, 'BiologicalProcess-CellularLevel').
-proof(2285, 2009) :- isa(Telophase, MitosisSubprocessType).
-proof(2285, 2010) :- isa(temporalBoundsIntersectInSituationType, PartiallyCommutativePredicate).
+proof(2285, 2009) :- cycIsa(Telophase, MitosisSubprocessType).
+proof(2285, 2010) :- cycIsa(temporalBoundsIntersectInSituationType, PartiallyCommutativePredicate).
 proof(2285, 2011) :- superEventTypes(Telophase, MitoticPhaseOfCellCycle).
 proof(2285, 2012) :- superEventTypes(Mitosis, EukaryoticCellCycle).
 proof(2285, 2013) :- superEventTypes(MitoticPhaseOfCellCycle, EukaryoticCellCycle).
@@ -108,14 +109,14 @@ proof(2285, 2016) :- superEventTypes(Telophase, Mitosis).
 proof(2285, 2017) :- superEventTypes(Mitosis, MitoticPhaseOfCellCycle).
 proof(2285, 2018) :- superEventTypes(Mitosis, EukaryoticCellCycle). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

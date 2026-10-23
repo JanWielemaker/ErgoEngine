@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,11 +22,11 @@
 // KBQ:  : $CPTTest-ACellInTheCellCycleIsActivelyDoingWhat (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genls(EukaryoticCellCycle, CellCycle)).
@@ -42,15 +43,15 @@ forwardSentence(relationExistsAll(?PREDICATE, ?TYPE, ?SUB_COLLECTION)) :- remova
 // Explicit Background Facts
 
 // Explicit Background Rules
-backwardSentence(relationExistsInstance(?PRED, ?COL_1, ?OBJ)) :- mtVisible(BaseKB), naf backchainForbidden(relationExistsInstance), relationExistsAll(?PRED, ?COL_1, ?COL_2), isa(?OBJ, ?COL_2).
-backwardSentence(not(isa(?OBJ, ?COL_2))) :- mtVisible(BaseKB), naf backchainForbidden(isa), relationExistsAll(?PRED, ?COL_1, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
-backwardSentence(not(relationExistsAll(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), naf backchainForbidden(relationExistsAll), isa(?OBJ, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
+backwardSentence(relationExistsInstance(?PRED, ?COL_1, ?OBJ)) :- mtVisible(BaseKB), \naf backchainForbidden(relationExistsInstance), relationExistsAll(?PRED, ?COL_1, ?COL_2), cycIsa(?OBJ, ?COL_2).
+backwardSentence(not(cycIsa(?OBJ, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationExistsAll(?PRED, ?COL_1, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
+backwardSentence(not(relationExistsAll(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationExistsAll), cycIsa(?OBJ, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261253', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261253', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261253', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261253', MtTimeDimFn(Now)), isa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle))).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261253', MtTimeDimFn(Now)), cycIsa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle))).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261253')).
@@ -61,10 +62,10 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261253')).
 proof(8715, 0) :- relationExistsAll(PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle, SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
 proof(8715, 1) :- relationExistsAll(PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle, SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
 proof(8715, 2) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel').
-proof(8715, 3) :- isa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
-proof(8715, 4) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel'), isa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
-proof(8715, 5) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel'), isa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
-proof(8715, 6) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel'), isa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)), relationExistsAll(PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle, SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
+proof(8715, 3) :- cycIsa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
+proof(8715, 4) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel'), cycIsa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
+proof(8715, 5) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel'), cycIsa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
+proof(8715, 6) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel'), cycIsa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)), relationExistsAll(PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle, SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)).
 proof(8715, 7) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel'), relationExistsInstance(PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle, 'HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254').
 
 proof(8715, 1000) :- genlMt(ReasoningToCausesFromObservationsMt, BaseKB).
@@ -79,16 +80,16 @@ proof(8715, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(8715, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261253'), BaseKB).
 proof(8715, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261253'), MtSpace('Hypothesis-HypotheticalContext-261253', MtTimeDimFn(Now))).
 proof(8715, 2007) :- genls(EukaryoticCellCycle, 'BiologicalProcess-CellularLevel').
-proof(8715, 2008) :- isa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)). 
+proof(8715, 2008) :- cycIsa('HYP-SubcollectionOfWithRelationFromTypeFnEukaryoticCellPresentTenseVersionFnlocusOfCellularProcess-CellEukaryoticCellCycle-261254', SubcollectionOfWithRelationFromTypeFn(EukaryoticCell, PresentTenseVersionFn('locusOfCellularProcess-Cell'), EukaryoticCellCycle)). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ:  : $CPTTest-IntracellularReceptorsAreOnlyPresentInTargetCells (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(relationAllExistsAndOnly, relationAllOnly)).
@@ -38,13 +39,13 @@ forwardSentence(relationAllExistsAndOnly(objectFoundInLocation, ?R_TYPE, ?CELL_T
 // Explicit Background Facts
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261183', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261183', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261183', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-ExistingObjectType-261184', ExistingObjectType)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-ExistingObjectType-261184', ExistingObjectType)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261183', MtTimeDimFn(Now)), genls('HYP-ExistingObjectType-261184', LipidSolubleSignalingMolecule)).
-istAsserted(UniversalVocabularyMt, isa('HYP-ExistingObjectType-261185', ExistingObjectType)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-ExistingObjectType-261185', ExistingObjectType)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261183', MtTimeDimFn(Now)), genls('HYP-ExistingObjectType-261185', ReceptorMolecule)).
-istAsserted(UniversalVocabularyMt, isa('HYP-ExistingObjectType-261186', ExistingObjectType)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-ExistingObjectType-261186', ExistingObjectType)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261183', MtTimeDimFn(Now)), genls('HYP-ExistingObjectType-261186', EukaryoticCell)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261183', MtTimeDimFn(Now)), TypeCapableFn(behaviorCapable)('HYP-ExistingObjectType-261184', SubcollectionOfWithRelationToTypeFn(PenetrationEvent, objectPenetrated, LipidBilayer), doneBy)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261183', MtTimeDimFn(Now)), ligandForReceptorType('HYP-ExistingObjectType-261184', 'HYP-ExistingObjectType-261185')).
@@ -71,14 +72,14 @@ proof(8472, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(8472, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261183'), MtSpace('Hypothesis-HypotheticalContext-261183', MtTimeDimFn(Now))).
 proof(8472, 2008) :- genlPreds(relationAllExistsAndOnly, relationAllOnly). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

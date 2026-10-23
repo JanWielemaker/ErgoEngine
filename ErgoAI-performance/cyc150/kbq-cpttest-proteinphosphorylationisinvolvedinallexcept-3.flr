@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,7 +22,7 @@
 // KBQ:  : $CPTTest-ProteinPhosphorylationIsInvolvedInAllExcept (query 3)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
@@ -32,13 +33,13 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 istAsserted(MolecularBiologyMt, relationNotExistsExists(subEvents, ActivationOfEnzymeOfTypeFn(GProteinLinkedReceptor), PhosphorylatingAProteinMolecule)).
 
 // Explicit Background Rules
-backwardSentence(not('most-GenQuantRelnToType'(?PRED, ?COL1, ?COL2))) :- mtVisible(BaseKB), naf backchainForbidden('most-GenQuantRelnToType'), relationNotExistsExists(?PRED, ?COL1, ?COL2).
-backwardSentence(not(relationNotExistsExists(?PRED, ?COL1, ?COL2))) :- mtVisible(BaseKB), naf backchainForbidden(relationNotExistsExists), 'most-GenQuantRelnToType'(?PRED, ?COL1, ?COL2).
+backwardSentence(not('most-GenQuantRelnToType'(?PRED, ?COL1, ?COL2))) :- mtVisible(BaseKB), \naf backchainForbidden('most-GenQuantRelnToType'), relationNotExistsExists(?PRED, ?COL1, ?COL2).
+backwardSentence(not(relationNotExistsExists(?PRED, ?COL1, ?COL2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationNotExistsExists), 'most-GenQuantRelnToType'(?PRED, ?COL1, ?COL2).
 
 // Query
 queryMt(CytologicalProcessesQueryMt).
 //REMOVED TITLE('KBQ  : $CPTTest-ProteinPhosphorylationIsInvolvedInAllExcept 3').
-%pretest :- neg 'most-GenQuantRelnToType'(subEvents, ActivationOfEnzymeOfTypeFn(GProteinLinkedReceptor), PhosphorylatingAProteinMolecule), %write_results('SUCCESS  : $CPTTest-ProteinPhosphorylationIsInvolvedInAllExcept 3').
+%pretest :- \neg 'most-GenQuantRelnToType'(subEvents, ActivationOfEnzymeOfTypeFn(GProteinLinkedReceptor), PhosphorylatingAProteinMolecule), %write_results('SUCCESS  : $CPTTest-ProteinPhosphorylationIsInvolvedInAllExcept 3').
 
 // Debugging
 proof(8982, 0) :- relationNotExistsExists(subEvents, ActivationOfEnzymeOfTypeFn(GProteinLinkedReceptor), PhosphorylatingAProteinMolecule).
@@ -50,14 +51,14 @@ proof(8982, 2000) :- genlMt(CytologicalProcessesQueryMt, UniversalVocabularyMt).
 proof(8982, 2001) :- genlMt(CytologicalProcessesQueryMt, BaseKB).
 proof(8982, 2002) :- genlMt(CytologicalProcessesQueryMt, MolecularBiologyMt). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

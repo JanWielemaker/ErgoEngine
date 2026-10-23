@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ: ( : $OpenSubqueryKBCTestFn  : $CPTTest-HowManyChromatidsInADuplicatedChromosome) (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
@@ -38,15 +39,15 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 istAsserted(MicrobiologyMt, relationAllExistsCount(chromatids, DuplicatedChromosome, Chromatid, 2)).
 
 // Explicit Background Rules
-backwardSentence(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)) :- mtVisible(BaseKB), naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), isa(?INSTANCE, ?TYPE1).
-backwardSentence(not(isa(?INSTANCE, ?TYPE1))) :- mtVisible(BaseKB), naf backchainForbidden(isa), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
-backwardSentence(not(relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExistsCount), isa(?INSTANCE, ?TYPE1), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
+backwardSentence(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), cycIsa(?INSTANCE, ?TYPE1).
+backwardSentence(not(cycIsa(?INSTANCE, ?TYPE1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
+backwardSentence(not(relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), cycIsa(?INSTANCE, ?TYPE1), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260122', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260122', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260122', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-DuplicatedChromosome-260123', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260122', MtTimeDimFn(Now)), isa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-DuplicatedChromosome-260123', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260122', MtTimeDimFn(Now)), cycIsa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome)).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260122')).
@@ -56,9 +57,9 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260122')).
 // Debugging
 proof(4302, 0) :- relationAllExistsCount(chromatids, DuplicatedChromosome, Chromatid, 2).
 proof(4302, 1) :- relationAllExistsCount(chromatids, DuplicatedChromosome, Chromatid, 2).
-proof(4302, 2) :- isa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome).
-proof(4302, 3) :- isa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome).
-proof(4302, 4) :- isa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome), relationAllExistsCount(chromatids, DuplicatedChromosome, Chromatid, 2).
+proof(4302, 2) :- cycIsa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome).
+proof(4302, 3) :- cycIsa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome).
+proof(4302, 4) :- cycIsa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome), relationAllExistsCount(chromatids, DuplicatedChromosome, Chromatid, 2).
 proof(4302, 5) :- relationInstanceExistsCount(chromatids, 'HYP-DuplicatedChromosome-260123', Chromatid, 2).
 
 proof(4302, 1000) :- genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt).
@@ -73,16 +74,16 @@ proof(4302, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(4302, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260122'), BaseKB).
 proof(4302, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260122'), MicrobiologyMt).
 proof(4302, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260122'), MtSpace('Hypothesis-HypotheticalContext-260122', MtTimeDimFn(Now))).
-proof(4302, 2008) :- isa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome). 
+proof(4302, 2008) :- cycIsa('HYP-DuplicatedChromosome-260123', DuplicatedChromosome). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

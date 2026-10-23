@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,17 +23,17 @@
 
 // Implicit Background Facts
 istAsserted(BaseKB, relationAllInstance(resultGenlArg, SubcollectionFunction, 1)).
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, resultGenlArg(CollectionIntersection2Fn, 1)).
 istAsserted(UniversalVocabularyMt, genlMt(CoreCycLImplementationMt, CoreCycLMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
-istAsserted(UniversalVocabularyMt, isa(CollectionIntersection2Fn, SubcollectionFunction)).
+istAsserted(UniversalVocabularyMt, cycIsa(CollectionIntersection2Fn, SubcollectionFunction)).
 istAsserted(UniversalVocabularyMt, genlMt(BiologyMt, BiochemistryMt)).
 istAsserted(UniversalVocabularyMt, 'functionCorrespondingPredicate-Canonical'(CollectionIntersection2Fn, collectionIntersection2, 1)).
 istAsserted(UniversalVocabularyMt, genlMt(UniversalVocabularyImplementationMt, CoreCycLImplementationMt)).
@@ -41,7 +42,7 @@ istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabulary
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyVocabularyMt, MicrobiologicalChemistryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyVocabularyMt, BiologyVocabularyMt)).
-istAsserted(UniversalVocabularyMt, isa(collectionIntersection2, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(collectionIntersection2, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(ProprietaryMtFn(BiologyMt), BiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BiologyVocabularyMt, ProprietaryMtFn(BiologyMt))).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
@@ -61,15 +62,15 @@ istAsserted(BaseKB, termOfUnit(CollectionIntersection2Fn(SteroidMolecule, Molecu
 forwardSentence(collectionIntersection2(?INTERSECTION, ?COL1, ?COL2)) :- removalSentence(termOfUnit(?INTERSECTION, CollectionIntersection2Fn(?COL1, ?COL2))).
 forwardSentence(genls(?NAT, ?COL)) :- removalSentence(resultGenlArg(?FUNC, ?N)), removalSentence(natFunction(?NAT, ?FUNC)), removalSentence(natArgument(?NAT, ?N, ?COL)).
 forwardSentence(genls(?COL, ?GENL2)) :- removalSentence(collectionIntersection2(?COL, ?XGENL1, ?GENL2)).
-forwardSentence(?PRED(?NART, ?ARG1, ?ARG2)) :- naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
+forwardSentence(?PRED(?NART, ?ARG1, ?ARG2)) :- \naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
 
 // Explicit Background Facts
 istAsserted(BiochemistryMt, ligandForReceptorType(LipidSolubleSignalingMolecule, CytoplasmicReceptorMolecule)).
 
 // Explicit Background Rules
-backwardSentence(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(ligandForReceptorType), genls(?MOL, ExtracellularSignalingChemicalObject), genls(?MOL, HydrophobicChemicalObject).
-backwardSentence(not(genls(?MOL, ExtracellularSignalingChemicalObject))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(genls), genls(?MOL, HydrophobicChemicalObject), not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
-backwardSentence(not(genls(?MOL, HydrophobicChemicalObject))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(genls), genls(?MOL, ExtracellularSignalingChemicalObject), not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
+backwardSentence(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(ligandForReceptorType), genls(?MOL, ExtracellularSignalingChemicalObject), genls(?MOL, HydrophobicChemicalObject).
+backwardSentence(not(genls(?MOL, ExtracellularSignalingChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(genls), genls(?MOL, HydrophobicChemicalObject), not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
+backwardSentence(not(genls(?MOL, HydrophobicChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(genls), genls(?MOL, ExtracellularSignalingChemicalObject), not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
@@ -156,17 +157,17 @@ proof(3372, 2018) :- genls(CollectionIntersection2Fn(ExtracellularSignalingChemi
 proof(3372, 2019) :- genls(CollectionIntersection2Fn(ExtracellularSignalingChemicalObject, MoleculeFn(Lipid)), HydrophobicChemicalObject).
 proof(3372, 2020) :- genls(CollectionIntersection2Fn(SteroidMolecule, MoleculeFn(Hormone)), ExtracellularSignalingChemicalObject).
 proof(3372, 2021) :- genls(CollectionIntersection2Fn(SteroidMolecule, MoleculeFn(Hormone)), HydrophobicChemicalObject).
-proof(3372, 2022) :- isa(CollectionIntersection2Fn, SubcollectionFunction).
-proof(3372, 2023) :- isa(collectionIntersection2, PartiallyCommutativePredicate). 
+proof(3372, 2022) :- cycIsa(CollectionIntersection2Fn, SubcollectionFunction).
+proof(3372, 2023) :- cycIsa(collectionIntersection2, PartiallyCommutativePredicate). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

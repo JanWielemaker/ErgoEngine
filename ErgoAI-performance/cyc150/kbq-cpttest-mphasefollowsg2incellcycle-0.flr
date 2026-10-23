@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,14 +22,14 @@
 // KBQ:  : $CPTTest-MPhaseFollowsG2InCellCycle (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(genlPreds, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlPreds, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, commutativeInArgs(endTogetherInSituationType, 2, 3)).
-istAsserted(UniversalVocabularyMt, isa(predicateIntersection, PartiallyCommutativePredicate)).
-istAsserted(UniversalVocabularyMt, isa(endTogetherInSituationType, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(predicateIntersection, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(endTogetherInSituationType, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(properSubEventTypes, properSubSituationTypes)).
@@ -83,18 +84,18 @@ proof(10554, 2002) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(No
 proof(10554, 2003) :- genlPreds(uniqueProperSubEventTypes, properSubSituationTypes).
 proof(10554, 2004) :- genlPreds('coveringOfEventType-Nonoverlapping', coveringOfEventType).
 proof(10554, 2005) :- genlPreds(properSubEventTypes, properSubSituationTypes).
-proof(10554, 2006) :- isa(predicateIntersection, PartiallyCommutativePredicate).
-proof(10554, 2007) :- isa(endTogetherInSituationType, PartiallyCommutativePredicate).
+proof(10554, 2006) :- cycIsa(predicateIntersection, PartiallyCommutativePredicate).
+proof(10554, 2007) :- cycIsa(endTogetherInSituationType, PartiallyCommutativePredicate).
 proof(10554, 2008) :- memberOfList(G2Phase, [G1Phase, SPhase, G2Phase]). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

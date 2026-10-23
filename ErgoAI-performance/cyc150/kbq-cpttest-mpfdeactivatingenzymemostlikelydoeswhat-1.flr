@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -23,11 +24,11 @@
 
 // Implicit Background Facts
 istAsserted(UniversalVocabularyMt, genls(EquivalenceRelation, SymmetricBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(equals, EquivalenceRelation)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(equals, EquivalenceRelation)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -41,7 +42,7 @@ istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyVocabularyMt, Microbio
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyVocabularyMt, BiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(ProprietaryMtFn(BiologyMt), BiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BiologyVocabularyMt, ProprietaryMtFn(BiologyMt))).
-istAsserted(UniversalVocabularyMt, isa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, 'functionCorrespondingPredicate-Canonical'(SingleIterationThroughCycleTypeFn, iteratedSubsituationTypeOfSerialCycleType, 2)).
 istAsserted(BaseKB, termOfUnit(SingleIterationThroughCycleTypeFn(TheEukaryoticCellCycle), SingleIterationThroughCycleTypeFn(TheEukaryoticCellCycle))).
 istAsserted(UniversalVocabularyMt, rewriteOf(EukaryoticCellCycle, SingleIterationThroughCycleTypeFn(TheEukaryoticCellCycle))).
@@ -52,29 +53,29 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 istAsserted(UniversalVocabularyMt, negationPreds('partwiseDisjoint-TypeType', 'shareParts-TypeType')).
 
 // Implicit Background Rules
-forwardSentence(?PRED(?ARG, ?TOU)) :- naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
-forwardSentence(genlInverse(?PRED, ?PRED)) :- removalSentence(isa(?PRED, SymmetricBinaryPredicate)).
-forwardSentence(?PRED(?ARG, ?TOU)) :- naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(?PRED(?ARG, ?TOU)) :- \naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(genlInverse(?PRED, ?PRED)) :- removalSentence(cycIsa(?PRED, SymmetricBinaryPredicate)).
+forwardSentence(?PRED(?ARG, ?TOU)) :- \naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
 forwardSentence('partwiseDisjoint-TypeType'(?EVENT_TYPE, ?ITERATION_TYPE)) :- removalSentence(iteratedSubsituationTypeOfSerialCycleType(?CYCLE, ?ITERATION_TYPE)), removalSentence('partwiseDisjoint-TypeType'(?CYCLE, ?EVENT_TYPE)).
 
 // Explicit Background Facts
 istAsserted(BiochemistryMt, 'partwiseDisjoint-TypeType'(CDKDegradation, SingleIterationThroughCycleTypeFn(TheEukaryoticCellCycle))).
 
 // Explicit Background Rules
-backwardSentence(properSubEventTypes(?SIT, ?Y)) :- mtVisible(BaseKB), naf backchainForbidden(properSubEventTypes), 'causes-SubSitTypeSubSitType'(?SIT, ?XX, ?Y).
-backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT, ?XX, ?Y))) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType'), not(properSubEventTypes(?SIT, ?Y)).
+backwardSentence(properSubEventTypes(?SIT, ?Y)) :- mtVisible(BaseKB), \naf backchainForbidden(properSubEventTypes), 'causes-SubSitTypeSubSitType'(?SIT, ?XX, ?Y).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT, ?XX, ?Y))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), not(properSubEventTypes(?SIT, ?Y)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261398', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261398', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261398', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-261399', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-261399', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-261399', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261398', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-261399', EnzymeActivationEvent)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261398', MtTimeDimFn(Now)), 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261399', DegradationOfChemicalCompoundFn(ActivatedFormOfEnzymeFn(MoleculeFn(MPF))))).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261398', MtTimeDimFn(Now)), 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, ActivationOfEnzymeOfTypeFn(MoleculeFn(MPF)), 'HYP-FirstOrderCollection-261399')).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261410', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261410', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261410', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-261411', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-261411', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-261411', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261410', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-261411', EnzymeActivationEvent)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261410', MtTimeDimFn(Now)), 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261411', DegradationOfChemicalCompoundFn(ActivatedFormOfEnzymeFn(MoleculeFn(MPF))))).
@@ -83,7 +84,7 @@ istAsserted(MtSpace('Hypothesis-HypotheticalContext-261410', MtTimeDimFn(Now)), 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261398')).
 //REMOVED TITLE('KBQ  : $CPTTest-MPFDeactivatingEnzymeMostLikelyDoesWhat 1').
-%pretest :- neg 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261399', CDKDegradation), %write_results('SUCCESS  : $CPTTest-MPFDeactivatingEnzymeMostLikelyDoesWhat 1').
+%pretest :- \neg 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261399', CDKDegradation), %write_results('SUCCESS  : $CPTTest-MPFDeactivatingEnzymeMostLikelyDoesWhat 1').
 
 // Debugging
 proof(9326, 0) :- not(properSubEventTypes(EukaryoticCellCycle, CDKDegradation)).
@@ -113,18 +114,18 @@ proof(9326, 2008) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(9326, 2009) :- genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondsToPredicate).
 proof(9326, 2010) :- genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondingPredicate).
 proof(9326, 2011) :- genlInverse('partwiseDisjoint-TypeType', 'partwiseDisjoint-TypeType').
-proof(9326, 2012) :- isa(equals, SymmetricBinaryPredicate).
-proof(9326, 2013) :- isa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate).
+proof(9326, 2012) :- cycIsa(equals, SymmetricBinaryPredicate).
+proof(9326, 2013) :- cycIsa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate).
 proof(9326, 2014) :- negationInverse('partwiseDisjoint-TypeType', properSubEventTypes). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

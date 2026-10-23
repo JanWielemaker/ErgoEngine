@@ -1,23 +1,23 @@
-:- iriprefix silk = "http://vulcan.com/2008/silk#" .
-:- iriprefix dc = "http://purl.org/dc/elements/1.1/" .
-:- iriprefix imp = "http://www.cyc.com/silk/implementation/" .
-:- iriprefix swrlb = "http://www.w3.org/2003/11/swrlb#" .
-:- iriprefix cyc = "http://sw.cyc.com/2009/04/07/concept/" .
-:- iriprefix silkb = "http://vulcan.com/2008/silk-builtins#" .
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
+:- iriprefix{dc = "http://purl.org/dc/elements/1.1/"}.
+:- iriprefix{imp = "http://www.cyc.com/silk/implementation/"}.
+:- iriprefix{swrlb = "http://www.w3.org/2003/11/swrlb#"}.
+:- iriprefix{cyc = "http://sw.cyc.com/2009/04/07/concept/"}.
+:- iriprefix{silkb = "http://vulcan.com/2008/silk-builtins#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-:- iriprefix cyc = "http://sw.cyc.com/2009/04/07/concept/" .
-:- iriprefix imp = "http://www.cyc.com/silk/implementation/" .
+:- iriprefix{cyc = "http://sw.cyc.com/2009/04/07/concept/"}.
+:- iriprefix{imp = "http://www.cyc.com/silk/implementation/"}.
 mtVisible(UniversalVocabularyMt) .
 mtVisible(BaseKB) .
 impPred(impPred) .
 impPred(hlPred) .
 impPred(not) .
 impPred(proof) .
-@{?, \"urn:uuid:2b49d34d-8c69-483e-9e2f-18450fb9a5cf"} impPred(?P) :- ?P : silk#ExternalPredicate .
-@{?, \"urn:uuid:25c1f718-7be5-4342-89a8-aef715b0940c"} impPred(?P) :- ?P : imp#SilkPredicate .
+@{"urn:uuid:2b49d34d-8c69-483e-9e2f-18450fb9a5cf"^^\iri} impPred(?P) :- ?P : silk#ExternalPredicate .
+@{"urn:uuid:25c1f718-7be5-4342-89a8-aef715b0940c"^^\iri} impPred(?P) :- ?P : imp#SilkPredicate .
 silk#arg : imp#SilkPredicate .
 silk#arith : imp#SilkPredicate .
 silk#avg : imp#SilkPredicate .
@@ -52,7 +52,7 @@ silk#symbolToURI : imp#SilkPredicate .
 silk#tag : imp#SilkPredicate .
 silk#type : imp#SilkPredicate .
 silk#violation : imp#SilkPredicate .
-@{?, \"urn:uuid:287d7fae-5c04-41a6-8dd5-1df88ffb1376"} hlPred(?P) :- impPred(?P) .
+@{"urn:uuid:287d7fae-5c04-41a6-8dd5-1df88ffb1376"^^\iri} hlPred(?P) :- impPred(?P) .
 hlPred(admittedArgument) .
 hlPred(admittedSentence) .
 hlPred(argGenl) .
@@ -141,8 +141,8 @@ hlPred(transitiveViaArg) .
 hlPred(transitiveViaArgInverse) .
 hlPred(trueSentence) .
 hlPred(unknownSentence) .
-@{?, \"urn:uuid:e52c5b8e-e648-46c0-8e1d-944e9f0cb5de"} backchainForbidden(?PRED) :- hlPred(?PRED) .
-:- setsemantics{equality(none)}.
+@{"urn:uuid:e52c5b8e-e648-46c0-8e1d-944e9f0cb5de"^^\iri} backchainForbidden(?PRED) :- hlPred(?PRED) .
+:- setsemantics{equality=none}.
 impPred(imp#xsbPID) .
 imp#xsbPID(?PID) :- sys_pid(?PID)@\prolog(shell).
 impPred(silkb#isInteger) .
@@ -156,11 +156,11 @@ silkb#isNumber : silk#ExternalPredicate .
 silkb#isAtom(?X)  :- atom(?X)@\prolog.
 silkb#isAtom : silk#ExternalPredicate .
 impPred(imp#isAtomic) .
-@{?, \"urn:uuid:4d552e15-f384-4528-87d0-0173007aa8a0"} imp#isAtomic(?X) :- %silkb#isNumber(?X)@builtin .
-@{?, \"urn:uuid:ebb2b714-d6ca-4603-af02-e51e3e0a5b6f"} imp#isAtomic(?X) :- %silkb#isString(?X)@builtin .
-@{?, \"urn:uuid:0dffdb6b-837c-4bc8-ad65-0cdd4eca31e1"} imp#isAtomic(?X) :- %silkb#isList(?X)@builtin .
-@{?, \"urn:uuid:c7ea88d8-6610-4c8d-96a0-9d0889cf894e"} imp#isAtomic(?X) :- %silkb#isSymbol(?X)@builtin .
-@{?, \"urn:uuid:86c5cafe-23a6-480e-a91a-4595d8840be3"} imp#isAtomic(?X) :- %silkb#isURI(?X)@builtin .
+@{"urn:uuid:4d552e15-f384-4528-87d0-0173007aa8a0"^^\iri} imp#isAtomic(?X) :- %silkb#isNumber(?X)@builtin .
+@{"urn:uuid:ebb2b714-d6ca-4603-af02-e51e3e0a5b6f"^^\iri} imp#isAtomic(?X) :- %silkb#isString(?X)@builtin .
+@{"urn:uuid:0dffdb6b-837c-4bc8-ad65-0cdd4eca31e1"^^\iri} imp#isAtomic(?X) :- %silkb#isList(?X)@builtin .
+@{"urn:uuid:c7ea88d8-6610-4c8d-96a0-9d0889cf894e"^^\iri} imp#isAtomic(?X) :- %silkb#isSymbol(?X)@builtin .
+@{"urn:uuid:86c5cafe-23a6-480e-a91a-4595d8840be3"^^\iri} imp#isAtomic(?X) :- %silkb#isURI(?X)@builtin .
 impPred(imp#arg0) .
 imp#arg0(?ARGNUM, ?TERM, ?ARG) :- arg0(?ARGNUM, ?TERM, ?ARG)@\prolog.
 impPred(imp#numberCodes) .

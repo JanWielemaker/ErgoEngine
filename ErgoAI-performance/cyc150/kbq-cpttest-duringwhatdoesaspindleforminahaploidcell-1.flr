@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,10 +23,10 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_Biology_Chapter_13_activities_quiz.2C_Question_20
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -36,7 +37,7 @@ istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyVocabularyMt, BiologyVocab
 istAsserted(UniversalVocabularyMt, genlPreds(lastProperSubEventTypes, properSubEventTypes)).
 istAsserted(UniversalVocabularyMt, genlMt(ProprietaryMtFn(BiologyMt), BiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BiologyVocabularyMt, ProprietaryMtFn(BiologyMt))).
-istAsserted(UniversalVocabularyMt, isa(superEventTypes, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(superEventTypes, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genls(SecondMeioticSpindleAssembly, SpindleApparatusAssembly)).
 istAsserted(MolecularBiologyMt, lastProperSubEventTypes(ProphaseII, SecondMeioticSpindleAssembly)).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
@@ -54,60 +55,60 @@ forwardSentence(properSubEventTypes(?COL1, ?COL2)) :- removalSentence(assertedSe
 istAsserted(BiologyMt, relationAllExists(eventOccursAt, SecondMeioticCellDivision, HaploidCell)).
 
 // Explicit Background Rules
-backwardSentence(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(relationAllExists), relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE), superEventTypes(?SUB_TYPE, ?SUPER_TYPE).
-backwardSentence(not(superEventTypes(?SUB_TYPE, ?SUPER_TYPE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(superEventTypes), relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE), not(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
-backwardSentence(not(relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(relationAllExists), superEventTypes(?SUB_TYPE, ?SUPER_TYPE), not(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
+backwardSentence(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE), superEventTypes(?SUB_TYPE, ?SUPER_TYPE).
+backwardSentence(not(superEventTypes(?SUB_TYPE, ?SUPER_TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(superEventTypes), relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE), not(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
+backwardSentence(not(relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), superEventTypes(?SUB_TYPE, ?SUPER_TYPE), not(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259649', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259649', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259649', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-259650', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-259650', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-259650', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259649', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-259650', Event)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259649', MtTimeDimFn(Now)), properSubEventTypes(ProphaseI, 'HYP-FirstOrderCollection-259650')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259649', MtTimeDimFn(Now)), relationAllExists(eventOccursAt, 'HYP-FirstOrderCollection-259650', HaploidCell)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259652', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259652', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259652', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-259653', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-259653', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-259653', Individual)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259654', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259654', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259654', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-259655', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-259655', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-259655', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259654', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-259655', Event)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259654', MtTimeDimFn(Now)), properSubEventTypes(CollectionUnionFn(SetOfListMembersFn([cyc:and, Cytokinesis, TelophaseI])), 'HYP-FirstOrderCollection-259655')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259654', MtTimeDimFn(Now)), relationAllExists(eventOccursAt, 'HYP-FirstOrderCollection-259655', HaploidCell)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259657', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259657', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259657', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-259658', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-259658', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-259658', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259657', MtTimeDimFn(Now)), genls('HYP-Collection-259658', SpindleApparatusAssembly)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259657', MtTimeDimFn(Now)), relationAllExists(eventOccursAt, 'HYP-Collection-259658', HaploidCell)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259660', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259660', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259660', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-259661', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-259661', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-259661', Individual)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259662', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259662', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259662', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-259663', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-259663', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-259663', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259662', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-259663', Event)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259662', MtTimeDimFn(Now)), properSubEventTypes(MetaphaseII, 'HYP-FirstOrderCollection-259663')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259662', MtTimeDimFn(Now)), relationAllExists(eventOccursAt, 'HYP-FirstOrderCollection-259663', HaploidCell)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259666', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259666', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259666', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-259667', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-259667', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-259667', Individual)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259668', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259668', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259668', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-259669', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-259669', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-259669', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259668', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-259669', Event)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259668', MtTimeDimFn(Now)), properSubEventTypes(ProphaseII, 'HYP-FirstOrderCollection-259669')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259668', MtTimeDimFn(Now)), relationAllExists(eventOccursAt, 'HYP-FirstOrderCollection-259669', HaploidCell)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259672', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259672', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259672', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-259673', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-259673', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-259673', Individual)).
 
 // Query
@@ -152,14 +153,14 @@ proof(2382, 2009) :- genlPreds(lastProperSubEventTypes, properSubEventTypes).
 proof(2382, 2010) :- genls(SecondMeioticSpindleAssembly, SpindleApparatusAssembly).
 proof(2382, 2011) :- superEventTypes(SecondMeioticSpindleAssembly, SecondMeioticCellDivision). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

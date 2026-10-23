@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,11 +23,11 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_.28variant_of_the_above.2C_derived_from.29_Biology_Chapter_11_Self-Quiz.2C_Question_7
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -53,23 +54,23 @@ istAsserted(BiologyMt, 'causes-SubSitTypeSubSitType'('GlycogenBreakdown-Cellular
 istAsserted(BiologyMt, 'causes-SubSitTypeSubSitType'('GlycogenBreakdown-CellularSignalingScript', TotalityOfSubEventsOfTypeFn(SignalTransductionInGlycogenBreakdown, ActivationOfEnzymeOfTypeFn(AdenylylCyclaseMolecule)), 'CyclicAMPProduction-GlycogenBreakdownTransductionPathway')).
 
 // Explicit Background Rules
-backwardSentence('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED), 'causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT).
-backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED))) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT), not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
-backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT))) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED), not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
+backwardSentence('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED), 'causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT), not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED), not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260480', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260480', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260480', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-260481', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-260481', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-260481', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260480', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-260481', Situation)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-260482', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-260482', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-260482', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260480', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-260482', Situation)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260480', MtTimeDimFn(Now)), 'causes-SubSitTypeSubSitType'('HYP-FirstOrderCollection-260481', TotalityOfSubEventsOfTypeFn(SignalTransductionInGlycogenBreakdown, ActivationOfEnzymeOfTypeByEnzymeOfTypeFn(GProteinMolecule, GProteinLinkedReceptor)), 'HYP-FirstOrderCollection-260482')).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260484', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260484', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260484', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260485', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260485', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260485', Individual)).
 
 // Query
@@ -127,14 +128,14 @@ proof(5558, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(5558, 2007) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 proof(5558, 2008) :- genls(TotalityOfSubEventsOfTypeFn('GlycogenBreakdown-CellularSignalingScript', ChemicalUnbindingEventTypeWithTypesFn(GlycogenMolecule, Glucose1PhosphateMolecule)), 'BiologicalProcess-CellularLevel'). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

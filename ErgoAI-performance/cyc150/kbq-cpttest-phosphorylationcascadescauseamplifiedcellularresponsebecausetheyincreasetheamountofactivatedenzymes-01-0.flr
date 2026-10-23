@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,9 +22,9 @@
 // KBQ:  : $CPTTest-PhosphorylationCascadesCauseAmplifiedCellularResponseBecauseTheyIncreaseTheAmountOfActivatedEnzymes-01 (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BiochemistryMt, ProprietaryMtFn(BiochemistryMt))).
@@ -33,12 +34,12 @@ istAsserted(UniversalVocabularyMt, genls(SignalTransductionCascade, 'SignalTrans
 istAsserted(UniversalVocabularyMt, genls(PhosphorylationCascade, SignalTransductionCascade)).
 
 // Explicit Background Rules
-backwardSentence('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')) :- mtVisible(BiochemistryMt), naf backchainForbidden('causes-SitTypeSitType'), relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)), genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess').
-backwardSentence(not(genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'))) :- mtVisible(BiochemistryMt), naf backchainForbidden(genls), relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)), not('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
-backwardSentence(not(relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)))) :- mtVisible(BiochemistryMt), naf backchainForbidden(relationAllInstance), genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'), not('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
+backwardSentence('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')) :- mtVisible(BiochemistryMt), \naf backchainForbidden('causes-SitTypeSitType'), relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)), genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess').
+backwardSentence(not(genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'))) :- mtVisible(BiochemistryMt), \naf backchainForbidden(genls), relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)), not('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
+backwardSentence(not(relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)))) :- mtVisible(BiochemistryMt), \naf backchainForbidden(relationAllInstance), genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'), not('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260153', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260153', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260153', BiochemistryMt)).
 istAsserted('Hypothesis-HypotheticalContext-260153', relationAllInstance(increasesSlot, PhosphorylationCascade, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt))).
 
@@ -63,14 +64,14 @@ proof(4424, 2003) :- genlMt('Hypothesis-HypotheticalContext-260153', 'Hypothesis
 proof(4424, 2004) :- genlMt('Hypothesis-HypotheticalContext-260153', BiochemistryMt).
 proof(4424, 2005) :- genls(PhosphorylationCascade, 'SignalTransduction-CellularProcess'). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

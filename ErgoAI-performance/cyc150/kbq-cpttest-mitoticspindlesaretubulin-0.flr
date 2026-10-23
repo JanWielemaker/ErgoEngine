@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,7 +23,7 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_In-house_12
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
@@ -37,11 +38,11 @@ istAsserted(MicrobiologyMt, relationAllExists(primaryConstituent, Microtubule, T
 istAsserted(MicrobiologyMt, primaryPhysicalPartType(MitoticSpindle, Microtubule)).
 
 // Explicit Background Rules
-backwardSentence(relationAllExists(primaryConstituent, ?SUPER_TYPE, ?CONST_TYPE_2)) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(relationAllExists), primaryPhysicalPartType(?SUPER_TYPE, ?CONST_TYPE_1), relationAllExists(primaryConstituent, ?CONST_TYPE_1, ?CONST_TYPE_2).
-backwardSentence(not(primaryPhysicalPartType(?SUPER_TYPE, ?CONST_TYPE_1))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(primaryPhysicalPartType), relationAllExists(primaryConstituent, ?CONST_TYPE_1, ?CONST_TYPE_2), not(relationAllExists(primaryConstituent, ?SUPER_TYPE, ?CONST_TYPE_2)).
-backwardSentence(not(relationAllExists(primaryConstituent, ?CONST_TYPE_1, ?CONST_TYPE_2))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(relationAllExists), primaryPhysicalPartType(?SUPER_TYPE, ?CONST_TYPE_1), not(relationAllExists(primaryConstituent, ?SUPER_TYPE, ?CONST_TYPE_2)).
-backwardSentence('primaryConstituent-TypeType'(?X, ?Y)) :- mtVisible(BaseKB), naf backchainForbidden('primaryConstituent-TypeType'), relationAllExists(primaryConstituent, ?X, ?Y).
-backwardSentence(not(relationAllExists(primaryConstituent, ?X, ?Y))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExists), not('primaryConstituent-TypeType'(?X, ?Y)).
+backwardSentence(relationAllExists(primaryConstituent, ?SUPER_TYPE, ?CONST_TYPE_2)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), primaryPhysicalPartType(?SUPER_TYPE, ?CONST_TYPE_1), relationAllExists(primaryConstituent, ?CONST_TYPE_1, ?CONST_TYPE_2).
+backwardSentence(not(primaryPhysicalPartType(?SUPER_TYPE, ?CONST_TYPE_1))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(primaryPhysicalPartType), relationAllExists(primaryConstituent, ?CONST_TYPE_1, ?CONST_TYPE_2), not(relationAllExists(primaryConstituent, ?SUPER_TYPE, ?CONST_TYPE_2)).
+backwardSentence(not(relationAllExists(primaryConstituent, ?CONST_TYPE_1, ?CONST_TYPE_2))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), primaryPhysicalPartType(?SUPER_TYPE, ?CONST_TYPE_1), not(relationAllExists(primaryConstituent, ?SUPER_TYPE, ?CONST_TYPE_2)).
+backwardSentence('primaryConstituent-TypeType'(?X, ?Y)) :- mtVisible(BaseKB), \naf backchainForbidden('primaryConstituent-TypeType'), relationAllExists(primaryConstituent, ?X, ?Y).
+backwardSentence(not(relationAllExists(primaryConstituent, ?X, ?Y))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), not('primaryConstituent-TypeType'(?X, ?Y)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
@@ -65,14 +66,14 @@ proof(6340, 2000) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(6340, 2001) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), BaseKB).
 proof(6340, 2002) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MicrobiologyMt). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

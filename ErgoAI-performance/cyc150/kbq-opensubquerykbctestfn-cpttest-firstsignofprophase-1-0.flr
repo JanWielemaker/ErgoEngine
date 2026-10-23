@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ: ( : $OpenSubqueryKBCTestFn  : $CPTTest-FirstSignOfProphase-1) (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -40,7 +41,7 @@ istAsserted(UniversalVocabularyMt, genlPreds(iterativeSubEventTypesTotality, sta
 istAsserted(BaseKB, termOfUnit(TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation), TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation))).
 istAsserted(BiologyMt, firstProperSubEventTypes(Prophase, TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation))).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
-istAsserted(UniversalVocabularyMt, isa(startTogetherInSituationType, TernaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(startTogetherInSituationType, TernaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, MolecularBiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, ReasoningToCausesFromObservationsMt)).
 
@@ -48,26 +49,26 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 forwardSentence(relationAllExists(firstSubEvents, ?COL1, ?COL2)) :- removalSentence(assertedSentence(firstProperSubEventTypes(?COL1, ?COL2))), removalSentence(firstProperSubEventTypes(?COL1, ?COL2)).
 forwardSentence(firstProperSubEventTypes(?X, ?Y)) :- removalSentence(assertedSentence(relationAllExists(firstSubEvents, ?X, ?Y))), removalSentence(relationAllExists(firstSubEvents, ?X, ?Y)).
 forwardSentence(firstProperSubEventTypes(?SIT, ?SUB_SIT_1)) :- removalSentence(startTogetherInSituationType(?SIT, ?SUB_SIT_1, ?SUB_SIT_2)), removalSentence(firstProperSubEventTypes(?SIT, ?SUB_SIT_2)).
-forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
+forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- \naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
 
 // Explicit Background Facts
 
 // Explicit Background Rules
-backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?COL_2)) :- mtVisible(BaseKB), naf backchainForbidden(relationInstanceExists), relationAllExists(?PRED, ?COL_1, ?COL_2), isa(?OBJ, ?COL_1).
-backwardSentence(not(isa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
-backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExists), isa(?OBJ, ?COL_1), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?COL_2)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExists), relationAllExists(?PRED, ?COL_1, ?COL_2), cycIsa(?OBJ, ?COL_1).
+backwardSentence(not(cycIsa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), cycIsa(?OBJ, ?COL_1), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260154', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260154', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260154', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-AnimalCell-260155', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), isa('HYP-AnimalCell-260155', AnimalCell)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Mammal-260156', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), isa('HYP-Mammal-260156', Mammal)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Prophase-260157', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), isa('HYP-Prophase-260157', Prophase)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), isa('HYP-Prophase-260157', Action)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), isa('HYP-AnimalCell-260155', Cell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-AnimalCell-260155', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), cycIsa('HYP-AnimalCell-260155', AnimalCell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Mammal-260156', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), cycIsa('HYP-Mammal-260156', Mammal)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Prophase-260157', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), cycIsa('HYP-Prophase-260157', Prophase)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), cycIsa('HYP-Prophase-260157', Action)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), cycIsa('HYP-AnimalCell-260155', Cell)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), cellSource('HYP-AnimalCell-260155', 'HYP-Mammal-260156')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now)), 'locusOfCellularProcess-Cell'('HYP-Prophase-260157', 'HYP-AnimalCell-260155')).
 
@@ -77,17 +78,17 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260154')).
 %pretest :- relationInstanceExists(firstSubEvents, 'HYP-Prophase-260157', ?X), %write_results('SUCCESS ( : $OpenSubqueryKBCTestFn  : $CPTTest-FirstSignOfProphase-1) 0').
 
 // Debugging
-proof(4427, 0) :- isa('HYP-Prophase-260157', Prophase).
-proof(4427, 1) :- isa('HYP-Prophase-260157', Prophase).
+proof(4427, 0) :- cycIsa('HYP-Prophase-260157', Prophase).
+proof(4427, 1) :- cycIsa('HYP-Prophase-260157', Prophase).
 proof(4427, 2) :- relationAllExists(firstSubEvents, Prophase, ReplicatedChromosomeCondensation).
 proof(4427, 3) :- relationAllExists(firstSubEvents, Prophase, ReplicatedChromosomeCondensation).
 proof(4427, 4) :- relationAllExists(firstSubEvents, Prophase, ReplicatedChromosomeCondensation).
-proof(4427, 5) :- isa('HYP-Prophase-260157', Prophase), relationAllExists(firstSubEvents, Prophase, ReplicatedChromosomeCondensation).
+proof(4427, 5) :- cycIsa('HYP-Prophase-260157', Prophase), relationAllExists(firstSubEvents, Prophase, ReplicatedChromosomeCondensation).
 proof(4427, 6) :- relationInstanceExists(firstSubEvents, 'HYP-Prophase-260157', ReplicatedChromosomeCondensation).
 proof(4427, 7) :- relationAllExists(firstSubEvents, Prophase, TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation)).
 proof(4427, 8) :- relationAllExists(firstSubEvents, Prophase, TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation)).
 proof(4427, 9) :- relationAllExists(firstSubEvents, Prophase, TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation)).
-proof(4427, 10) :- isa('HYP-Prophase-260157', Prophase), relationAllExists(firstSubEvents, Prophase, TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation)).
+proof(4427, 10) :- cycIsa('HYP-Prophase-260157', Prophase), relationAllExists(firstSubEvents, Prophase, TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation)).
 proof(4427, 11) :- relationInstanceExists(firstSubEvents, 'HYP-Prophase-260157', TotalityOfSubEventsOfTypeFn(Prophase, ReplicatedChromosomeCondensation)).
 
 proof(4427, 1000) :- genlMt(MicrobiologyMt, MicrobiologyVocabularyMt).
@@ -113,17 +114,17 @@ proof(4427, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(4427, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260154'), BiologyMt).
 proof(4427, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260154'), MtSpace('Hypothesis-HypotheticalContext-260154', MtTimeDimFn(Now))).
 proof(4427, 2008) :- genlPreds(iterativeSubEventTypesTotality, startTogetherInSituationType).
-proof(4427, 2009) :- isa('HYP-Prophase-260157', Prophase).
-proof(4427, 2010) :- isa(startTogetherInSituationType, TernaryPredicate). 
+proof(4427, 2009) :- cycIsa('HYP-Prophase-260157', Prophase).
+proof(4427, 2010) :- cycIsa(startTogetherInSituationType, TernaryPredicate). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

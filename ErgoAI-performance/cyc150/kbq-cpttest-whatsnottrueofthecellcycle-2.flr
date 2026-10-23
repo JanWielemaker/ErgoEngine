@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,10 +23,10 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:__.28Derived_from.29_Princeton_APR_Practice_Test_1.2C_Question_30
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
@@ -37,7 +38,7 @@ istAsserted(UniversalVocabularyMt, completeExtentEnumerable('equivalentRolePlaye
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 //REMOVED TITLE('KBQ  : $CPTTest-WhatsNotTrueOfTheCellCycle 2').
-%pretest :- neg 'equivalentRolePlayers-SitTypeToSubSitType'(EukaryoticCellCycle, daughterCells, ReproductiveFertilizationEvent, inputs), %write_results('SUCCESS  : $CPTTest-WhatsNotTrueOfTheCellCycle 2').
+%pretest :- \neg 'equivalentRolePlayers-SitTypeToSubSitType'(EukaryoticCellCycle, daughterCells, ReproductiveFertilizationEvent, inputs), %write_results('SUCCESS  : $CPTTest-WhatsNotTrueOfTheCellCycle 2').
 
 // Debugging
 proof(7209, 0) :- not('equivalentRolePlayers-SitTypeToSubSitType'(EukaryoticCellCycle, daughterCells, ReproductiveFertilizationEvent, inputs)).
@@ -53,14 +54,14 @@ proof(7209, 2005) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(7209, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 proof(7209, 2007) :- unknownSentence('equivalentRolePlayers-SitTypeToSubSitType'(EukaryoticCellCycle, daughterCells, ReproductiveFertilizationEvent, inputs)). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

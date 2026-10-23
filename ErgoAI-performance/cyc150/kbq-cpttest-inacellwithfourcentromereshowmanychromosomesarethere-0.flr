@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,10 +23,10 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_.28derived_from.29_Barron.27s_Chapter_7_quiz.2C_Question_2
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -40,15 +41,15 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Molecular
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, ReasoningToCausesFromObservationsMt)).
 
 // Explicit Background Rules
-backwardSentence(cellHasNumberOfChromosomes(?CELL, ?N)) :- mtVisible(BiologyMt), naf backchainForbidden(cellHasNumberOfChromosomes), relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N), isa(?CELL, EukaryoticCell).
-backwardSentence(not(isa(?CELL, EukaryoticCell))) :- mtVisible(BiologyMt), naf backchainForbidden(isa), relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N), not(cellHasNumberOfChromosomes(?CELL, ?N)).
-backwardSentence(not(relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N))) :- mtVisible(BiologyMt), naf backchainForbidden(relationInstanceExistsCount), isa(?CELL, EukaryoticCell), not(cellHasNumberOfChromosomes(?CELL, ?N)).
+backwardSentence(cellHasNumberOfChromosomes(?CELL, ?N)) :- mtVisible(BiologyMt), \naf backchainForbidden(cellHasNumberOfChromosomes), relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N), cycIsa(?CELL, EukaryoticCell).
+backwardSentence(not(cycIsa(?CELL, EukaryoticCell))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N), not(cellHasNumberOfChromosomes(?CELL, ?N)).
+backwardSentence(not(relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N))) :- mtVisible(BiologyMt), \naf backchainForbidden(relationInstanceExistsCount), cycIsa(?CELL, EukaryoticCell), not(cellHasNumberOfChromosomes(?CELL, ?N)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259507', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259507', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259507', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-EukaryoticCell-259508', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-259507', MtTimeDimFn(Now)), isa('HYP-EukaryoticCell-259508', EukaryoticCell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-EukaryoticCell-259508', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-259507', MtTimeDimFn(Now)), cycIsa('HYP-EukaryoticCell-259508', EukaryoticCell)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259507', MtTimeDimFn(Now)), relationInstanceExistsCount(properPhysicalParts, 'HYP-EukaryoticCell-259508', Centromere, 4)).
 
 // Query
@@ -57,9 +58,9 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259507')).
 %pretest :- cellHasNumberOfChromosomes('HYP-EukaryoticCell-259508', 4), %write_results('SUCCESS  : $CPTTest-InACellWithFourCentromeresHowManyChromosomesAreThere 0').
 
 // Debugging
-proof(1679, 0) :- isa('HYP-EukaryoticCell-259508', EukaryoticCell).
+proof(1679, 0) :- cycIsa('HYP-EukaryoticCell-259508', EukaryoticCell).
 proof(1679, 1) :- relationInstanceExistsCount(properPhysicalParts, 'HYP-EukaryoticCell-259508', Centromere, 4).
-proof(1679, 2) :- isa('HYP-EukaryoticCell-259508', EukaryoticCell), relationInstanceExistsCount(properPhysicalParts, 'HYP-EukaryoticCell-259508', Centromere, 4).
+proof(1679, 2) :- cycIsa('HYP-EukaryoticCell-259508', EukaryoticCell), relationInstanceExistsCount(properPhysicalParts, 'HYP-EukaryoticCell-259508', Centromere, 4).
 proof(1679, 3) :- cellHasNumberOfChromosomes('HYP-EukaryoticCell-259508', 4).
 
 proof(1679, 1000) :- genlMt(MicrobiologyMt, MicrobiologyVocabularyMt).
@@ -78,16 +79,16 @@ proof(1679, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(1679, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259507'), BaseKB).
 proof(1679, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259507'), BiologyMt).
 proof(1679, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259507'), MtSpace('Hypothesis-HypotheticalContext-259507', MtTimeDimFn(Now))).
-proof(1679, 2008) :- isa('HYP-EukaryoticCell-259508', EukaryoticCell). 
+proof(1679, 2008) :- cycIsa('HYP-EukaryoticCell-259508', EukaryoticCell). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

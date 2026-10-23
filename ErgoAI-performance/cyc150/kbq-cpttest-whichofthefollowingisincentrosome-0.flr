@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,10 +23,10 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_.28derived_from.29_Princeton_APR_Ch._7_quiz.2C_question_8_.28p._111.29
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(relationAllExistsCount, relationAllExistsMin)).
@@ -41,39 +42,39 @@ istAsserted(UniversalVocabularyMt, genls(Centrosome, MicrotubuleOrganizingCenter
 istAsserted(MicrobiologyMt, relationAllExistsCount(properPhysicalParts, Centrosome, Centriole, 2)).
 
 // Explicit Background Rules
-backwardSentence(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExists), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), greaterThan(?NUM, 0).
-backwardSentence(not(greaterThan(?NUM, 0))) :- mtVisible(BaseKB), naf backchainForbidden(greaterThan), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)).
-backwardSentence(not(relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExistsMin), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)), greaterThan(?NUM, 0).
+backwardSentence(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), greaterThan(?NUM, 0).
+backwardSentence(not(greaterThan(?NUM, 0))) :- mtVisible(BaseKB), \naf backchainForbidden(greaterThan), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)).
+backwardSentence(not(relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsMin), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)), greaterThan(?NUM, 0).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260657', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260657', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260657', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260658', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260658', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260658', Thing)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260657', MtTimeDimFn(Now)), relationAllExists(properPhysicalParts, 'HYP-Collection-260658', G2Phase)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260660', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260660', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260660', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260661', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260661', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260661', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260660', MtTimeDimFn(Now)), genls('HYP-Collection-260661', MicrotubuleOrganizingCenter)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260663', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260663', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260663', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260664', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260664', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260664', Thing)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260663', MtTimeDimFn(Now)), relationAllExists(properPhysicalParts, 'HYP-Collection-260664', Chromatin)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260667', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260667', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260667', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260668', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260668', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260668', Thing)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260667', MtTimeDimFn(Now)), relationAllExists(properPhysicalParts, 'HYP-Collection-260668', Centromere)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260671', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260671', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260671', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260672', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260672', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260672', Thing)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260671', MtTimeDimFn(Now)), relationAllExists(properPhysicalParts, 'HYP-Collection-260672', Centriole)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260675', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260675', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260675', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260676', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260676', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260676', Thing)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260675', MtTimeDimFn(Now)), relationAllExists(properPhysicalParts, 'HYP-Collection-260676', SPhase)).
 
@@ -110,14 +111,14 @@ proof(6492, 2008) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(6492, 2009) :- genlPreds(relationAllExistsCount, relationAllExistsMin).
 proof(6492, 2010) :- genls(Centrosome, MicrotubuleOrganizingCenter). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,15 +23,15 @@
 
 // Implicit Background Facts
 istAsserted(UniversalVocabularyMt, genls(EquivalenceRelation, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(equals, EquivalenceRelation)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(equals, EquivalenceRelation)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(immediatelyAfterInSituationType, startsAfterEndOfInSituationType)).
 istAsserted(UniversalVocabularyMt, commutativeInArgs(endTogetherInSituationType, 2, 3)).
-istAsserted(UniversalVocabularyMt, isa(predicateIntersection, PartiallyCommutativePredicate)).
-istAsserted(UniversalVocabularyMt, isa(endTogetherInSituationType, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(predicateIntersection, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(endTogetherInSituationType, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyVocabularyMt, MicrobiologicalChemistryMt)).
@@ -107,20 +108,20 @@ proof(3334, 2011) :- genlPreds(immediatelyAfterInSituationType, startsAfterEndOf
 proof(3334, 2012) :- genlPreds('coveringOfEventType-Nonoverlapping', coveringOfEventType).
 proof(3334, 2013) :- genlPreds(mostGeneralCoveringOfEventType, coveringOfEventType).
 proof(3334, 2014) :- genlPreds(uniqueFirstProperSubEventTypes, uniqueProperSubEventTypes).
-proof(3334, 2015) :- isa(predicateIntersection, PartiallyCommutativePredicate).
-proof(3334, 2016) :- isa(endTogetherInSituationType, PartiallyCommutativePredicate).
+proof(3334, 2015) :- cycIsa(predicateIntersection, PartiallyCommutativePredicate).
+proof(3334, 2016) :- cycIsa(endTogetherInSituationType, PartiallyCommutativePredicate).
 proof(3334, 2017) :- memberOfList(Anaphase, [Prophase, Prometaphase, Metaphase, Anaphase, Telophase]).
 proof(3334, 2018) :- memberOfList(Telophase, [Prophase, Prometaphase, Metaphase, Anaphase, Telophase]).
 proof(3334, 2019) :- memberOfList(Mitosis, [Mitosis, Cytokinesis]). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

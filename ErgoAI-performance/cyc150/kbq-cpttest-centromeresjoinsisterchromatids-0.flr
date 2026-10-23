@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ:  : $CPTTest-CentromeresJoinSisterChromatids (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
@@ -36,35 +37,35 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 
 // Implicit Background Rules
 forwardSentence(typeConnects(Centromere, ?CHROMATID_1, ?CHROMATID_2)) :- removalSentence(sisterChromatids(?CHROMATID_1, ?CHROMATID_2)).
-forwardSentence(isa(?CONNECTION, ?TYPE)) :- removalSentence(connectionJoins(?CONNECTION, ?C1, ?C2)), removalSentence(typeConnects(?TYPE, ?C1, ?C2)).
+forwardSentence(cycIsa(?CONNECTION, ?TYPE)) :- removalSentence(connectionJoins(?CONNECTION, ?C1, ?C2)), removalSentence(typeConnects(?TYPE, ?C1, ?C2)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260616', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260616', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260616', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Chromatid-260617', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), isa('HYP-Chromatid-260617', Chromatid)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), isa('HYP-Chromatid-260617', SolidTangibleThing)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Chromatid-260618', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), isa('HYP-Chromatid-260618', Chromatid)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), isa('HYP-Chromatid-260618', SolidTangibleThing)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Connection-Physical-260619', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), isa('HYP-Connection-Physical-260619', 'Connection-Physical')).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Chromatid-260617', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), cycIsa('HYP-Chromatid-260617', Chromatid)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), cycIsa('HYP-Chromatid-260617', SolidTangibleThing)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Chromatid-260618', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), cycIsa('HYP-Chromatid-260618', Chromatid)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), cycIsa('HYP-Chromatid-260618', SolidTangibleThing)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Connection-Physical-260619', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), cycIsa('HYP-Connection-Physical-260619', 'Connection-Physical')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), sisterChromatids('HYP-Chromatid-260617', 'HYP-Chromatid-260618')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now)), connectionJoins('HYP-Connection-Physical-260619', 'HYP-Chromatid-260617', 'HYP-Chromatid-260618')).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260616')).
 //REMOVED TITLE('KBQ  : $CPTTest-CentromeresJoinSisterChromatids 0').
-%pretest :- isa('HYP-Connection-Physical-260619', Centromere), %write_results('SUCCESS  : $CPTTest-CentromeresJoinSisterChromatids 0').
+%pretest :- cycIsa('HYP-Connection-Physical-260619', Centromere), %write_results('SUCCESS  : $CPTTest-CentromeresJoinSisterChromatids 0').
 
 // Debugging
-proof(6209, 0) :- isa('HYP-Connection-Physical-260619', Centromere).
+proof(6209, 0) :- cycIsa('HYP-Connection-Physical-260619', Centromere).
 
 proof(6209, 1000) :- genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt).
 proof(6209, 1001) :- genlMt(MolecularBiologyVocabularyMt, MicrobiologicalChemistryMt).
 proof(6209, 1002) :- genlMt(ReasoningToCausesFromObservationsMt, BaseKB).
 proof(6209, 1003) :- typeConnects(Centromere, 'HYP-Chromatid-260617', 'HYP-Chromatid-260618').
-proof(6209, 1004) :- isa('HYP-Connection-Physical-260619', Centromere).
+proof(6209, 1004) :- cycIsa('HYP-Connection-Physical-260619', Centromere).
 
 proof(6209, 2000) :- admittedArgument('Hypothesis-HypotheticalContext-260616', 1, genlMt).
 proof(6209, 2001) :- admittedArgument('Hypothesis-HypotheticalContext-260616', 2, genlMt).
@@ -74,16 +75,16 @@ proof(6209, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(6209, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260616'), BaseKB).
 proof(6209, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260616'), MicrobiologyMt).
 proof(6209, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260616'), MtSpace('Hypothesis-HypotheticalContext-260616', MtTimeDimFn(Now))).
-proof(6209, 2008) :- isa('HYP-Connection-Physical-260619', Centromere). 
+proof(6209, 2008) :- cycIsa('HYP-Connection-Physical-260619', Centromere). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

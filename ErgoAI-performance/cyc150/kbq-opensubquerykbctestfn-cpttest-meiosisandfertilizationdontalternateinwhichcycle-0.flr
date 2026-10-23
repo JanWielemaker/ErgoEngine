@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ: ( : $OpenSubqueryKBCTestFn  : $CPTTest-MeiosisAndFertilizationDONTAlternateInWhichCycle) (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -34,8 +35,8 @@ istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyVocabularyMt, Microbio
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyVocabularyMt, BiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(ProprietaryMtFn(BiologyMt), BiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BiologyVocabularyMt, ProprietaryMtFn(BiologyMt))).
-istAsserted(UniversalVocabularyMt, isa(phasesAlternateInCycleType, PartiallyCommutativePredicate)).
-istAsserted(UniversalVocabularyMt, isa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(phasesAlternateInCycleType, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, transitiveViaArgInverse('partwiseDisjoint-TypeType', superEventTypes, 1)).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, MolecularBiologyMt)).
@@ -44,7 +45,7 @@ istAsserted(UniversalVocabularyMt, 'partwiseDisjoint-TypeType'(ReproductiveFerti
 istAsserted(UniversalVocabularyMt, negationPreds('partwiseDisjoint-TypeType', 'shareParts-TypeType')).
 
 // Implicit Background Rules
-forwardSentence(genlInverse(?PRED, ?PRED)) :- removalSentence(isa(?PRED, SymmetricBinaryPredicate)).
+forwardSentence(genlInverse(?PRED, ?PRED)) :- removalSentence(cycIsa(?PRED, SymmetricBinaryPredicate)).
 forwardSentence('partwiseDisjoint-TypeType'(?EVENT_TYPE, ?ITERATION_TYPE)) :- removalSentence(iteratedSubsituationTypeOfSerialCycleType(?CYCLE, ?ITERATION_TYPE)), removalSentence('partwiseDisjoint-TypeType'(?CYCLE, ?EVENT_TYPE)).
 
 // Explicit Background Facts
@@ -56,14 +57,14 @@ istAsserted(BaseKB, iteratedSubsituationTypeOfSerialCycleType(TheEukaryoticCellC
 istAsserted(UniversalVocabularyMt, iteratedSubsituationTypeOfSerialCycleType(AsexualLifeCycle, SingleIterationThroughCycleTypeFn(AsexualLifeCycle))).
 
 // Explicit Background Rules
-backwardSentence(properSubEventTypes(?TYPE, ?PHASE1)) :- mtVisible(BaseKB), naf backchainForbidden(properSubEventTypes), iteratedSubsituationTypeOfSerialCycleType(?CYCLE_TYPE, ?TYPE), phasesAlternateInCycleType(?CYCLE_TYPE, ?XPHASE2, ?PHASE1).
-backwardSentence(not(iteratedSubsituationTypeOfSerialCycleType(?CYCLE_TYPE, ?TYPE))) :- mtVisible(BaseKB), naf backchainForbidden(iteratedSubsituationTypeOfSerialCycleType), phasesAlternateInCycleType(?CYCLE_TYPE, ?XPHASE2, ?PHASE1), not(properSubEventTypes(?TYPE, ?PHASE1)).
-backwardSentence(not(phasesAlternateInCycleType(?CYCLE_TYPE, ?XPHASE2, ?PHASE1))) :- mtVisible(BaseKB), naf backchainForbidden(phasesAlternateInCycleType), iteratedSubsituationTypeOfSerialCycleType(?CYCLE_TYPE, ?TYPE), not(properSubEventTypes(?TYPE, ?PHASE1)).
+backwardSentence(properSubEventTypes(?TYPE, ?PHASE1)) :- mtVisible(BaseKB), \naf backchainForbidden(properSubEventTypes), iteratedSubsituationTypeOfSerialCycleType(?CYCLE_TYPE, ?TYPE), phasesAlternateInCycleType(?CYCLE_TYPE, ?XPHASE2, ?PHASE1).
+backwardSentence(not(iteratedSubsituationTypeOfSerialCycleType(?CYCLE_TYPE, ?TYPE))) :- mtVisible(BaseKB), \naf backchainForbidden(iteratedSubsituationTypeOfSerialCycleType), phasesAlternateInCycleType(?CYCLE_TYPE, ?XPHASE2, ?PHASE1), not(properSubEventTypes(?TYPE, ?PHASE1)).
+backwardSentence(not(phasesAlternateInCycleType(?CYCLE_TYPE, ?XPHASE2, ?PHASE1))) :- mtVisible(BaseKB), \naf backchainForbidden(phasesAlternateInCycleType), iteratedSubsituationTypeOfSerialCycleType(?CYCLE_TYPE, ?TYPE), not(properSubEventTypes(?TYPE, ?PHASE1)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 //REMOVED TITLE('KBQ ( : $OpenSubqueryKBCTestFn  : $CPTTest-MeiosisAndFertilizationDONTAlternateInWhichCycle) 0').
-%pretest :- neg phasesAlternateInCycleType(?CYCLE, ReproductiveFertilizationEvent, Meiosis), %write_results('SUCCESS ( : $OpenSubqueryKBCTestFn  : $CPTTest-MeiosisAndFertilizationDONTAlternateInWhichCycle) 0').
+%pretest :- \neg phasesAlternateInCycleType(?CYCLE, ReproductiveFertilizationEvent, Meiosis), %write_results('SUCCESS ( : $OpenSubqueryKBCTestFn  : $CPTTest-MeiosisAndFertilizationDONTAlternateInWhichCycle) 0').
 
 // Debugging
 proof(4336, 0) :- iteratedSubsituationTypeOfSerialCycleType(TheCellCycle, CellCycle).
@@ -104,21 +105,21 @@ proof(4336, 2004) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(4336, 2005) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), BaseKB).
 proof(4336, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), BiologyMt).
 proof(4336, 2007) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
-proof(4336, 2008) :- isa(phasesAlternateInCycleType, PartiallyCommutativePredicate).
-proof(4336, 2009) :- isa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate).
+proof(4336, 2008) :- cycIsa(phasesAlternateInCycleType, PartiallyCommutativePredicate).
+proof(4336, 2009) :- cycIsa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate).
 proof(4336, 2010) :- negationInverse('partwiseDisjoint-TypeType', properSubEventTypes).
 proof(4336, 2011) :- negationPreds('partwiseDisjoint-TypeType', properSubEventTypes).
 proof(4336, 2012) :- superEventTypes(AsexualLifeCycle, AsexualLifeCycle).
 proof(4336, 2013) :- 'partwiseDisjoint-TypeType'(AsexualLifeCycle, ReproductiveFertilizationEvent). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

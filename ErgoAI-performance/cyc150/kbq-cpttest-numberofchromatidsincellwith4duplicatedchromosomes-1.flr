@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,12 +23,12 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_.28derived_from.29_Barron.27s_Chapter_7_quiz.2C_Question_3
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(relationExistsUniqueAll, relationExistsAll)).
@@ -40,29 +41,29 @@ istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, B
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, MolecularBiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, ReasoningToCausesFromObservationsMt)).
 istAsserted(UniversalVocabularyMt, genls(EukaryoticChromosome, Chromosome)).
-istAsserted(UniversalVocabularyMt, isa(Chromatid, ChromosomeRegionType)).
+istAsserted(UniversalVocabularyMt, cycIsa(Chromatid, ChromosomeRegionType)).
 
 // Implicit Background Rules
-backwardSentence(relationAllExistsCount(parts, ?OBJ_TYPE, ?PART_TYPE, ?NUMBER)) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExistsCount), partTypeCount(?OBJ_TYPE, ?PART_TYPE, ?NUMBER).
-backwardSentence(not(partTypeCount(?OBJ_TYPE, ?PART_TYPE, ?NUMBER))) :- mtVisible(BaseKB), naf backchainForbidden(partTypeCount), not(relationAllExistsCount(parts, ?OBJ_TYPE, ?PART_TYPE, ?NUMBER)).
+backwardSentence(relationAllExistsCount(parts, ?OBJ_TYPE, ?PART_TYPE, ?NUMBER)) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), partTypeCount(?OBJ_TYPE, ?PART_TYPE, ?NUMBER).
+backwardSentence(not(partTypeCount(?OBJ_TYPE, ?PART_TYPE, ?NUMBER))) :- mtVisible(BaseKB), \naf backchainForbidden(partTypeCount), not(relationAllExistsCount(parts, ?OBJ_TYPE, ?PART_TYPE, ?NUMBER)).
 forwardSentence(normalWholeTypeForPartType(?PART_TYPE, ?WHOLE_TYPE)) :- removalSentence(relationExistsAll(properPhysicalParts, ?WHOLE_TYPE, ?PART_TYPE)).
-forwardSentence(relationExistsUniqueAll(properPhysicalParts, Chromosome, ?REGION_TYPE)) :- removalSentence(isa(?REGION_TYPE, ChromosomeRegionType)).
+forwardSentence(relationExistsUniqueAll(properPhysicalParts, Chromosome, ?REGION_TYPE)) :- removalSentence(cycIsa(?REGION_TYPE, ChromosomeRegionType)).
 
 // Explicit Background Facts
 istAsserted(MolecularBiologyMt, normalWholeTypeForPartType(Chromatid, DuplicatedChromosome)).
 
 // Explicit Background Rules
-backwardSentence(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)) :- mtVisible(BaseKB), naf backchainForbidden(relationInstanceExistsCount), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), normalWholeTypeForPartType(?OTHER, ?GENL), genls(?TYPE, ?GENL).
-backwardSentence(not(normalWholeTypeForPartType(?OTHER, ?GENL))) :- mtVisible(BaseKB), naf backchainForbidden(normalWholeTypeForPartType), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
-backwardSentence(not(genls(?TYPE, ?GENL))) :- mtVisible(BaseKB), naf backchainForbidden(genls), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)), normalWholeTypeForPartType(?OTHER, ?GENL).
-backwardSentence(not(relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N))) :- mtVisible(BaseKB), naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), normalWholeTypeForPartType(?OTHER, ?GENL), genls(?TYPE, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
-backwardSentence(not(relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExistsCount), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), normalWholeTypeForPartType(?OTHER, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
+backwardSentence(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), normalWholeTypeForPartType(?OTHER, ?GENL), genls(?TYPE, ?GENL).
+backwardSentence(not(normalWholeTypeForPartType(?OTHER, ?GENL))) :- mtVisible(BaseKB), \naf backchainForbidden(normalWholeTypeForPartType), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
+backwardSentence(not(genls(?TYPE, ?GENL))) :- mtVisible(BaseKB), \naf backchainForbidden(genls), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)), normalWholeTypeForPartType(?OTHER, ?GENL).
+backwardSentence(not(relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N))) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), normalWholeTypeForPartType(?OTHER, ?GENL), genls(?TYPE, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
+backwardSentence(not(relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), normalWholeTypeForPartType(?OTHER, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261170', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261170', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261170', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Cell-261171', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261170', MtTimeDimFn(Now)), isa('HYP-Cell-261171', Cell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Cell-261171', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261170', MtTimeDimFn(Now)), cycIsa('HYP-Cell-261171', Cell)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261170', MtTimeDimFn(Now)), relationInstanceExistsCount(parts, 'HYP-Cell-261171', DuplicatedChromosome, 4)).
 
 // Query
@@ -120,16 +121,16 @@ proof(8469, 2011) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(8469, 2012) :- genlPreds(relationExistsUniqueAll, relationExistsAll).
 proof(8469, 2013) :- genls(DuplicatedChromosome, Chromosome).
 proof(8469, 2014) :- genls(DuplicatedChromosome, DuplicatedChromosome).
-proof(8469, 2015) :- isa(Chromatid, ChromosomeRegionType). 
+proof(8469, 2015) :- cycIsa(Chromatid, ChromosomeRegionType). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

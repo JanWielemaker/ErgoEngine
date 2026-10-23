@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,18 +22,18 @@
 // KBQ:  : $CPTTest-AnaphaseInvolvesAChangeInNumberOfChromosomes (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondingPredicate)).
-istAsserted(UniversalVocabularyMt, isa(predicateIntersection, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(predicateIntersection, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondsToPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, 'functionCorrespondingPredicate-Canonical'(IncreaseOnSlotFn, increaseEventTypeForSlot, 1)).
-istAsserted(UniversalVocabularyMt, isa(properSubEventTypes, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(properSubEventTypes, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, 'functionCorrespondingPredicate-Canonical'(TotalityOfSubEventsOfTypeFn, iterativeSubEventTypesTotality, 3)).
 istAsserted(BaseKB, termOfUnit(TotalityOfSubEventsOfTypeFn(Anaphase, 'SisterChromatidsCutByEnzyme-Mitosis'), TotalityOfSubEventsOfTypeFn(Anaphase, 'SisterChromatidsCutByEnzyme-Mitosis'))).
 istAsserted(UniversalVocabularyMt, predicateIntersection(uniqueProperSubEventTypes, uniqueProperSubSituationTypes, properSubEventTypes)).
@@ -47,12 +48,12 @@ istAsserted(UniversalVocabularyMt, genls(SisterChromatidsCutByEnzyme, IncreaseOn
 istAsserted(UniversalVocabularyMt, genls('SisterChromatidsCutByEnzyme-Mitosis', SisterChromatidsCutByEnzyme)).
 
 // Implicit Background Rules
-forwardSentence(?PRED(?TOU, ?ARG)) :- naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(?PRED(?TOU, ?ARG)) :- \naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
 forwardSentence(genlPreds(?PRED, ?GENLPRED1)) :- removalSentence(predicateIntersection(?PRED, ?XGENLPRED2, ?GENLPRED1)).
 forwardSentence(genlPreds(?PRED, ?GENLPRED1)) :- removalSentence(predicateIntersection(?PRED, ?GENLPRED1, ?XGENLPRED2)).
-forwardSentence(?PRED(?TOU, ?ARG)) :- naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(?PRED(?TOU, ?ARG)) :- \naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
 forwardSentence(genls(?INCREASE, ?CHANGE)) :- removalSentence(quantityChangeTypeForSlot(?CHANGE, ?SLOT)), removalSentence(increaseEventTypeForSlot(?INCREASE, ?SLOT)).
-forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
+forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- \naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
 forwardSentence(uniqueProperSubEventTypes(?SUPER, ?SUB)) :- removalSentence(iterativeSubEventTypesTotality(?SUPER, ?XSUB_SUB, ?SUB)).
 
 // Query
@@ -81,17 +82,17 @@ proof(2874, 2005) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(2874, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 proof(2874, 2007) :- genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondsToPredicate).
 proof(2874, 2008) :- genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondingPredicate).
-proof(2874, 2009) :- isa(predicateIntersection, PartiallyCommutativePredicate).
+proof(2874, 2009) :- cycIsa(predicateIntersection, PartiallyCommutativePredicate).
 proof(2874, 2010) :- properSubEventTypes(Anaphase, ChangeOnSlotFn(cellHasNumberOfChromosomes)). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

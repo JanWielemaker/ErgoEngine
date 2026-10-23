@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ: ( : $OpenSubqueryKBCTestFn  : $CPTTest-MicrotubuleDevelopmentInterferenceEffects) (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, transitiveViaArgInverse(relationAllExists, genls, 2)).
@@ -46,16 +47,16 @@ forwardSentence(relationAllExists(inputsCommitted, ?X, ?Y)) :- removalSentence(a
 istAsserted(MicrobiologyMt, relationOnlyAll(outputsCreated, MicrotubuleProduction, Microtubule)).
 
 // Explicit Background Rules
-backwardSentence('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden('inhibits-SitSitType'), relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE), relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE), 'inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE).
-backwardSentence(not('inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden('inhibits-SitSitType'), relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE), not('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)), relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE).
-backwardSentence(not(relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(relationAllExists), relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE), 'inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE), not('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)).
-backwardSentence(not(relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(relationOnlyAll), relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE), 'inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE), not('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)).
+backwardSentence('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('inhibits-SitSitType'), relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE), relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE), 'inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE).
+backwardSentence(not('inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('inhibits-SitSitType'), relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE), not('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)), relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE).
+backwardSentence(not(relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE), 'inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE), not('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)).
+backwardSentence(not(relationOnlyAll(outputsCreated, ?SOLE_OUTPUTTER_TYPE, ?RESOURCE_TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationOnlyAll), relationAllExists(inputsCommitted, ?INPUT_REQ_TYPE, ?RESOURCE_TYPE), 'inhibits-SitSitType'(?INHIBITION, ?SOLE_OUTPUTTER_TYPE), not('inhibits-SitSitType'(?INHIBITION, ?INPUT_REQ_TYPE)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259540', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259540', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259540', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Situation-259541', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-259540', MtTimeDimFn(Now)), isa('HYP-Situation-259541', Situation)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Situation-259541', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-259540', MtTimeDimFn(Now)), cycIsa('HYP-Situation-259541', Situation)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259540', MtTimeDimFn(Now)), 'inhibits-SitSitType'('HYP-Situation-259541', MicrotubuleProduction)).
 
 // Query
@@ -104,14 +105,14 @@ proof(1832, 4008) :- relationAllExists(inputsCommitted, SecondMeioticSpindleAsse
 proof(1832, 4009) :- relationAllExists(inputsCommitted, FirstMeioticSpindleAssembly, Microtubule).
 proof(1832, 4010) :- relationAllExists(inputsCommitted, MitoticSpindleAssembly, Microtubule). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ: ( : $OpenSubqueryKBCTestFn  : $CPTTest-DiploidNumberForDogs) (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -42,13 +43,13 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 istAsserted(BiologyMt, relationAllInstance(organismDiploidNumber, Dog, 78)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260308', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260308', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260308', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-SpermCell-260309', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), isa('HYP-SpermCell-260309', SpermCell)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), isa('HYP-SpermCell-260309', AnimalCell)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Dog-260310', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), isa('HYP-Dog-260310', Dog)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-SpermCell-260309', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), cycIsa('HYP-SpermCell-260309', SpermCell)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), cycIsa('HYP-SpermCell-260309', AnimalCell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Dog-260310', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), cycIsa('HYP-Dog-260310', Dog)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), cellHasNumberOfChromosomes('HYP-SpermCell-260309', 39)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now)), cellSource('HYP-SpermCell-260309', 'HYP-Dog-260310')).
 
@@ -77,16 +78,16 @@ proof(4913, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(4913, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260308'), BaseKB).
 proof(4913, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260308'), BiologyMt).
 proof(4913, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260308'), MtSpace('Hypothesis-HypotheticalContext-260308', MtTimeDimFn(Now))).
-proof(4913, 2008) :- isa('HYP-Dog-260310', Dog). 
+proof(4913, 2008) :- cycIsa('HYP-Dog-260310', Dog). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

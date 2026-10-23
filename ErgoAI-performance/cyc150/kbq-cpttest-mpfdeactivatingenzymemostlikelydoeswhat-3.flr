@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,10 +23,10 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_ETS_example_GRE_test.2C_question_155
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -43,30 +44,30 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Molecular
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, ReasoningToCausesFromObservationsMt)).
 
 // Implicit Background Rules
-forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
+forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- \naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
 
 // Explicit Background Facts
 istAsserted(BiochemistryMt, iterativeSubEventTypesTotality(EukaryoticCellCycle, BiochemicalSynthesisFn(MoleculeFn(Cyclin)), ContinuousPeriodOfCyclinProductionInEukaryoticCellCycle)).
 istAsserted(MolecularBiologyMt, startsAfterStartOfInSituationType(EukaryoticCellCycle, TotalityOfSubEventsOfTypeFn(EukaryoticCellCycle, ActivationOfEnzymeOfTypeFn(MoleculeFn(MPF))), ContinuousPeriodOfCyclinProductionInEukaryoticCellCycle)).
 
 // Explicit Background Rules
-backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN))) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType'), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB).
-backwardSentence(not(iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER))) :- mtVisible(BaseKB), naf backchainForbidden(iterativeSubEventTypesTotality), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER).
-backwardSentence(not(startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER))) :- mtVisible(BaseKB), naf backchainForbidden(startsAfterStartOfInSituationType), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB).
-backwardSentence(not(iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER))) :- mtVisible(BaseKB), naf backchainForbidden(iterativeSubEventTypesTotality), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER).
-backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB))) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType'), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB).
+backwardSentence(not(iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER))) :- mtVisible(BaseKB), \naf backchainForbidden(iterativeSubEventTypesTotality), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER).
+backwardSentence(not(startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER))) :- mtVisible(BaseKB), \naf backchainForbidden(startsAfterStartOfInSituationType), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB).
+backwardSentence(not(iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER))) :- mtVisible(BaseKB), \naf backchainForbidden(iterativeSubEventTypesTotality), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT_TYPE, ?BETWEEN, ?EARLY_SUB))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), iterativeSubEventTypesTotality(?SIT_TYPE, ?LATE_SUB, ?LATER), iterativeSubEventTypesTotality(?SIT_TYPE, ?EARLY_SUB, ?EARLIER), startsAfterStartOfInSituationType(?SIT_TYPE, ?LATER, ?EARLIER), 'causes-SubSitTypeSubSitType'(?SIT_TYPE, ?LATE_SUB, ?BETWEEN).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261398', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261398', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261398', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-261399', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-261399', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-261399', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261398', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-261399', EnzymeActivationEvent)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261398', MtTimeDimFn(Now)), 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261399', DegradationOfChemicalCompoundFn(ActivatedFormOfEnzymeFn(MoleculeFn(MPF))))).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261398', MtTimeDimFn(Now)), 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, ActivationOfEnzymeOfTypeFn(MoleculeFn(MPF)), 'HYP-FirstOrderCollection-261399')).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261410', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261410', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261410', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-261411', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-261411', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-261411', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261410', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-261411', EnzymeActivationEvent)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261410', MtTimeDimFn(Now)), 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261411', DegradationOfChemicalCompoundFn(ActivatedFormOfEnzymeFn(MoleculeFn(MPF))))).
@@ -75,7 +76,7 @@ istAsserted(MtSpace('Hypothesis-HypotheticalContext-261410', MtTimeDimFn(Now)), 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261398')).
 //REMOVED TITLE('KBQ  : $CPTTest-MPFDeactivatingEnzymeMostLikelyDoesWhat 3').
-%pretest :- neg 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261399', BiochemicalSynthesisFn(MoleculeFn(Cyclin))), %write_results('SUCCESS  : $CPTTest-MPFDeactivatingEnzymeMostLikelyDoesWhat 3').
+%pretest :- \neg 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, 'HYP-FirstOrderCollection-261399', BiochemicalSynthesisFn(MoleculeFn(Cyclin))), %write_results('SUCCESS  : $CPTTest-MPFDeactivatingEnzymeMostLikelyDoesWhat 3').
 
 // Debugging
 proof(9328, 0) :- 'causes-SubSitTypeSubSitType'(EukaryoticCellCycle, ActivationOfEnzymeOfTypeFn(MoleculeFn(MPF)), 'HYP-FirstOrderCollection-261399').
@@ -113,14 +114,14 @@ proof(9328, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(9328, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261398'), MolecularBiologyMt).
 proof(9328, 2008) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261398'), MtSpace('Hypothesis-HypotheticalContext-261398', MtTimeDimFn(Now))). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

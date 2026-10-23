@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,12 +23,12 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_.28derived_from.29_Biology_Chapter_12
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlPreds, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlPreds, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondingPredicate)).
 istAsserted(UniversalVocabularyMt, genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondsToPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
@@ -44,8 +45,8 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Molecular
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, ReasoningToCausesFromObservationsMt)).
 
 // Implicit Background Rules
-forwardSentence(?PRED(?TOU, ?ARG)) :- naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
-forwardSentence(?PRED(?TOU, ?ARG)) :- naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(?PRED(?TOU, ?ARG)) :- \naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(?PRED(?TOU, ?ARG)) :- \naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 1)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
 forwardSentence(genls(?INCREASE, ?CHANGE)) :- removalSentence(quantityChangeTypeForSlot(?CHANGE, ?SLOT)), removalSentence(increaseEventTypeForSlot(?INCREASE, ?SLOT)).
 
 // Explicit Background Facts
@@ -53,9 +54,9 @@ istAsserted(MolecularBiologyMt, 'causes-SubSitTypeSubSitType-Unique'(EukaryoticC
 istAsserted(MolecularBiologyMt, 'causes-SubSitTypeSubSitType-Unique'(EukaryoticCellCycle, TotalityOfSubEventsOfTypeFn(EukaryoticCellCycle, PhosphorylatingAChemicalObjectOfTypeFn(SubcollectionOfWithRelationFromTypeFn(ProteinMolecule, properPhysicalParts, NuclearLamina))), DissolutionOfNuclearEnvelope)).
 
 // Explicit Background Rules
-backwardSentence('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z).
-backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y))) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z), not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
-backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z))) :- mtVisible(BaseKB), naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y), not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
+backwardSentence('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z).
+backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z), not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
+backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y), not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
@@ -92,14 +93,14 @@ proof(2529, 2009) :- genlPreds('functionCorrespondingPredicate-Canonical', funct
 proof(2529, 2010) :- genlPreds('causes-SubSitTypeSubSitType-Unique', correlatedSubSituationTypes).
 proof(2529, 2011) :- genls(MPFActivityRisingToG2CheckpointTriggeringLevel, ChangeOnSlotFn(QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(MoleculeFn(MPF)), amountPresentAt))). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

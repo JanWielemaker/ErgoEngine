@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,8 +22,8 @@
 // KBQ:  : $CPTTest-WhatIsTheDiameterOfACilium (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, ProprietaryMtFn(MicrobiologyMt))).
@@ -33,10 +34,10 @@ istAsserted(MicrobiologyMt, relationAllInstance(diameterOfObject, Cilium, Micro(
 istAsserted(MicrobiologyMt, relationAllInstance(diameterOfObject, Cilium, Micron(0.2, 0.3))).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259698', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259698', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259698', MicrobiologyMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Cilium-259699', Individual)).
-istAsserted('Hypothesis-HypotheticalContext-259698', isa('HYP-Cilium-259699', Cilium)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Cilium-259699', Individual)).
+istAsserted('Hypothesis-HypotheticalContext-259698', cycIsa('HYP-Cilium-259699', Cilium)).
 
 // Query
 queryMt('Hypothesis-HypotheticalContext-259698').
@@ -59,16 +60,16 @@ proof(2632, 2002) :- genlMt('Hypothesis-HypotheticalContext-259698', UniversalVo
 proof(2632, 2003) :- genlMt('Hypothesis-HypotheticalContext-259698', 'Hypothesis-HypotheticalContext-259698').
 proof(2632, 2004) :- genlMt('Hypothesis-HypotheticalContext-259698', BaseKB).
 proof(2632, 2005) :- genlMt('Hypothesis-HypotheticalContext-259698', MicrobiologyMt).
-proof(2632, 2006) :- isa('HYP-Cilium-259699', Cilium). 
+proof(2632, 2006) :- cycIsa('HYP-Cilium-259699', Cilium). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

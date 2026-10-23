@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,20 +23,20 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_.28derived_from.29_Kaplan_Practice_Test_1.2C_question_77_.28p._250.29
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlPreds, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(subEvents, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlPreds, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(subEvents, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, transitiveViaArg(relationAllExists, genlPreds, 1)).
 istAsserted(UniversalVocabularyMt, genlPreds(typedGenlPreds, genlPreds)).
-istAsserted(UniversalVocabularyMt, isa(predicateIntersection, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(predicateIntersection, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(properSubEvents, subEvents)).
@@ -91,24 +92,24 @@ forwardSentence(properSubEventTypes(?SIT, ?SUB_SIT)) :- removalSentence(iterativ
 forwardSentence(firstProperSubEventTypes(?SIT, ?SUB_SIT_1)) :- removalSentence(startTogetherInSituationType(?SIT, ?SUB_SIT_1, ?SUB_SIT_2)), removalSentence(firstProperSubEventTypes(?SIT, ?SUB_SIT_2)).
 forwardSentence(relationAllExistsCount(properSubEvents, ?SUPER, ?SUB, 1)) :- removalSentence(iterativeSubEventTypesTotality(?SUPER, ?XSUB_SUB, ?SUB)).
 forwardSentence(relationAllExistsCount(properSubEvents, ?EVENT_TYPE, ?SUB_TYPE, 1)) :- removalSentence(uniqueProperSubEventTypes(?EVENT_TYPE, ?SUB_TYPE)).
-forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
+forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- \naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
 forwardSentence(uniqueProperSubEventTypes(?SUPER, ?SUB)) :- removalSentence(iterativeSubEventTypesTotality(?SUPER, ?XSUB_SUB, ?SUB)).
 
 // Explicit Background Rules
-backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?COL_2)) :- mtVisible(BaseKB), naf backchainForbidden(relationInstanceExists), relationAllExists(?PRED, ?COL_1, ?COL_2), isa(?OBJ, ?COL_1).
-backwardSentence(not(isa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
-backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExists), isa(?OBJ, ?COL_1), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
-backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?TYPE)) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(relationInstanceExists), isa(?INS, ?TYPE), ?PRED(?OBJ, ?INS).
-backwardSentence(not(isa(?INS, ?TYPE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(isa), ?PRED(?OBJ, ?INS), not(relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
-backwardSentence(not(?PRED(?OBJ, ?INS))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(?PRED), isa(?INS, ?TYPE), not(relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
+backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?COL_2)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExists), relationAllExists(?PRED, ?COL_1, ?COL_2), cycIsa(?OBJ, ?COL_1).
+backwardSentence(not(cycIsa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), cycIsa(?OBJ, ?COL_1), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?TYPE)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationInstanceExists), cycIsa(?INS, ?TYPE), ?PRED(?OBJ, ?INS).
+backwardSentence(not(cycIsa(?INS, ?TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(isa), ?PRED(?OBJ, ?INS), not(relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
+backwardSentence(not(?PRED(?OBJ, ?INS))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(?PRED), cycIsa(?INS, ?TYPE), not(relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260002', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260002', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260002', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-SPhase-260003', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260002', MtTimeDimFn(Now)), isa('HYP-SPhase-260003', SPhase)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Cell-260004', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260002', MtTimeDimFn(Now)), isa('HYP-Cell-260004', Cell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-SPhase-260003', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260002', MtTimeDimFn(Now)), cycIsa('HYP-SPhase-260003', SPhase)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Cell-260004', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260002', MtTimeDimFn(Now)), cycIsa('HYP-Cell-260004', Cell)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260002', MtTimeDimFn(Now)), doneBy('HYP-SPhase-260003', 'HYP-Cell-260004')).
 
 // Query
@@ -119,37 +120,37 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260002')).
 // Debugging
 proof(3969, 0) :- subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
 proof(3969, 1) :- subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
-proof(3969, 2) :- isa('HYP-SPhase-260003', SPhase).
-proof(3969, 3) :- isa('HYP-SPhase-260003', SPhase).
+proof(3969, 2) :- cycIsa('HYP-SPhase-260003', SPhase).
+proof(3969, 3) :- cycIsa('HYP-SPhase-260003', SPhase).
 proof(3969, 4) :- genls(SPhase, 'BiologicalProcess-CellularLevel').
 proof(3969, 5) :- genls(SPhase, 'BiologicalProcess-CellularLevel').
-proof(3969, 6) :- isa('HYP-SPhase-260003', SPhase), genls(SPhase, 'BiologicalProcess-CellularLevel').
-proof(3969, 7) :- isa('HYP-SPhase-260003', SPhase), genls(SPhase, 'BiologicalProcess-CellularLevel').
-proof(3969, 8) :- isa('HYP-SPhase-260003', SPhase), genls(SPhase, 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
+proof(3969, 6) :- cycIsa('HYP-SPhase-260003', SPhase), genls(SPhase, 'BiologicalProcess-CellularLevel').
+proof(3969, 7) :- cycIsa('HYP-SPhase-260003', SPhase), genls(SPhase, 'BiologicalProcess-CellularLevel').
+proof(3969, 8) :- cycIsa('HYP-SPhase-260003', SPhase), genls(SPhase, 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
 proof(3969, 9) :- genls(SPhase, 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', SPhase).
-proof(3969, 10) :- isa('HYP-SPhase-260003', CellEnlargementEvent).
-proof(3969, 11) :- isa('HYP-SPhase-260003', CellEnlargementEvent).
+proof(3969, 10) :- cycIsa('HYP-SPhase-260003', CellEnlargementEvent).
+proof(3969, 11) :- cycIsa('HYP-SPhase-260003', CellEnlargementEvent).
 proof(3969, 12) :- genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel').
 proof(3969, 13) :- genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel').
-proof(3969, 14) :- isa('HYP-SPhase-260003', CellEnlargementEvent), genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel').
-proof(3969, 15) :- isa('HYP-SPhase-260003', CellEnlargementEvent), genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel').
-proof(3969, 16) :- isa('HYP-SPhase-260003', CellEnlargementEvent), genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
+proof(3969, 14) :- cycIsa('HYP-SPhase-260003', CellEnlargementEvent), genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel').
+proof(3969, 15) :- cycIsa('HYP-SPhase-260003', CellEnlargementEvent), genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel').
+proof(3969, 16) :- cycIsa('HYP-SPhase-260003', CellEnlargementEvent), genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
 proof(3969, 17) :- genls(CellEnlargementEvent, 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', CellEnlargementEvent).
-proof(3969, 18) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell').
-proof(3969, 19) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell').
+proof(3969, 18) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell').
+proof(3969, 19) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell').
 proof(3969, 20) :- genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel').
 proof(3969, 21) :- genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel').
-proof(3969, 22) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell'), genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel').
-proof(3969, 23) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell'), genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel').
-proof(3969, 24) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell'), genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
+proof(3969, 22) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell'), genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel').
+proof(3969, 23) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell'), genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel').
+proof(3969, 24) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell'), genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
 proof(3969, 25) :- genls('BiologicalProcess-CellularLevel-LocalizedToSingleCell', 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell').
-proof(3969, 26) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel').
-proof(3969, 27) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel').
+proof(3969, 26) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel').
+proof(3969, 27) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel').
 proof(3969, 28) :- genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel').
 proof(3969, 29) :- genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel').
-proof(3969, 30) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel'), genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel').
-proof(3969, 31) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel'), genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel').
-proof(3969, 32) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel'), genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
+proof(3969, 30) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel'), genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel').
+proof(3969, 31) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel'), genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel').
+proof(3969, 32) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel'), genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel'), subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
 proof(3969, 33) :- genls('BiologicalProcess-CellularLevel', 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', 'BiologicalProcess-CellularLevel').
 proof(3969, 34) :- genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA'), 'BiologicalProcess-CellularLevel').
 proof(3969, 35) :- genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA'), 'BiologicalProcess-CellularLevel').
@@ -167,37 +168,37 @@ proof(3969, 46) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTyp
 proof(3969, 47) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA')).
 proof(3969, 48) :- genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA'), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA')).
 proof(3969, 49) :- genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA'), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA')).
-proof(3969, 50) :- isa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA'), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA')).
+proof(3969, 50) :- cycIsa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA'), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA')).
 proof(3969, 51) :- genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA'), 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCellCycle, 'Replication-DNA')).
 proof(3969, 52) :- relationAllExists(subEvents, SPhase, 'Replication-DNA').
 proof(3969, 53) :- relationAllExists(subEvents, SPhase, 'Replication-DNA').
 proof(3969, 54) :- genls('Replication-DNA', 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, 'Replication-DNA').
 proof(3969, 55) :- genls('Replication-DNA', 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, 'Replication-DNA').
-proof(3969, 56) :- isa('HYP-SPhase-260003', SPhase), genls('Replication-DNA', 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, 'Replication-DNA').
+proof(3969, 56) :- cycIsa('HYP-SPhase-260003', SPhase), genls('Replication-DNA', 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, 'Replication-DNA').
 proof(3969, 57) :- genls('Replication-DNA', 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', 'Replication-DNA').
 proof(3969, 58) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))).
 proof(3969, 59) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))).
 proof(3969, 60) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))).
 proof(3969, 61) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))).
-proof(3969, 62) :- isa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))).
+proof(3969, 62) :- cycIsa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))).
 proof(3969, 63) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))).
 proof(3969, 64) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
 proof(3969, 65) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
 proof(3969, 66) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
 proof(3969, 67) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
-proof(3969, 68) :- isa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
+proof(3969, 68) :- cycIsa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
 proof(3969, 69) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
 proof(3969, 70) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt)))).
 proof(3969, 71) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt)))).
 proof(3969, 72) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt)))).
 proof(3969, 73) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt)))).
-proof(3969, 74) :- isa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt)))).
+proof(3969, 74) :- cycIsa('HYP-SPhase-260003', SPhase), genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt)))).
 proof(3969, 75) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt))), 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt)))).
 proof(3969, 76) :- relationAllExists(subEvents, SPhase, ChromosomalDuplication).
 proof(3969, 77) :- relationAllExists(subEvents, SPhase, ChromosomalDuplication).
 proof(3969, 78) :- genls(ChromosomalDuplication, 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, ChromosomalDuplication).
 proof(3969, 79) :- genls(ChromosomalDuplication, 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, ChromosomalDuplication).
-proof(3969, 80) :- isa('HYP-SPhase-260003', SPhase), genls(ChromosomalDuplication, 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, ChromosomalDuplication).
+proof(3969, 80) :- cycIsa('HYP-SPhase-260003', SPhase), genls(ChromosomalDuplication, 'BiologicalProcess-CellularLevel'), relationAllExists(subEvents, SPhase, ChromosomalDuplication).
 proof(3969, 81) :- genls(ChromosomalDuplication, 'BiologicalProcess-CellularLevel'), relationInstanceExists(subEvents, 'HYP-SPhase-260003', ChromosomalDuplication).
 
 proof(3969, 1000) :- genlMt(MicrobiologyMt, MicrobiologyVocabularyMt).
@@ -266,11 +267,11 @@ proof(3969, 2023) :- genls(TotalityOfSubEventsOfTypeFn(InterphaseOfEukaryoticCel
 proof(3969, 2024) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinA, amountPresentAt))), 'BiologicalProcess-CellularLevel').
 proof(3969, 2025) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt))), 'BiologicalProcess-CellularLevel').
 proof(3969, 2026) :- genls(TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt))), 'BiologicalProcess-CellularLevel').
-proof(3969, 2027) :- isa('HYP-SPhase-260003', CellEnlargementEvent).
-proof(3969, 2028) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel').
-proof(3969, 2029) :- isa('HYP-SPhase-260003', SPhase).
-proof(3969, 2030) :- isa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell').
-proof(3969, 2031) :- isa(predicateIntersection, PartiallyCommutativePredicate).
+proof(3969, 2027) :- cycIsa('HYP-SPhase-260003', CellEnlargementEvent).
+proof(3969, 2028) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel').
+proof(3969, 2029) :- cycIsa('HYP-SPhase-260003', SPhase).
+proof(3969, 2030) :- cycIsa('HYP-SPhase-260003', 'BiologicalProcess-CellularLevel-LocalizedToSingleCell').
+proof(3969, 2031) :- cycIsa(predicateIntersection, PartiallyCommutativePredicate).
 proof(3969, 2032) :- subEvents('HYP-SPhase-260003', 'HYP-SPhase-260003').
 proof(3969, 2033) :- relationAllExists(subEvents, SPhase, 'Replication-DNA').
 proof(3969, 2034) :- relationAllExists(subEvents, SPhase, ChromosomalDuplication).
@@ -279,14 +280,14 @@ proof(3969, 2036) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfT
 proof(3969, 2037) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, DecreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinE, amountPresentAt)))).
 proof(3969, 2038) :- relationAllExists(subEvents, SPhase, TotalityOfSubEventsOfTypeFn(SPhase, IncreaseOnSlotFn(QuantitySlotForArg2Fn(CyclinB, amountPresentAt)))). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,10 +23,10 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_.28derived_from.29_ETS_example_GRE_test.2C_question_45
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -47,37 +48,37 @@ forwardSentence(relationAllExistsUnique(?PRED, ?COL1, ?COL2)) :- removalSentence
 // Explicit Background Facts
 
 // Explicit Background Rules
-backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?COL_2)) :- mtVisible(BaseKB), naf backchainForbidden(relationInstanceExists), relationAllExists(?PRED, ?COL_1, ?COL_2), isa(?OBJ, ?COL_1).
-backwardSentence(not(isa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
-backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExists), isa(?OBJ, ?COL_1), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?COL_2)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExists), relationAllExists(?PRED, ?COL_1, ?COL_2), cycIsa(?OBJ, ?COL_1).
+backwardSentence(not(cycIsa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), cycIsa(?OBJ, ?COL_1), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260860', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260860', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260860', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Oogenesis-260861', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260860', MtTimeDimFn(Now)), isa('HYP-Oogenesis-260861', Oogenesis)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260865', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Oogenesis-260861', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260860', MtTimeDimFn(Now)), cycIsa('HYP-Oogenesis-260861', Oogenesis)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260865', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260865', 'Hypothesis-HypotheticalContext-260860')).
-istAsserted(UniversalVocabularyMt, isa('HYP-MeiosisI-260866', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), isa('HYP-MeiosisI-260866', MeiosisI)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), isa('HYP-MeiosisI-260866', CreationEvent)).
-istAsserted(UniversalVocabularyMt, isa('HYP-SomethingExisting-260867', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), isa('HYP-SomethingExisting-260867', SomethingExisting)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-MeiosisI-260866', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), cycIsa('HYP-MeiosisI-260866', MeiosisI)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), cycIsa('HYP-MeiosisI-260866', CreationEvent)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-SomethingExisting-260867', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), cycIsa('HYP-SomethingExisting-260867', SomethingExisting)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), properSubEvents('HYP-Oogenesis-260861', 'HYP-MeiosisI-260866')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260865', MtTimeDimFn(Now)), outputsCreated('HYP-MeiosisI-260866', 'HYP-SomethingExisting-260867')).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260869', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260869', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260869', 'Hypothesis-HypotheticalContext-260860')).
-istAsserted(UniversalVocabularyMt, isa('HYP-CreationEvent-260870', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260869', MtTimeDimFn(Now)), isa('HYP-CreationEvent-260870', CreationEvent)).
-istAsserted(UniversalVocabularyMt, isa('HYP-PolarBody-260871', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260869', MtTimeDimFn(Now)), isa('HYP-PolarBody-260871', PolarBody)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-CreationEvent-260870', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260869', MtTimeDimFn(Now)), cycIsa('HYP-CreationEvent-260870', CreationEvent)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-PolarBody-260871', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260869', MtTimeDimFn(Now)), cycIsa('HYP-PolarBody-260871', PolarBody)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260869', MtTimeDimFn(Now)), properSubEvents('HYP-Oogenesis-260861', 'HYP-CreationEvent-260870')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260869', MtTimeDimFn(Now)), outputsCreated('HYP-CreationEvent-260870', 'HYP-PolarBody-260871')).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260873', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260873', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260873', 'Hypothesis-HypotheticalContext-260860')).
-istAsserted(UniversalVocabularyMt, isa('HYP-MeiosisI-260874', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260873', MtTimeDimFn(Now)), isa('HYP-MeiosisI-260874', MeiosisI)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260873', MtTimeDimFn(Now)), isa('HYP-MeiosisI-260874', CreationEvent)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-MeiosisI-260874', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260873', MtTimeDimFn(Now)), cycIsa('HYP-MeiosisI-260874', MeiosisI)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260873', MtTimeDimFn(Now)), cycIsa('HYP-MeiosisI-260874', CreationEvent)).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260860')).
@@ -87,9 +88,9 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260860')).
 // Debugging
 proof(7264, 0) :- relationAllExists(outputsCreated, Oogenesis, Ovum).
 proof(7264, 1) :- relationAllExists(outputsCreated, Oogenesis, Ovum).
-proof(7264, 2) :- isa('HYP-Oogenesis-260861', Oogenesis).
-proof(7264, 3) :- isa('HYP-Oogenesis-260861', Oogenesis).
-proof(7264, 4) :- isa('HYP-Oogenesis-260861', Oogenesis), relationAllExists(outputsCreated, Oogenesis, Ovum).
+proof(7264, 2) :- cycIsa('HYP-Oogenesis-260861', Oogenesis).
+proof(7264, 3) :- cycIsa('HYP-Oogenesis-260861', Oogenesis).
+proof(7264, 4) :- cycIsa('HYP-Oogenesis-260861', Oogenesis), relationAllExists(outputsCreated, Oogenesis, Ovum).
 proof(7264, 5) :- relationInstanceExists(outputsCreated, 'HYP-Oogenesis-260861', Ovum).
 
 proof(7264, 1000) :- genlMt(MicrobiologyMt, MicrobiologyVocabularyMt).
@@ -110,16 +111,16 @@ proof(7264, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(7264, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260860'), BiologyMt).
 proof(7264, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260860'), MtSpace('Hypothesis-HypotheticalContext-260860', MtTimeDimFn(Now))).
 proof(7264, 2008) :- genlPreds(relationAllExistsUnique, relationAllExists).
-proof(7264, 2009) :- isa('HYP-Oogenesis-260861', Oogenesis). 
+proof(7264, 2009) :- cycIsa('HYP-Oogenesis-260861', Oogenesis). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

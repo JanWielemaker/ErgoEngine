@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,11 +22,11 @@
 // KBQ:  : $CPTTest-CanParameciaMoveThemselves (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
@@ -43,15 +44,15 @@ istAsserted(MicrobiologyMt, relationAllExistsMany(properPhysicalParts, Parameciu
 forwardSentence(genls(?CELL, 'Cell-MotileByCilium')) :- removalSentence(relationAllExistsMany(properPhysicalParts, ?CELL, Cilium)).
 
 // Explicit Background Rules
-backwardSentence(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)) :- mtVisible(BaseKB), naf backchainForbidden(behaviorCapable), TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE), isa(?INST, ?COL).
-backwardSentence(not(isa(?INST, ?COL))) :- mtVisible(BaseKB), naf backchainForbidden(isa), TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE), not(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
-backwardSentence(not(TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE))) :- mtVisible(BaseKB), naf backchainForbidden(TypeCapableFn(behaviorCapable)), isa(?INST, ?COL), not(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
+backwardSentence(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)) :- mtVisible(BaseKB), \naf backchainForbidden(behaviorCapable), TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE), cycIsa(?INST, ?COL).
+backwardSentence(not(cycIsa(?INST, ?COL))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE), not(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
+backwardSentence(not(TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE))) :- mtVisible(BaseKB), \naf backchainForbidden(TypeCapableFn(behaviorCapable)), cycIsa(?INST, ?COL), not(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259683', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259683', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259683', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Paramecium-259684', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-259683', MtTimeDimFn(Now)), isa('HYP-Paramecium-259684', Paramecium)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Paramecium-259684', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-259683', MtTimeDimFn(Now)), cycIsa('HYP-Paramecium-259684', Paramecium)).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259683')).
@@ -59,11 +60,11 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259683')).
 %pretest :- behaviorCapable('HYP-Paramecium-259684', LocomotionProcess, providerOfMotiveForce), %write_results('SUCCESS  : $CPTTest-CanParameciaMoveThemselves 0').
 
 // Debugging
-proof(2535, 0) :- isa('HYP-Paramecium-259684', Paramecium).
-proof(2535, 1) :- isa('HYP-Paramecium-259684', Paramecium).
+proof(2535, 0) :- cycIsa('HYP-Paramecium-259684', Paramecium).
+proof(2535, 1) :- cycIsa('HYP-Paramecium-259684', Paramecium).
 proof(2535, 2) :- TypeCapableFn(behaviorCapable)(Paramecium, LocomotionProcess, providerOfMotiveForce).
 proof(2535, 3) :- TypeCapableFn(behaviorCapable)(Paramecium, LocomotionProcess, providerOfMotiveForce).
-proof(2535, 4) :- isa('HYP-Paramecium-259684', Paramecium), TypeCapableFn(behaviorCapable)(Paramecium, LocomotionProcess, providerOfMotiveForce).
+proof(2535, 4) :- cycIsa('HYP-Paramecium-259684', Paramecium), TypeCapableFn(behaviorCapable)(Paramecium, LocomotionProcess, providerOfMotiveForce).
 proof(2535, 5) :- behaviorCapable('HYP-Paramecium-259684', LocomotionProcess, providerOfMotiveForce).
 
 proof(2535, 1000) :- genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt).
@@ -79,17 +80,17 @@ proof(2535, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(2535, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259683'), BaseKB).
 proof(2535, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259683'), MicrobiologyMt).
 proof(2535, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259683'), MtSpace('Hypothesis-HypotheticalContext-259683', MtTimeDimFn(Now))).
-proof(2535, 2008) :- isa('HYP-Paramecium-259684', Paramecium).
+proof(2535, 2008) :- cycIsa('HYP-Paramecium-259684', Paramecium).
 proof(2535, 2009) :- TypeCapableFn(behaviorCapable)(Paramecium, LocomotionProcess, providerOfMotiveForce). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ:  : $CPTTest-IfMeiosisTakes100HoursHowLongDoesItsProphaseITake (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
@@ -41,12 +42,12 @@ forwardSentence(relationAllInstance(duration, ?COL1, ?COL2)) :- removalSentence(
 // Explicit Background Facts
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260026', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260026', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260026', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Meiosis-260027', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260026', MtTimeDimFn(Now)), isa('HYP-Meiosis-260027', Meiosis)).
-istAsserted(UniversalVocabularyMt, isa('HYP-ProphaseI-260028', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-260026', MtTimeDimFn(Now)), isa('HYP-ProphaseI-260028', ProphaseI)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Meiosis-260027', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260026', MtTimeDimFn(Now)), cycIsa('HYP-Meiosis-260027', Meiosis)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-ProphaseI-260028', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-260026', MtTimeDimFn(Now)), cycIsa('HYP-ProphaseI-260028', ProphaseI)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260026', MtTimeDimFn(Now)), duration('HYP-Meiosis-260027', HoursDuration(100))).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260026', MtTimeDimFn(Now)), properSubEvents('HYP-Meiosis-260027', 'HYP-ProphaseI-260028')).
 
@@ -72,16 +73,16 @@ proof(4017, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(4017, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260026'), BaseKB).
 proof(4017, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260026'), MicrobiologyMt).
 proof(4017, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-260026'), MtSpace('Hypothesis-HypotheticalContext-260026', MtTimeDimFn(Now))).
-proof(4017, 2008) :- isa('HYP-ProphaseI-260028', ProphaseI). 
+proof(4017, 2008) :- cycIsa('HYP-ProphaseI-260028', ProphaseI). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

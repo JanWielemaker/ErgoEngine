@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ:  : $CPTTest-MPFActivityDropOfInMPhaseDoesDropOffInMPhase-01 (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -46,15 +47,15 @@ forwardSentence(relationExistsAll(properSubEvents, ?SUPERTYPE, ?SUBTYPE)) :- rem
 // Explicit Background Facts
 
 // Explicit Background Rules
-backwardSentence(relationExistsInstance(?PRED, ?COL_1, ?OBJ)) :- mtVisible(BaseKB), naf backchainForbidden(relationExistsInstance), relationExistsAll(?PRED, ?COL_1, ?COL_2), isa(?OBJ, ?COL_2).
-backwardSentence(not(isa(?OBJ, ?COL_2))) :- mtVisible(BaseKB), naf backchainForbidden(isa), relationExistsAll(?PRED, ?COL_1, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
-backwardSentence(not(relationExistsAll(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), naf backchainForbidden(relationExistsAll), isa(?OBJ, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
+backwardSentence(relationExistsInstance(?PRED, ?COL_1, ?OBJ)) :- mtVisible(BaseKB), \naf backchainForbidden(relationExistsInstance), relationExistsAll(?PRED, ?COL_1, ?COL_2), cycIsa(?OBJ, ?COL_2).
+backwardSentence(not(cycIsa(?OBJ, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationExistsAll(?PRED, ?COL_1, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
+backwardSentence(not(relationExistsAll(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationExistsAll), cycIsa(?OBJ, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261976', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261976', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261976', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-MPFActivityDroppingInMPhase-261977', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261976', MtTimeDimFn(Now)), isa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-MPFActivityDroppingInMPhase-261977', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261976', MtTimeDimFn(Now)), cycIsa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase)).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261976')).
@@ -64,9 +65,9 @@ queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261976')).
 // Debugging
 proof(11634, 0) :- relationExistsAll(properSubEvents, MitoticPhaseOfCellCycle, MPFActivityDroppingInMPhase).
 proof(11634, 1) :- relationExistsAll(properSubEvents, MitoticPhaseOfCellCycle, MPFActivityDroppingInMPhase).
-proof(11634, 2) :- isa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase).
-proof(11634, 3) :- isa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase).
-proof(11634, 4) :- isa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase), relationExistsAll(properSubEvents, MitoticPhaseOfCellCycle, MPFActivityDroppingInMPhase).
+proof(11634, 2) :- cycIsa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase).
+proof(11634, 3) :- cycIsa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase).
+proof(11634, 4) :- cycIsa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase), relationExistsAll(properSubEvents, MitoticPhaseOfCellCycle, MPFActivityDroppingInMPhase).
 proof(11634, 5) :- relationExistsInstance(properSubEvents, MitoticPhaseOfCellCycle, 'HYP-MPFActivityDroppingInMPhase-261977').
 
 proof(11634, 1000) :- genlMt(MicrobiologyMt, MicrobiologyVocabularyMt).
@@ -86,16 +87,16 @@ proof(11634, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalC
 proof(11634, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261976'), BaseKB).
 proof(11634, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261976'), BiochemistryMt).
 proof(11634, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261976'), MtSpace('Hypothesis-HypotheticalContext-261976', MtTimeDimFn(Now))).
-proof(11634, 2008) :- isa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase). 
+proof(11634, 2008) :- cycIsa('HYP-MPFActivityDroppingInMPhase-261977', MPFActivityDroppingInMPhase). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

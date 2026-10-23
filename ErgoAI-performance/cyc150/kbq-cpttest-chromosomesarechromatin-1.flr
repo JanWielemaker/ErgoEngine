@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -23,25 +24,25 @@
 
 // Implicit Background Facts
 istAsserted(UniversalVocabularyMt, genls(TangibleStuffCompositionType, ExistingStuffType)).
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, disjointWith(SpatiallyDisjointObjectType, ExistingStuffType)).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, ReasoningToCausesFromObservationsMt)).
 istAsserted(UniversalVocabularyMt, genls(CellularSubStructureTypeByFunction, SpatiallyDisjointObjectType)).
-istAsserted(UniversalVocabularyMt, isa(Centriole, CellularSubStructureTypeByFunction)).
+istAsserted(UniversalVocabularyMt, cycIsa(Centriole, CellularSubStructureTypeByFunction)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 //REMOVED TITLE('KBQ  : $CPTTest-ChromosomesAreChromatin 1').
-%pretest :- (neg relationAllExists(physicalDecompositions, EukaryoticChromosome, Centriole) or neg relationAllExists(physicalDecompositions, Centriole, DNAStuff) or neg relationAllExists(physicalDecompositions, Centriole, ProteinStuff) or neg isa(Centriole, TangibleStuffCompositionType)), %write_results('SUCCESS  : $CPTTest-ChromosomesAreChromatin 1').
+%pretest :- (\neg relationAllExists(physicalDecompositions, EukaryoticChromosome, Centriole) ; \neg relationAllExists(physicalDecompositions, Centriole, DNAStuff) ; \neg relationAllExists(physicalDecompositions, Centriole, ProteinStuff) ; \neg cycIsa(Centriole, TangibleStuffCompositionType)), %write_results('SUCCESS  : $CPTTest-ChromosomesAreChromatin 1').
 
 // Debugging
-proof(2134, 0) :- not(isa(Centriole, TangibleStuffCompositionType)).
+proof(2134, 0) :- not(cycIsa(Centriole, TangibleStuffCompositionType)).
 
 proof(2134, 1000) :- genlMt(ReasoningToCausesFromObservationsMt, BaseKB).
 
@@ -53,14 +54,14 @@ proof(2134, 2004) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now
 proof(2134, 2005) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), BaseKB).
 proof(2134, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

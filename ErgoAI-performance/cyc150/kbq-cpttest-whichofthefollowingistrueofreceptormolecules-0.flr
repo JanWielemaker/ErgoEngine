@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,10 +23,10 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example:_Biology_Chapter_11_Online_Quiz.2C_Question_9
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genls(CytoplasmicReceptorMolecule, ReceptorMolecule)).
@@ -37,28 +38,28 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 istAsserted(MolecularBiologyMt, relationAllExists('in-ContCompletely', CytoplasmicReceptorMolecule, Cytoplasm)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261706', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261706', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261706', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-261707', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-261707', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-261707', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261706', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-261707', Situation)).
-istAsserted(UniversalVocabularyMt, isa('HYP-BinaryRolePredicate-261708', BinaryRolePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-BinaryRolePredicate-261708', BinaryRolePredicate)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261706', MtTimeDimFn(Now)), typePrimaryFunction(ReceptorMolecule, 'HYP-FirstOrderCollection-261707', 'HYP-BinaryRolePredicate-261708')).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261710', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261710', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261710', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-261711', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-261711', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-261711', Thing)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261710', MtTimeDimFn(Now)), relationAllExists(actors, 'HYP-Collection-261711', ProteinKinaseMolecule)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261714', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261714', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261714', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-261715', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-261715', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-261715', Thing)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-261714', MtTimeDimFn(Now)), relationAllExists(actors, 'HYP-Collection-261715', IonChannel)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 //REMOVED TITLE('KBQ  : $CPTTest-WhichOfTheFollowingIsTrueOfReceptorMolecules 0').
-%pretest :- (relationAllExists('in-Lodged', ?_MOL_TYPE, CellMembrane), genls(?_MOL_TYPE, ReceptorMolecule) or relationAllExists('in-ContCompletely', ?_MOL_TYPE, Cytoplasm), genls(?_MOL_TYPE, ReceptorMolecule)), %write_results('SUCCESS  : $CPTTest-WhichOfTheFollowingIsTrueOfReceptorMolecules 0').
+%pretest :- (relationAllExists('in-Lodged', ?_MOL_TYPE, CellMembrane), genls(?_MOL_TYPE, ReceptorMolecule) ; relationAllExists('in-ContCompletely', ?_MOL_TYPE, Cytoplasm), genls(?_MOL_TYPE, ReceptorMolecule)), %write_results('SUCCESS  : $CPTTest-WhichOfTheFollowingIsTrueOfReceptorMolecules 0').
 
 // Debugging
 proof(10558, 0) :- relationAllExists('in-ContCompletely', CytoplasmicReceptorMolecule, Cytoplasm).
@@ -81,14 +82,14 @@ proof(10558, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(No
 proof(10558, 2007) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now)), MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
 proof(10558, 2008) :- genls(CytoplasmicReceptorMolecule, ReceptorMolecule). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

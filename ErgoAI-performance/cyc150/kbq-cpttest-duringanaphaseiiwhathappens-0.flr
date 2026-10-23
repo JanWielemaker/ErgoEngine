@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,18 +23,18 @@
 // http://silk.bbn.com/index.php/Categorized_Candidate_Questions_for_Halo_Bio_Question_Answering : Example_Biology_Chapter_13_online_quiz.2C_Question_28
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlPreds, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlPreds, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
-istAsserted(UniversalVocabularyMt, isa(subEventTypes, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(subEventTypes, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, transitiveViaArg(subEventTypes, genls, 2)).
 istAsserted(UniversalVocabularyMt, genlPreds(relationAllExistsUnique, relationAllExists)).
-istAsserted(UniversalVocabularyMt, isa(predicateIntersection, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(predicateIntersection, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(properSubEventTypes, subEventTypes)).
@@ -66,7 +67,7 @@ forwardSentence(properSubEventTypes(?SIT, ?SUB_SIT)) :- removalSentence(iterativ
 forwardSentence(lastProperSubEventTypes(?SUB_SIT, ?SUB_SUB_SIT)) :- removalSentence(iterativeSubEventTypesTotality(?XSIT, ?SUB_SUB_SIT, ?SUB_SIT)).
 forwardSentence(relationAllExistsCount(properSubEvents, ?SUPER, ?SUB, 1)) :- removalSentence(iterativeSubEventTypesTotality(?SUPER, ?XSUB_SUB, ?SUB)).
 forwardSentence(relationAllExistsCount(properSubEvents, ?EVENT_TYPE, ?SUB_TYPE, 1)) :- removalSentence(uniqueProperSubEventTypes(?EVENT_TYPE, ?SUB_TYPE)).
-forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
+forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- \naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
 forwardSentence(uniqueProperSubEventTypes(?SUPER, ?SUB)) :- removalSentence(iterativeSubEventTypesTotality(?SUPER, ?XSUB_SUB, ?SUB)).
 
 // Query
@@ -108,17 +109,17 @@ proof(9250, 2006) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeWithGranu
 proof(9250, 2007) :- genlMt(MtSpace(CytologicalProcessesQueryMt, MtTimeWithGranularityDimFn(Now, TimePoint)), MtSpace(CytologicalProcessesQueryMt, MtTimeWithGranularityDimFn(Now, TimePoint))).
 proof(9250, 2008) :- genlPreds(relationAllExistsUnique, relationAllExists).
 proof(9250, 2009) :- genlPreds(uniqueProperSubEventTypes, properSubEventTypes).
-proof(9250, 2010) :- isa(predicateIntersection, PartiallyCommutativePredicate).
+proof(9250, 2010) :- cycIsa(predicateIntersection, PartiallyCommutativePredicate).
 proof(9250, 2011) :- subEventTypes(AnaphaseII, SisterChromatidsCutByEnzymeAndChromosomesMoveToPole). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

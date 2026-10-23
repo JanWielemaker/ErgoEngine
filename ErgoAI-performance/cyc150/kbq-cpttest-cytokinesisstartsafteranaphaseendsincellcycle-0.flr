@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -22,27 +23,27 @@
 
 // Implicit Background Facts
 istAsserted(UniversalVocabularyMt, genls(EquivalenceRelation, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(equals, EquivalenceRelation)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(equals, EquivalenceRelation)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(immediatelyAfterInSituationType, startsAfterEndOfInSituationType)).
 istAsserted(UniversalVocabularyMt, commutativeInArgs(endTogetherInSituationType, 2, 3)).
-istAsserted(UniversalVocabularyMt, isa(predicateIntersection, PartiallyCommutativePredicate)).
-istAsserted(UniversalVocabularyMt, isa(endTogetherInSituationType, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(predicateIntersection, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(endTogetherInSituationType, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyVocabularyMt, MicrobiologicalChemistryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyVocabularyMt, BiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(ProprietaryMtFn(BiologyMt), BiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BiologyVocabularyMt, ProprietaryMtFn(BiologyMt))).
-istAsserted(UniversalVocabularyMt, isa(Telophase, MitosisSubprocessType)).
+istAsserted(UniversalVocabularyMt, cycIsa(Telophase, MitosisSubprocessType)).
 istAsserted(BiologyMt, immediatelyAfterInSituationType(Mitosis, Telophase, Anaphase)).
 istAsserted(BiologyMt, uniqueFirstProperSubEventTypes(MitoticPhaseOfCellCycle, Mitosis)).
 istAsserted(BiologyMt, superEventTypes(Mitosis, MitoticPhaseOfCellCycle)).
 istAsserted(BiologyMt, superEventTypes(MitoticPhaseOfCellCycle, EukaryoticCellCycle)).
-istAsserted(UniversalVocabularyMt, isa(superEventTypes, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(superEventTypes, TransitiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, predicateIntersection(uniqueFirstProperSubEventTypes, firstProperSubEventTypes, uniqueProperSubEventTypes)).
 istAsserted(BiologyMt, uniqueProperSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle)).
 istAsserted(BiologyMt, startsDuringInSituationType(MitoticPhaseOfCellCycle, Cytokinesis, Telophase)).
@@ -62,8 +63,8 @@ istAsserted(BiologyMt, 'coveringOfEventType-Nonoverlapping'(Anaphase, [AnaphaseA
 // Implicit Background Rules
 forwardSentence(genlPreds(?PRED, ?GENLPRED1)) :- removalSentence(predicateIntersection(?PRED, ?XGENLPRED2, ?GENLPRED1)).
 forwardSentence(genlPreds(?PRED, ?GENLPRED1)) :- removalSentence(predicateIntersection(?PRED, ?GENLPRED1, ?XGENLPRED2)).
-forwardSentence(superEventTypes(?PHASE, Mitosis)) :- removalSentence(isa(?PHASE, MitosisSubprocessType)).
-forwardSentence(superEventTypes(?COLL, Mitosis)) :- removalSentence(isa(?COLL, MitosisSubprocessType)).
+forwardSentence(superEventTypes(?PHASE, Mitosis)) :- removalSentence(cycIsa(?PHASE, MitosisSubprocessType)).
+forwardSentence(superEventTypes(?COLL, Mitosis)) :- removalSentence(cycIsa(?COLL, MitosisSubprocessType)).
 forwardSentence(startsAfterEndOfInSituationType(?SIT_TYPE, ?SUBSIT_TYPE3, ?SUBSIT_TYPE2)) :- removalSentence(startsDuringInSituationType(?SIT_TYPE, ?SUBSIT_TYPE3, ?SUBSIT_TYPE1)), removalSentence(startsAfterEndOfInSituationType(?SIT_TYPE, ?SUBSIT_TYPE1, ?SUBSIT_TYPE2)).
 forwardSentence(startsAfterEndOfInSituationType(?SUPER_TYPE, ?LATER_TYPE, ?EARLIER_TYPE)) :- removalSentence(equals(?DIFF, 1)), removalSentence('coveringOfEventType-Nonoverlapping'(?SUPER_TYPE, ?LIST)), removalSentence(memberOfList(?LATER_TYPE, ?LIST)), removalSentence(evaluate(?POSITIONOFITEMINLISTFN_1, PositionOfItemInListFn(?LATER_TYPE, ?LIST))), removalSentence(memberOfList(?EARLIER_TYPE, ?LIST)), removalSentence(evaluate(?POSITIONOFITEMINLISTFN, PositionOfItemInListFn(?EARLIER_TYPE, ?LIST))), removalSentence(evaluate(?DIFF, DifferenceFn(?POSITIONOFITEMINLISTFN_1, ?POSITIONOFITEMINLISTFN))).
 forwardSentence(uniqueProperSubEventTypes(?SUPER_TYPE, ?SUB_TYPE)) :- removalSentence(coveringOfEventType(?SUPER_TYPE, ?LIST)), removalSentence(memberOfList(?SUB_TYPE, ?LIST)).
@@ -130,9 +131,9 @@ proof(2928, 2011) :- genlPreds(immediatelyAfterInSituationType, startsAfterEndOf
 proof(2928, 2012) :- genlPreds('coveringOfEventType-Nonoverlapping', coveringOfEventType).
 proof(2928, 2013) :- genlPreds(mostGeneralCoveringOfEventType, coveringOfEventType).
 proof(2928, 2014) :- genlPreds(uniqueFirstProperSubEventTypes, uniqueProperSubEventTypes).
-proof(2928, 2015) :- isa(predicateIntersection, PartiallyCommutativePredicate).
-proof(2928, 2016) :- isa(endTogetherInSituationType, PartiallyCommutativePredicate).
-proof(2928, 2017) :- isa(Telophase, MitosisSubprocessType).
+proof(2928, 2015) :- cycIsa(predicateIntersection, PartiallyCommutativePredicate).
+proof(2928, 2016) :- cycIsa(endTogetherInSituationType, PartiallyCommutativePredicate).
+proof(2928, 2017) :- cycIsa(Telophase, MitosisSubprocessType).
 proof(2928, 2018) :- memberOfList(Anaphase, [Prophase, Prometaphase, Metaphase, Anaphase, Telophase]).
 proof(2928, 2019) :- memberOfList(Telophase, [Prophase, Prometaphase, Metaphase, Anaphase, Telophase]).
 proof(2928, 2020) :- memberOfList(Mitosis, [G1Phase, SPhase, G2Phase, Mitosis, Cytokinesis]).
@@ -146,14 +147,14 @@ proof(2928, 2027) :- superEventTypes(Telophase, Mitosis).
 proof(2928, 2028) :- superEventTypes(Mitosis, MitoticPhaseOfCellCycle).
 proof(2928, 2029) :- superEventTypes(Mitosis, EukaryoticCellCycle). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

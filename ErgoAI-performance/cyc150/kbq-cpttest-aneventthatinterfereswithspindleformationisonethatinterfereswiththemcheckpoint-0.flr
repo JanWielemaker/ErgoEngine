@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ:  : $CPTTest-AnEventThatInterferesWithSpindleFormationIsOneThatInterferesWithTheMCheckpoint (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -42,15 +43,15 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 istAsserted(BiologyMt, 'preconditionFor-SitTypeSitType'(MitoticSpindleAssembly, MCheckpoint)).
 
 // Explicit Background Rules
-backwardSentence('inhibits-SitSitType'(?INHIBITION, ?COND)) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden('inhibits-SitSitType'), 'inhibits-SitSitType'(?INHIBITION, ?INHIBITED), 'preconditionFor-SitTypeSitType'(?INHIBITED, ?COND).
-backwardSentence(not('inhibits-SitSitType'(?INHIBITION, ?INHIBITED))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden('inhibits-SitSitType'), 'preconditionFor-SitTypeSitType'(?INHIBITED, ?COND), not('inhibits-SitSitType'(?INHIBITION, ?COND)).
-backwardSentence(not('preconditionFor-SitTypeSitType'(?INHIBITED, ?COND))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden('preconditionFor-SitTypeSitType'), 'inhibits-SitSitType'(?INHIBITION, ?INHIBITED), not('inhibits-SitSitType'(?INHIBITION, ?COND)).
+backwardSentence('inhibits-SitSitType'(?INHIBITION, ?COND)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('inhibits-SitSitType'), 'inhibits-SitSitType'(?INHIBITION, ?INHIBITED), 'preconditionFor-SitTypeSitType'(?INHIBITED, ?COND).
+backwardSentence(not('inhibits-SitSitType'(?INHIBITION, ?INHIBITED))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('inhibits-SitSitType'), 'preconditionFor-SitTypeSitType'(?INHIBITED, ?COND), not('inhibits-SitSitType'(?INHIBITION, ?COND)).
+backwardSentence(not('preconditionFor-SitTypeSitType'(?INHIBITED, ?COND))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('preconditionFor-SitTypeSitType'), 'inhibits-SitSitType'(?INHIBITION, ?INHIBITED), not('inhibits-SitSitType'(?INHIBITION, ?COND)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259468', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259468', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259468', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Situation-259469', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-259468', MtTimeDimFn(Now)), isa('HYP-Situation-259469', Situation)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Situation-259469', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-259468', MtTimeDimFn(Now)), cycIsa('HYP-Situation-259469', Situation)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259468', MtTimeDimFn(Now)), 'inhibits-SitSitType'('HYP-Situation-259469', SpindleApparatusAssembly)).
 
 // Query
@@ -84,14 +85,14 @@ proof(1540, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(1540, 2007) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259468'), MtSpace('Hypothesis-HypotheticalContext-259468', MtTimeDimFn(Now))).
 proof(1540, 2008) :- 'preconditionFor-SitTypeSitType'(SpindleApparatusAssembly, MCheckpoint). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

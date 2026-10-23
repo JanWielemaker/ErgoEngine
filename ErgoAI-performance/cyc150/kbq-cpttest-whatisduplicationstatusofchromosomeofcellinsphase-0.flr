@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,34 +22,34 @@
 // KBQ:  : $CPTTest-WhatIsDuplicationStatusOfChromosomeOfCellInSPhase (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
-istAsserted(UniversalVocabularyMt, isa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel)).
+istAsserted(UniversalVocabularyMt, cycIsa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel)).
 istAsserted(UniversalVocabularyMt, genlMt(ReasoningToCausesFromObservationsMt, BaseKB)).
 istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, ReasoningToCausesFromObservationsMt)).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259674', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259674', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259674', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-CellTypeByCellLifeStageFnSPhase-259675', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now)), isa('HYP-CellTypeByCellLifeStageFnSPhase-259675', CellTypeByCellLifeStageFn(SPhase))).
-istAsserted(UniversalVocabularyMt, isa('HYP-PartiallyDuplicatedChromosome-259676', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now)), isa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now)), isa('HYP-PartiallyDuplicatedChromosome-259676', OrganicMaterial)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-CellTypeByCellLifeStageFnSPhase-259675', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now)), cycIsa('HYP-CellTypeByCellLifeStageFnSPhase-259675', CellTypeByCellLifeStageFn(SPhase))).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-PartiallyDuplicatedChromosome-259676', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now)), cycIsa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now)), cycIsa('HYP-PartiallyDuplicatedChromosome-259676', OrganicMaterial)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now)), chromosomes('HYP-CellTypeByCellLifeStageFnSPhase-259675', 'HYP-PartiallyDuplicatedChromosome-259676')).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259674')).
 //REMOVED TITLE('KBQ  : $CPTTest-WhatIsDuplicationStatusOfChromosomeOfCellInSPhase 0').
-%pretest :- isa(?WHAT, ChromosomeTypeByDuplicationLevel), isa('HYP-PartiallyDuplicatedChromosome-259676', ?WHAT), %write_results('SUCCESS  : $CPTTest-WhatIsDuplicationStatusOfChromosomeOfCellInSPhase 0').
+%pretest :- cycIsa(?WHAT, ChromosomeTypeByDuplicationLevel), cycIsa('HYP-PartiallyDuplicatedChromosome-259676', ?WHAT), %write_results('SUCCESS  : $CPTTest-WhatIsDuplicationStatusOfChromosomeOfCellInSPhase 0').
 
 // Debugging
-proof(2468, 0) :- isa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel), isa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome).
-proof(2468, 1) :- isa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome), isa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel).
+proof(2468, 0) :- cycIsa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel), cycIsa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome).
+proof(2468, 1) :- cycIsa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome), cycIsa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel).
 
 proof(2468, 1000) :- genlMt(ReasoningToCausesFromObservationsMt, BaseKB).
 
@@ -59,17 +60,17 @@ proof(2468, 2003) :- admittedArgument(SecondFn(48, MinuteFn(8, HourFn(18, DayFn(
 proof(2468, 2004) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259674'), UniversalVocabularyMt).
 proof(2468, 2005) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259674'), BaseKB).
 proof(2468, 2006) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-259674'), MtSpace('Hypothesis-HypotheticalContext-259674', MtTimeDimFn(Now))).
-proof(2468, 2007) :- isa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome).
-proof(2468, 2008) :- isa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel). 
+proof(2468, 2007) :- cycIsa('HYP-PartiallyDuplicatedChromosome-259676', PartiallyDuplicatedChromosome).
+proof(2468, 2008) :- cycIsa(PartiallyDuplicatedChromosome, ChromosomeTypeByDuplicationLevel). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

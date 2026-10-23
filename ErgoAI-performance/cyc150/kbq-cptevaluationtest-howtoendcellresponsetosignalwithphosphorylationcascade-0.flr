@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- optimize{class_expressions, main} .
+// ?- optimize{class_expressions, main} . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,11 +22,11 @@
 // KBQ:  : $CPTEvaluationTest-HowToEndCellResponseToSignalWithPhosphorylationCascade (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlPreds, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlPreds, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
@@ -48,29 +49,29 @@ istAsserted(UniversalVocabularyMt, genlPreds('facilitates-SitTypeSitType', situa
 istAsserted(UniversalVocabularyMt, genlPreds('fosters-SitTypeSitType', 'facilitates-SitTypeSitType')).
 
 // Implicit Background Rules
-forwardSentence(?PRED(?ARG, ?TOU)) :- naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
-forwardSentence(?PRED(?ARG, ?TOU)) :- naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(?PRED(?ARG, ?TOU)) :- \naf impPred(?PRED), removalSentence(functionCorrespondingPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
+forwardSentence(?PRED(?ARG, ?TOU)) :- \naf impPred(?PRED), removalSentence(functionCorrespondsToPredicate(?FUNC, ?PRED, 2)), removalSentence(termOfUnit(?TOU, ?FUNC(?ARG))).
 
 // Explicit Background Facts
 
 // Explicit Background Rules
-backwardSentence('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)) :- mtVisible(MolecularBiologyMt), naf backchainForbidden('fosters-SitTypeSitType'), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE).
-backwardSentence(not(subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(subEventTypes), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)).
-backwardSentence(not(transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(transductionPathTypeOfSignalProcessType), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule).
-backwardSentence(not(characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(characteristicResponseOfSignalProcessType), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)).
-backwardSentence(not('ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden('ending-Pred'), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule).
+backwardSentence('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden('fosters-SitTypeSitType'), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE).
+backwardSentence(not(subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(subEventTypes), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)).
+backwardSentence(not(transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(transductionPathTypeOfSignalProcessType), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule).
+backwardSentence(not(characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(characteristicResponseOfSignalProcessType), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule), 'ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)).
+backwardSentence(not('ending-Pred'(?BIO_PROC_TYPE, ?END_TYPE))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden('ending-Pred'), transductionPathTypeOfSignalProcessType(?SCRIPT_TYPE, ?TRANS_TYPE), not('fosters-SitTypeSitType'(DephosphorylatingAProteinMolecule, ?END_TYPE)), characteristicResponseOfSignalProcessType(?SCRIPT_TYPE, ?BIO_PROC_TYPE), subEventTypes(?TRANS_TYPE, PhosphorylatingAProteinMolecule).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-260572', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260572', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-260572', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-260573', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-260573', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-260573', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260572', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-260573', CellularCommunication)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-260574', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-260574', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-260574', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260572', MtTimeDimFn(Now)), genls('HYP-Collection-260574', 'CellSignalingProcess-LocalizedToSingleCell-WithPathway')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260572', MtTimeDimFn(Now)), genls('HYP-Collection-260574', PhosphorylationCascade)).
-istAsserted(UniversalVocabularyMt, isa('HYP-FirstOrderCollection-260575', FirstOrderCollection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-FirstOrderCollection-260575', FirstOrderCollection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-FirstOrderCollection-260575', Individual)).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260572', MtTimeDimFn(Now)), genls('HYP-FirstOrderCollection-260575', 'BiologicalProcess-CellularLevel')).
 istAsserted(MtSpace('Hypothesis-HypotheticalContext-260572', MtTimeDimFn(Now)), transductionPathTypeOfSignalProcessType('HYP-FirstOrderCollection-260573', 'HYP-Collection-260574')).
@@ -121,14 +122,14 @@ proof(6066, 2010) :- genlPreds('functionCorrespondingPredicate-Canonical', funct
 proof(6066, 2011) :- genlPreds('functionCorrespondingPredicate-Canonical', functionCorrespondingPredicate).
 proof(6066, 2012) :- subEventTypes('HYP-Collection-260574', PhosphorylatingAProteinMolecule). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

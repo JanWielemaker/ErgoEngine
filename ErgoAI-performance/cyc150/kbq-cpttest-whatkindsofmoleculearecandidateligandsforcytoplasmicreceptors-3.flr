@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,11 +22,11 @@
 // KBQ:  : $CPTTest-WhatKindsOfMoleculeAreCandidateLigandsForCytoplasmicReceptors (query 3)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genls, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genls(CellMembrane, LipidBilayer)).
 istAsserted(UniversalVocabularyMt, negationPreds(behaviorCapable, behaviorIncapable)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
@@ -43,81 +44,81 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 
 // Implicit Background Rules
 forwardSentence(genls(?PENETRATION_TYPE, ?GEN_PENETRATION_TYPE)) :- removalSentence(penetrationsOfMembraneTypeByChemObjectType(?OBJ_TYPE, ?MEMBRANE_TYPE, ?PENETRATION_TYPE)), removalSentence(penetrationsOfMembraneTypeByChemObjectType(?OBJ_TYPE, ?GEN_MEMBRANE_TYPE, ?GEN_PENETRATION_TYPE)), removalSentence(different(?GEN_MEMBRANE_TYPE, ?MEMBRANE_TYPE)), removalSentence(genls(?MEMBRANE_TYPE, ?GEN_MEMBRANE_TYPE)).
-forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
+forwardSentence(?PRED(?ARG1, ?ARG2, ?NART)) :- \naf impPred(?PRED), removalSentence('functionCorrespondingPredicate-Canonical'(?FUNC, ?PRED, 3)), removalSentence(termOfUnit(?NART, ?FUNC(?ARG1, ?ARG2))).
 
 // Explicit Background Facts
 istAsserted(MolecularBiologyMt, relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject)).
 
 // Explicit Background Rules
-backwardSentence(behaviorIncapable(?OBJ, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(behaviorIncapable), isa(?OBJ, HydrophilicChemicalObject).
-backwardSentence(not(isa(?OBJ, HydrophilicChemicalObject))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(isa), not(behaviorIncapable(?OBJ, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
-backwardSentence(behaviorCapable(?LIGAND, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(behaviorCapable), behaviorCapable(?LIGAND, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment).
-backwardSentence(not(behaviorCapable(?LIGAND, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(behaviorCapable), not(behaviorCapable(?LIGAND, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
-backwardSentence(behaviorCapable(?MOL, ?BINDING_TO_RECEPTOR_TYPE, objectOfAttachment)) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(behaviorCapable), candidateReceptorTypeForLigand(?RECEPTOR_TYPE, ?MOL), typesBondedInBindingEventType(ChemicalObject, ?RECEPTOR_TYPE, ?BINDING_TO_RECEPTOR_TYPE).
-backwardSentence(not(candidateReceptorTypeForLigand(?RECEPTOR_TYPE, ?MOL))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(candidateReceptorTypeForLigand), typesBondedInBindingEventType(ChemicalObject, ?RECEPTOR_TYPE, ?BINDING_TO_RECEPTOR_TYPE), not(behaviorCapable(?MOL, ?BINDING_TO_RECEPTOR_TYPE, objectOfAttachment)).
-backwardSentence(not(typesBondedInBindingEventType(ChemicalObject, ?RECEPTOR_TYPE, ?BINDING_TO_RECEPTOR_TYPE))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(typesBondedInBindingEventType), candidateReceptorTypeForLigand(?RECEPTOR_TYPE, ?MOL), not(behaviorCapable(?MOL, ?BINDING_TO_RECEPTOR_TYPE, objectOfAttachment)).
-backwardSentence(behaviorCapable(?AGT, ?ACT_TYPE, ?ROLE)) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(behaviorCapable), behaviorCapable(?AGT, ?SPEC_ACT_TYPE, ?ROLE), genls(?SPEC_ACT_TYPE, ?ACT_TYPE).
-backwardSentence(not(genls(?SPEC_ACT_TYPE, ?ACT_TYPE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(genls), behaviorCapable(?AGT, ?SPEC_ACT_TYPE, ?ROLE), not(behaviorCapable(?AGT, ?ACT_TYPE, ?ROLE)).
-backwardSentence(not(behaviorCapable(?AGT, ?SPEC_ACT_TYPE, ?ROLE))) :- mtVisible(UniversalVocabularyMt), naf backchainForbidden(behaviorCapable), genls(?SPEC_ACT_TYPE, ?ACT_TYPE), not(behaviorCapable(?AGT, ?ACT_TYPE, ?ROLE)).
-backwardSentence(not(relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(relationInstanceOnly), candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ), isa(?OBJ, ?TYPE), disjointWith(HydrophobicChemicalObject, ?TYPE).
-backwardSentence(not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(candidateReceptorTypeForLigand), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject), disjointWith(HydrophobicChemicalObject, ?TYPE), isa(?OBJ, ?TYPE).
-backwardSentence(not(isa(?OBJ, ?TYPE))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(isa), candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject), disjointWith(HydrophobicChemicalObject, ?TYPE).
-backwardSentence(not(disjointWith(HydrophobicChemicalObject, ?TYPE))) :- mtVisible(MolecularBiologyMt), naf backchainForbidden(disjointWith), candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject), isa(?OBJ, ?TYPE).
+backwardSentence(behaviorIncapable(?OBJ, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(behaviorIncapable), cycIsa(?OBJ, HydrophilicChemicalObject).
+backwardSentence(not(cycIsa(?OBJ, HydrophilicChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(isa), not(behaviorIncapable(?OBJ, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
+backwardSentence(behaviorCapable(?LIGAND, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(behaviorCapable), behaviorCapable(?LIGAND, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment).
+backwardSentence(not(behaviorCapable(?LIGAND, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(behaviorCapable), not(behaviorCapable(?LIGAND, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
+backwardSentence(behaviorCapable(?MOL, ?BINDING_TO_RECEPTOR_TYPE, objectOfAttachment)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(behaviorCapable), candidateReceptorTypeForLigand(?RECEPTOR_TYPE, ?MOL), typesBondedInBindingEventType(ChemicalObject, ?RECEPTOR_TYPE, ?BINDING_TO_RECEPTOR_TYPE).
+backwardSentence(not(candidateReceptorTypeForLigand(?RECEPTOR_TYPE, ?MOL))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(candidateReceptorTypeForLigand), typesBondedInBindingEventType(ChemicalObject, ?RECEPTOR_TYPE, ?BINDING_TO_RECEPTOR_TYPE), not(behaviorCapable(?MOL, ?BINDING_TO_RECEPTOR_TYPE, objectOfAttachment)).
+backwardSentence(not(typesBondedInBindingEventType(ChemicalObject, ?RECEPTOR_TYPE, ?BINDING_TO_RECEPTOR_TYPE))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(typesBondedInBindingEventType), candidateReceptorTypeForLigand(?RECEPTOR_TYPE, ?MOL), not(behaviorCapable(?MOL, ?BINDING_TO_RECEPTOR_TYPE, objectOfAttachment)).
+backwardSentence(behaviorCapable(?AGT, ?ACT_TYPE, ?ROLE)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(behaviorCapable), behaviorCapable(?AGT, ?SPEC_ACT_TYPE, ?ROLE), genls(?SPEC_ACT_TYPE, ?ACT_TYPE).
+backwardSentence(not(genls(?SPEC_ACT_TYPE, ?ACT_TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(genls), behaviorCapable(?AGT, ?SPEC_ACT_TYPE, ?ROLE), not(behaviorCapable(?AGT, ?ACT_TYPE, ?ROLE)).
+backwardSentence(not(behaviorCapable(?AGT, ?SPEC_ACT_TYPE, ?ROLE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(behaviorCapable), genls(?SPEC_ACT_TYPE, ?ACT_TYPE), not(behaviorCapable(?AGT, ?ACT_TYPE, ?ROLE)).
+backwardSentence(not(relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(relationInstanceOnly), candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ), cycIsa(?OBJ, ?TYPE), disjointWith(HydrophobicChemicalObject, ?TYPE).
+backwardSentence(not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(candidateReceptorTypeForLigand), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject), disjointWith(HydrophobicChemicalObject, ?TYPE), cycIsa(?OBJ, ?TYPE).
+backwardSentence(not(cycIsa(?OBJ, ?TYPE))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(isa), candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject), disjointWith(HydrophobicChemicalObject, ?TYPE).
+backwardSentence(not(disjointWith(HydrophobicChemicalObject, ?TYPE))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(disjointWith), candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, ?OBJ), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject), cycIsa(?OBJ, ?TYPE).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261110', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261110', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261110', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-EpinephrineMolecule-261111', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261110', MtTimeDimFn(Now)), isa('HYP-EpinephrineMolecule-261111', EpinephrineMolecule)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261113', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-EpinephrineMolecule-261111', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261110', MtTimeDimFn(Now)), cycIsa('HYP-EpinephrineMolecule-261111', EpinephrineMolecule)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261113', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261113', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-TestosteroneMolecule-261114', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261113', MtTimeDimFn(Now)), isa('HYP-TestosteroneMolecule-261114', TestosteroneMolecule)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261116', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-TestosteroneMolecule-261114', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261113', MtTimeDimFn(Now)), cycIsa('HYP-TestosteroneMolecule-261114', TestosteroneMolecule)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261116', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261116', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-PhospholipaseCMolecule-261117', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261116', MtTimeDimFn(Now)), isa('HYP-PhospholipaseCMolecule-261117', PhospholipaseCMolecule)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261119', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-PhospholipaseCMolecule-261117', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261116', MtTimeDimFn(Now)), cycIsa('HYP-PhospholipaseCMolecule-261117', PhospholipaseCMolecule)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261119', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261119', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-NorepinephrineMolecule-261120', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261119', MtTimeDimFn(Now)), isa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261122', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-NorepinephrineMolecule-261120', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261119', MtTimeDimFn(Now)), cycIsa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261122', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261122', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-DopamineMolecule-261123', Individual)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261122', MtTimeDimFn(Now)), isa('HYP-DopamineMolecule-261123', DopamineMolecule)).
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-261130', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-DopamineMolecule-261123', Individual)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261122', MtTimeDimFn(Now)), cycIsa('HYP-DopamineMolecule-261123', DopamineMolecule)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261130', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-261130', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Thing-261131', Thing)).
-istAsserted(UniversalVocabularyMt, isa('HYP-Collection-261132', Collection)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Thing-261131', Thing)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Collection-261132', Collection)).
 istAsserted(UniversalVocabularyMt, genls('HYP-Collection-261132', Thing)).
-istAsserted(MtSpace('Hypothesis-HypotheticalContext-261130', MtTimeDimFn(Now)), isa('HYP-Thing-261131', 'HYP-Collection-261132')).
-istAsserted(UniversalVocabularyMt, isa('Proof-HypotheticalContext-261133', HypotheticalContext)).
+istAsserted(MtSpace('Hypothesis-HypotheticalContext-261130', MtTimeDimFn(Now)), cycIsa('HYP-Thing-261131', 'HYP-Collection-261132')).
+istAsserted(UniversalVocabularyMt, cycIsa('Proof-HypotheticalContext-261133', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Proof-HypotheticalContext-261133', 'Hypothesis-HypotheticalContext-261130')).
-istAsserted(UniversalVocabularyMt, isa('HYP-Thing-261131', Individual)).
-istAsserted(MtSpace('Proof-HypotheticalContext-261133', MtTimeDimFn(Now)), isa('HYP-Thing-261131', ExtracellularSignalingChemicalObject)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-Thing-261131', Individual)).
+istAsserted(MtSpace('Proof-HypotheticalContext-261133', MtTimeDimFn(Now)), cycIsa('HYP-Thing-261131', ExtracellularSignalingChemicalObject)).
 
 // Query
 queryMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalContext-261119')).
 //REMOVED TITLE('KBQ  : $CPTTest-WhatKindsOfMoleculeAreCandidateLigandsForCytoplasmicReceptors 3').
-%pretest :- neg candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120'), %write_results('SUCCESS  : $CPTTest-WhatKindsOfMoleculeAreCandidateLigandsForCytoplasmicReceptors 3').
+%pretest :- \neg candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120'), %write_results('SUCCESS  : $CPTTest-WhatKindsOfMoleculeAreCandidateLigandsForCytoplasmicReceptors 3').
 
 // Debugging
 proof(8253, 0) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)).
 proof(8253, 1) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)).
 proof(8253, 2) :- relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject).
-proof(8253, 3) :- isa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule).
-proof(8253, 4) :- isa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule).
+proof(8253, 3) :- cycIsa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule).
+proof(8253, 4) :- cycIsa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule).
 proof(8253, 5) :- disjointWith(HydrophobicChemicalObject, NorepinephrineMolecule).
 proof(8253, 6) :- disjointWith(HydrophobicChemicalObject, NorepinephrineMolecule).
-proof(8253, 7) :- isa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule), disjointWith(HydrophobicChemicalObject, NorepinephrineMolecule).
-proof(8253, 8) :- isa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule), disjointWith(HydrophobicChemicalObject, NorepinephrineMolecule), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject).
+proof(8253, 7) :- cycIsa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule), disjointWith(HydrophobicChemicalObject, NorepinephrineMolecule).
+proof(8253, 8) :- cycIsa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule), disjointWith(HydrophobicChemicalObject, NorepinephrineMolecule), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject).
 proof(8253, 9) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 10) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
-proof(8253, 11) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
+proof(8253, 10) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
+proof(8253, 11) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
 proof(8253, 12) :- disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject).
 proof(8253, 13) :- disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject).
-proof(8253, 14) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject).
-proof(8253, 15) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject).
+proof(8253, 14) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject).
+proof(8253, 15) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject).
 proof(8253, 16) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 17) :- genls(ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)).
 proof(8253, 18) :- genls(ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)).
@@ -180,7 +181,7 @@ proof(8253, 74) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecul
 proof(8253, 75) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 76) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 77) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 78) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 78) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 79) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 80) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 81) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -209,7 +210,7 @@ proof(8253, 103) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 104) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 105) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 106) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 107) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 107) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 108) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 109) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 110) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -294,7 +295,7 @@ proof(8253, 188) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 189) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 190) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 191) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 192) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 192) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 193) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 194) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 195) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -323,7 +324,7 @@ proof(8253, 217) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 218) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 219) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 220) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 221) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 221) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 222) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 223) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 224) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -353,7 +354,7 @@ proof(8253, 247) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 248) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 249) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 250) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
-proof(8253, 251) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 251) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 252) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 253) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 254) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -439,7 +440,7 @@ proof(8253, 333) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 334) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 335) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 336) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 337) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 337) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 338) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 339) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 340) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -468,7 +469,7 @@ proof(8253, 362) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 363) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 364) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 365) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 366) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 366) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 367) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 368) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 369) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -497,8 +498,8 @@ proof(8253, 391) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 392) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 393) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 394) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 395) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
-proof(8253, 396) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 395) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 396) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 397) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 398) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 399) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -555,9 +556,9 @@ proof(8253, 449) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 450) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 451) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 452) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 453) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
-proof(8253, 454) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
-proof(8253, 455) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 453) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
+proof(8253, 454) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
+proof(8253, 455) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 456) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy)).
 proof(8253, 457) :- not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
 proof(8253, 458) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), doneBy)).
@@ -727,9 +728,9 @@ proof(8253, 621) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecu
 proof(8253, 622) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 proof(8253, 623) :- typesBondedInBindingEventType(ChemicalObject, CytoplasmicReceptorMolecule, ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)), not(behaviorCapable('HYP-NorepinephrineMolecule-261120', ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), objectOfAttachment)).
 proof(8253, 624) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
-proof(8253, 625) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
-proof(8253, 626) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject).
-proof(8253, 627) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject).
+proof(8253, 625) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
+proof(8253, 626) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject).
+proof(8253, 627) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject), disjointWith(HydrophobicChemicalObject, HydrophilicChemicalObject), relationInstanceOnly(candidateReceptorTypeForLigand, CytoplasmicReceptorMolecule, HydrophobicChemicalObject).
 proof(8253, 628) :- not(candidateReceptorTypeForLigand(CytoplasmicReceptorMolecule, 'HYP-NorepinephrineMolecule-261120')).
 
 proof(8253, 2000) :- genlMt(ReasoningToCausesFromObservationsMt, BaseKB).
@@ -754,19 +755,19 @@ proof(8253, 3012) :- genlMt(MtSpace(MtTimeDimFn(Now), 'Hypothesis-HypotheticalCo
 proof(8253, 3013) :- genls(CellMembrane, LipidBilayer).
 proof(8253, 3014) :- genls(ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, CellMembrane), ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer)).
 proof(8253, 3015) :- genls(ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule), ChemicalBindingEventTypeWithTypesFn(ChemicalObject, CytoplasmicReceptorMolecule)).
-proof(8253, 3016) :- isa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule).
-proof(8253, 3017) :- isa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
+proof(8253, 3016) :- cycIsa('HYP-NorepinephrineMolecule-261120', NorepinephrineMolecule).
+proof(8253, 3017) :- cycIsa('HYP-NorepinephrineMolecule-261120', HydrophilicChemicalObject).
 proof(8253, 3018) :- negationPreds(behaviorIncapable, behaviorCapable).
 proof(8253, 3019) :- different(LipidBilayer, CellMembrane). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

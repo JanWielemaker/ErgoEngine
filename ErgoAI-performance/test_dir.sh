@@ -30,7 +30,8 @@ exclude_list="error_nonvar.flr error_nonvar2.flr error_nonvar3.flr \
               silk-predicates.flr silk-predicates_at_builtin.flr \
               core-pragmatics.flr core-rules.flr latest-tiny-kb.flr rmt-removal-lookup-pos-1.flr "
 
-flora_command="_nochatter. %test. _end."
+# run after loading; test_one_file.sh times it as the SOLVE phase
+flora_command="%test."
 
 # Test if element is a member of exclude list
 # $1 - element
@@ -64,6 +65,6 @@ for file in $file_list ; do
     fi
     prog=`basename $file .flr`
     touch $file
-    $basedir/test_one_file.sh $FLORADIR/runflora $prog "$flora_command"
+    $basedir/test_one_file.sh $FLORADIR/runergo $prog "$flora_command"
 done
 

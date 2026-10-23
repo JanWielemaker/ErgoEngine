@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,13 +22,13 @@
 // KBQ:  : $CPTTest-MitosisPreservesChromosomeNumber (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(genls, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genls, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologyMt, MicrobiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
-istAsserted(UniversalVocabularyMt, isa(predicateIntersection, PartiallyCommutativePredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(predicateIntersection, PartiallyCommutativePredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(CycAgencyTheoryMt, UniversalVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(BaseKB, CycAgencyTheoryMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyVocabularyMt, MicrobiologicalChemistryMt)).
@@ -57,27 +58,27 @@ forwardSentence(relationAllExistsCount(properSubEvents, ?EVENT_TYPE, ?SUB_TYPE, 
 // Explicit Background Facts
 
 // Explicit Background Rules
-backwardSentence(ratioOfTo(?N, ?M, 1)) :- mtVisible(BiologyMt), naf backchainForbidden(ratioOfTo), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), isa(?DIV, ?DIV_TYPE).
-backwardSentence(not(genls(?CYCLE_TYPE, CellCycle))) :- mtVisible(BiologyMt), naf backchainForbidden(genls), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?DIV_TYPE, CellDivision), isa(?DIV, ?DIV_TYPE), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE).
-backwardSentence(not(properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE))) :- mtVisible(BiologyMt), naf backchainForbidden(properSubEventTypes), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), genls(?DIV_TYPE, CellDivision), isa(?DIV, ?DIV_TYPE).
-backwardSentence(not(genls(?DIV_TYPE, CellDivision))) :- mtVisible(BiologyMt), naf backchainForbidden(genls), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), isa(?DIV, ?DIV_TYPE).
-backwardSentence(not(isa(?DIV, ?DIV_TYPE))) :- mtVisible(BiologyMt), naf backchainForbidden(isa), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision).
-backwardSentence(not(daughterCells(?DIV, ?OUTPUT))) :- mtVisible(BiologyMt), naf backchainForbidden(daughterCells), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), isa(?DIV, ?DIV_TYPE).
-backwardSentence(not(cellHasNumberOfChromosomes(?OUTPUT, ?M))) :- mtVisible(BiologyMt), naf backchainForbidden(cellHasNumberOfChromosomes), daughterCells(?DIV, ?OUTPUT), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), isa(?DIV, ?DIV_TYPE).
-backwardSentence(not(parentCell(?DIV, ?INPUT))) :- mtVisible(BiologyMt), naf backchainForbidden(parentCell), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), isa(?DIV, ?DIV_TYPE).
-backwardSentence(not(cellHasNumberOfChromosomes(?INPUT, ?N))) :- mtVisible(BiologyMt), naf backchainForbidden(cellHasNumberOfChromosomes), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), isa(?DIV, ?DIV_TYPE).
+backwardSentence(ratioOfTo(?N, ?M, 1)) :- mtVisible(BiologyMt), \naf backchainForbidden(ratioOfTo), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), cycIsa(?DIV, ?DIV_TYPE).
+backwardSentence(not(genls(?CYCLE_TYPE, CellCycle))) :- mtVisible(BiologyMt), \naf backchainForbidden(genls), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?DIV_TYPE, CellDivision), cycIsa(?DIV, ?DIV_TYPE), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE).
+backwardSentence(not(properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE))) :- mtVisible(BiologyMt), \naf backchainForbidden(properSubEventTypes), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), genls(?DIV_TYPE, CellDivision), cycIsa(?DIV, ?DIV_TYPE).
+backwardSentence(not(genls(?DIV_TYPE, CellDivision))) :- mtVisible(BiologyMt), \naf backchainForbidden(genls), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), cycIsa(?DIV, ?DIV_TYPE).
+backwardSentence(not(cycIsa(?DIV, ?DIV_TYPE))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision).
+backwardSentence(not(daughterCells(?DIV, ?OUTPUT))) :- mtVisible(BiologyMt), \naf backchainForbidden(daughterCells), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), cycIsa(?DIV, ?DIV_TYPE).
+backwardSentence(not(cellHasNumberOfChromosomes(?OUTPUT, ?M))) :- mtVisible(BiologyMt), \naf backchainForbidden(cellHasNumberOfChromosomes), daughterCells(?DIV, ?OUTPUT), parentCell(?DIV, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), cycIsa(?DIV, ?DIV_TYPE).
+backwardSentence(not(parentCell(?DIV, ?INPUT))) :- mtVisible(BiologyMt), \naf backchainForbidden(parentCell), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), cellHasNumberOfChromosomes(?INPUT, ?N), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), cycIsa(?DIV, ?DIV_TYPE).
+backwardSentence(not(cellHasNumberOfChromosomes(?INPUT, ?N))) :- mtVisible(BiologyMt), \naf backchainForbidden(cellHasNumberOfChromosomes), daughterCells(?DIV, ?OUTPUT), cellHasNumberOfChromosomes(?OUTPUT, ?M), parentCell(?DIV, ?INPUT), not(ratioOfTo(?N, ?M, 1)), genls(?CYCLE_TYPE, CellCycle), properSubEventTypes(?CYCLE_TYPE, ?DIV_TYPE), genls(?DIV_TYPE, CellDivision), cycIsa(?DIV, ?DIV_TYPE).
 
 // Hypothesized Premises
-istAsserted(UniversalVocabularyMt, isa('Hypothesis-HypotheticalContext-259691', HypotheticalContext)).
+istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259691', HypotheticalContext)).
 istAsserted(UniversalVocabularyMt, genlMt('Hypothesis-HypotheticalContext-259691', CytologicalProcessesQueryMt)).
-istAsserted(UniversalVocabularyMt, isa('HYP-MitoticPhaseOfCellCycle-259692', Individual)).
-istAsserted('Hypothesis-HypotheticalContext-259691', isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)).
-istAsserted(UniversalVocabularyMt, isa('HYP-EukaryoticCell-259693', Individual)).
-istAsserted('Hypothesis-HypotheticalContext-259691', isa('HYP-EukaryoticCell-259693', EukaryoticCell)).
-istAsserted(UniversalVocabularyMt, isa('HYP-PositiveInteger-259694', PositiveInteger)).
-istAsserted(UniversalVocabularyMt, isa('HYP-EukaryoticCell-259695', Individual)).
-istAsserted('Hypothesis-HypotheticalContext-259691', isa('HYP-EukaryoticCell-259695', EukaryoticCell)).
-istAsserted(UniversalVocabularyMt, isa('HYP-PositiveInteger-259696', PositiveInteger)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-MitoticPhaseOfCellCycle-259692', Individual)).
+istAsserted('Hypothesis-HypotheticalContext-259691', cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-EukaryoticCell-259693', Individual)).
+istAsserted('Hypothesis-HypotheticalContext-259691', cycIsa('HYP-EukaryoticCell-259693', EukaryoticCell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-PositiveInteger-259694', PositiveInteger)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-EukaryoticCell-259695', Individual)).
+istAsserted('Hypothesis-HypotheticalContext-259691', cycIsa('HYP-EukaryoticCell-259695', EukaryoticCell)).
+istAsserted(UniversalVocabularyMt, cycIsa('HYP-PositiveInteger-259696', PositiveInteger)).
 istAsserted('Hypothesis-HypotheticalContext-259691', daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693')).
 istAsserted('Hypothesis-HypotheticalContext-259691', cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694')).
 istAsserted('Hypothesis-HypotheticalContext-259691', parentCell('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259695')).
@@ -97,21 +98,21 @@ proof(2568, 4) :- daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-Eukar
 proof(2568, 5) :- cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694').
 proof(2568, 6) :- cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694').
 proof(2568, 7) :- cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694'), daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693').
-proof(2568, 8) :- assertedSentence(isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)).
-proof(2568, 9) :- assertedSentence(isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)).
-proof(2568, 10) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle).
+proof(2568, 8) :- assertedSentence(cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)).
+proof(2568, 9) :- assertedSentence(cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)).
+proof(2568, 10) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle).
 proof(2568, 11) :- genls(MitoticPhaseOfCellCycle, CellDivision).
 proof(2568, 12) :- properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
 proof(2568, 13) :- properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
 proof(2568, 14) :- genls(EukaryoticCellCycle, CellCycle).
 proof(2568, 15) :- genls(EukaryoticCellCycle, CellCycle).
 proof(2568, 16) :- genls(EukaryoticCellCycle, CellCycle), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
-proof(2568, 17) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
-proof(2568, 18) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
-proof(2568, 19) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
-proof(2568, 20) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259695', 'HYP-PositiveInteger-259696'), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694'), daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693'), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
-proof(2568, 21) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694'), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259695', 'HYP-PositiveInteger-259696'), daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693'), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
-proof(2568, 22) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694'), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259695', 'HYP-PositiveInteger-259696'), parentCell('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259695'), daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693'), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
+proof(2568, 17) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
+proof(2568, 18) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
+proof(2568, 19) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
+proof(2568, 20) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259695', 'HYP-PositiveInteger-259696'), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694'), daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693'), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
+proof(2568, 21) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694'), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259695', 'HYP-PositiveInteger-259696'), daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693'), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
+proof(2568, 22) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle), genls(MitoticPhaseOfCellCycle, CellDivision), genls(EukaryoticCellCycle, CellCycle), assertedSentence(cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle)), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259693', 'HYP-PositiveInteger-259694'), cellHasNumberOfChromosomes('HYP-EukaryoticCell-259695', 'HYP-PositiveInteger-259696'), parentCell('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259695'), daughterCells('HYP-MitoticPhaseOfCellCycle-259692', 'HYP-EukaryoticCell-259693'), properSubEventTypes(EukaryoticCellCycle, MitoticPhaseOfCellCycle).
 proof(2568, 23) :- ratioOfTo('HYP-PositiveInteger-259696', 'HYP-PositiveInteger-259694', 1).
 
 proof(2568, 1000) :- genlMt(MicrobiologyMt, MicrobiologyVocabularyMt).
@@ -136,17 +137,17 @@ proof(2568, 2005) :- genlMt('Hypothesis-HypotheticalContext-259691', BiologyMt).
 proof(2568, 2006) :- genlPreds(uniqueProperSubEventTypes, properSubEventTypes).
 proof(2568, 2007) :- genls(MitoticPhaseOfCellCycle, CellDivision).
 proof(2568, 2008) :- genls(EukaryoticCellCycle, CellCycle).
-proof(2568, 2009) :- isa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle).
-proof(2568, 2010) :- isa(predicateIntersection, PartiallyCommutativePredicate). 
+proof(2568, 2009) :- cycIsa('HYP-MitoticPhaseOfCellCycle-259692', MitoticPhaseOfCellCycle).
+proof(2568, 2010) :- cycIsa(predicateIntersection, PartiallyCommutativePredicate). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 

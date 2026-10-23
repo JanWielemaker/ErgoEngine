@@ -1,11 +1,12 @@
+:- iriprefix{silk = "http://vulcan.com/2008/silk#"}.
 :- use_argumentation_theory{ogcle} .
 ?- [ogclpe>>ogcle] .
-:- setsemantics{tabling(incremental)}.
-?-Method[%mustDefine(on)]@\sys.
+// :- setsemantics{tabling(incremental)}. (rejected by ErgoAI 3.01)
+?-Method[mustDefine(on)]@\sys.
 
 \overrides(?X,?Y) :- silk#overrides(?X,?Y) .
 \overrides(?X,?Y,?Z,?W) :- silk#overrides(?X,?Y,?Z,?W) .
-?- \optimize(class_expressions, main) .
+// ?- \optimize(class_expressions, main) . (not an ErgoAI 3.01 optimizer option)
 
 
 ?- [+'../aux_files/silk-predicates'],
@@ -21,10 +22,10 @@
 // KBQ: ( : $OpenSubqueryKBCTestFn  : $CPTTest-WhichOfTheFollowingIsInCentrosome) (query 0)
 
 // Implicit Background Facts
-istAsserted(UniversalVocabularyMt, isa(temporallySubsumes, ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, TransitiveBinaryPredicate)).
-istAsserted(UniversalVocabularyMt, isa(genlMt, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(temporallySubsumes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('temporallySubsumes-TypeType', ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, TransitiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(genlMt, ReflexiveBinaryPredicate)).
 istAsserted(UniversalVocabularyMt, genlMt(MicrobiologicalChemistryMt, MicrobiologyMt)).
 istAsserted(UniversalVocabularyMt, genlMt(MolecularBiologyMt, MolecularBiologyVocabularyMt)).
 istAsserted(UniversalVocabularyMt, genlPreds(relationAllExistsCount, relationAllExistsMin)).
@@ -42,12 +43,12 @@ istAsserted(UniversalVocabularyMt, arg2Isa(properPhysicalParts, PartiallyTangibl
 istAsserted(MicrobiologyMt, relationAllExistsCount(properPhysicalParts, Centrosome, Centriole, 2)).
 
 // Explicit Background Rules
-backwardSentence(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExists), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), greaterThan(?NUM, 0).
-backwardSentence(not(greaterThan(?NUM, 0))) :- mtVisible(BaseKB), naf backchainForbidden(greaterThan), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)).
-backwardSentence(not(relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExistsMin), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)), greaterThan(?NUM, 0).
-backwardSentence(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExistsAndOnly), relationAllExists(?PRED, ?TYPE_1, ?TYPE_2), arg2Isa(?PRED, ?COL).
-backwardSentence(not(arg2Isa(?PRED, ?COL))) :- mtVisible(BaseKB), naf backchainForbidden(arg2Isa), relationAllExists(?PRED, ?TYPE_1, ?TYPE_2), not(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
-backwardSentence(not(relationAllExists(?PRED, ?TYPE_1, ?TYPE_2))) :- mtVisible(BaseKB), naf backchainForbidden(relationAllExists), arg2Isa(?PRED, ?COL), not(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
+backwardSentence(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), greaterThan(?NUM, 0).
+backwardSentence(not(greaterThan(?NUM, 0))) :- mtVisible(BaseKB), \naf backchainForbidden(greaterThan), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)).
+backwardSentence(not(relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsMin), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)), greaterThan(?NUM, 0).
+backwardSentence(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsAndOnly), relationAllExists(?PRED, ?TYPE_1, ?TYPE_2), arg2Isa(?PRED, ?COL).
+backwardSentence(not(arg2Isa(?PRED, ?COL))) :- mtVisible(BaseKB), \naf backchainForbidden(arg2Isa), relationAllExists(?PRED, ?TYPE_1, ?TYPE_2), not(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
+backwardSentence(not(relationAllExists(?PRED, ?TYPE_1, ?TYPE_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), arg2Isa(?PRED, ?COL), not(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).
@@ -89,14 +90,14 @@ proof(2124, 2009) :- genlPreds(relationAllExistsCount, relationAllExistsMin).
 proof(2124, 2010) :- genlPreds(relationAllExistsAndOnly, relationAllExists).
 proof(2124, 2011) :- genls(Centrosome, MicrotubuleOrganizingCenter). 
 checkingGround(?R) :- ground(?R).
-%write_results(?R) :- %writeln(?R)@\io.
+%write_results(?R) :- writeln(?R)@\io.
 
 %pretest :- true.
 
 %test :- tell(temp)@\plg(), 
-	Method[%mustDefine(on)]@\sys,
+	Method[mustDefine(on)]@\sys,
 	%pretest,
-	Method[%mustDefine(off)]@\sys,
+	Method[mustDefine(off)]@\sys,
 	%pretest,
 	told@\plg().
 
