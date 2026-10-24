@@ -55,8 +55,8 @@ istAsserted(BiologyMt, 'causes-SubSitTypeSubSitType'('GlycogenBreakdown-Cellular
 
 // Explicit Background Rules
 backwardSentence('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED), 'causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT).
-backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT), not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
-backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED), not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT), \neg ('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?PROCESS, ?INTERMED, ?EFFECT))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), 'causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?INTERMED), \neg ('causes-SubSitTypeSubSitType'(?PROCESS, ?CAUSE, ?EFFECT)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260480', HypotheticalContext)).

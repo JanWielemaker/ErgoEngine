@@ -56,8 +56,8 @@ istAsserted(BiologyMt, relationAllExists(eventOccursAt, SecondMeioticCellDivisio
 
 // Explicit Background Rules
 backwardSentence(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE), superEventTypes(?SUB_TYPE, ?SUPER_TYPE).
-backwardSentence(not(superEventTypes(?SUB_TYPE, ?SUPER_TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(superEventTypes), relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE), not(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
-backwardSentence(not(relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), superEventTypes(?SUB_TYPE, ?SUPER_TYPE), not(relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
+backwardSentence(not(superEventTypes(?SUB_TYPE, ?SUPER_TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(superEventTypes), relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE), \neg (relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
+backwardSentence(not(relationAllExists(eventOccursAt, ?SUPER_TYPE, ?TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationAllExists), superEventTypes(?SUB_TYPE, ?SUPER_TYPE), \neg (relationAllExists(eventOccursAt, ?SUB_TYPE, ?TYPE)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259649', HypotheticalContext)).

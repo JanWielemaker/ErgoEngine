@@ -17850,3 +17850,17 @@ istAsserted(UniversalVocabularyMt, notAssertibleMt(InferencePSC)) .
 "urn:uuid:0e48decc-58cd-4d6e-92c9-3364689be913"^^\iri[silk#strict] .
 istAsserted(UniversalVocabularyMt, notAssertibleMt(LogicalTruthMt)) .
 
+
+// Added for the cyc150 cases (ErgoEngine branch ergo301-performance).  The
+// cases' Cyc proofs use these as supports, but the tiny KB lacks them:
+// - negationPreds/negationInverse('partwiseDisjoint-TypeType',
+//   properSubEventTypes) follows from the cases' own
+//   negationPreds('partwiseDisjoint-TypeType', 'shareParts-TypeType') once
+//   properSubEventTypes specializes the symmetric 'shareParts-TypeType';
+// - superEventTypes(X, X) is used, i.e. superEventTypes is reflexive.
+// - other cases state 'partwiseDisjoint-TypeType' symmetric as background;
+//   meiosisandfertilizationdontalternateinwhichcycle-0 needs it too.
+istAsserted(UniversalVocabularyMt, genlPreds(properSubEventTypes, 'shareParts-TypeType')).
+istAsserted(UniversalVocabularyMt, cycIsa('shareParts-TypeType', SymmetricBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa(superEventTypes, ReflexiveBinaryPredicate)).
+istAsserted(UniversalVocabularyMt, cycIsa('partwiseDisjoint-TypeType', SymmetricBinaryPredicate)).

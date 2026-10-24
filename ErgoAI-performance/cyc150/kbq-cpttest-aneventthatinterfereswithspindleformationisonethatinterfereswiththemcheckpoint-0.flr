@@ -44,8 +44,8 @@ istAsserted(BiologyMt, 'preconditionFor-SitTypeSitType'(MitoticSpindleAssembly, 
 
 // Explicit Background Rules
 backwardSentence('inhibits-SitSitType'(?INHIBITION, ?COND)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('inhibits-SitSitType'), 'inhibits-SitSitType'(?INHIBITION, ?INHIBITED), 'preconditionFor-SitTypeSitType'(?INHIBITED, ?COND).
-backwardSentence(not('inhibits-SitSitType'(?INHIBITION, ?INHIBITED))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('inhibits-SitSitType'), 'preconditionFor-SitTypeSitType'(?INHIBITED, ?COND), not('inhibits-SitSitType'(?INHIBITION, ?COND)).
-backwardSentence(not('preconditionFor-SitTypeSitType'(?INHIBITED, ?COND))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('preconditionFor-SitTypeSitType'), 'inhibits-SitSitType'(?INHIBITION, ?INHIBITED), not('inhibits-SitSitType'(?INHIBITION, ?COND)).
+backwardSentence(not('inhibits-SitSitType'(?INHIBITION, ?INHIBITED))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('inhibits-SitSitType'), 'preconditionFor-SitTypeSitType'(?INHIBITED, ?COND), \neg ('inhibits-SitSitType'(?INHIBITION, ?COND)).
+backwardSentence(not('preconditionFor-SitTypeSitType'(?INHIBITED, ?COND))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden('preconditionFor-SitTypeSitType'), 'inhibits-SitSitType'(?INHIBITION, ?INHIBITED), \neg ('inhibits-SitSitType'(?INHIBITION, ?COND)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259468', HypotheticalContext)).

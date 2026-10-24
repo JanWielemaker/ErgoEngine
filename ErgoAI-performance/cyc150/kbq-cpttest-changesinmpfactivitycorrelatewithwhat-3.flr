@@ -55,8 +55,8 @@ istAsserted(MolecularBiologyMt, 'causes-SubSitTypeSubSitType-Unique'(EukaryoticC
 
 // Explicit Background Rules
 backwardSentence('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z).
-backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z), not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
-backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y), not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
+backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z), \neg ('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
+backwardSentence(not('causes-SubSitTypeSubSitType-Unique'(?SIT, ?Y, ?Z))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType-Unique'), 'causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Y), \neg ('causes-SubSitTypeSubSitType-Unique'(?SIT, ?X, ?Z)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).

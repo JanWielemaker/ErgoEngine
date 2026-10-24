@@ -38,7 +38,7 @@ istAsserted(UniversalVocabularyMt, genls(NGFMolecule, HydrophilicChemicalObject)
 
 // Explicit Background Rules
 backwardSentence(genls(?MOL, HydrophobicChemicalObject)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(genls), ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule).
-backwardSentence(not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(ligandForReceptorType), not(genls(?MOL, HydrophobicChemicalObject)).
+backwardSentence(not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(ligandForReceptorType), \neg (genls(?MOL, HydrophobicChemicalObject)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).

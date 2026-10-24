@@ -42,7 +42,7 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 
 // Explicit Background Rules
 backwardSentence(relationInstanceExistsCount(outputsCreated, ?G, 'Gamete-Mature', 1)) :- mtVisible(BiologyMt), \naf backchainForbidden(relationInstanceExistsCount), cycIsa(?G, Oogenesis).
-backwardSentence(not(cycIsa(?G, Oogenesis))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), not(relationInstanceExistsCount(outputsCreated, ?G, 'Gamete-Mature', 1)).
+backwardSentence(not(cycIsa(?G, Oogenesis))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), \neg (relationInstanceExistsCount(outputsCreated, ?G, 'Gamete-Mature', 1)).
 backwardSentence(not(relationInstanceExistsCount(?PRED, ?THING, ?COL, ?M))) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationInstanceExistsCount(?PRED, ?THING, ?COL, ?N), different(?M, ?N).
 backwardSentence(not(relationInstanceExistsCount(?PRED, ?THING, ?COL, ?N))) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationInstanceExistsCount(?PRED, ?THING, ?COL, ?M), different(?M, ?N).
 

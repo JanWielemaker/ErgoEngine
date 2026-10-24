@@ -89,6 +89,10 @@ impPred(imp#disjointWithLink) .
 @{"urn:uuid:27f5c1fe-d5fc-401e-87df-e888792fa1bb"^^\iri} sbhlSentence(cycIsa(?OBJ, ?GENL)) :- %silkb#isGround(?OBJ)@builtin , imp#directIsa(?OBJ, ?SPEC) , sbhlSentence(genls(?SPEC, ?GENL)) .
 @{"urn:uuid:7a5a84e8-da90-4194-bf19-75e4d4716a6f"^^\iri} sbhlSentence(cycIsa(?OBJ, ?GENL)) :- %silkb#isGround(?GENL)@builtin , \+ %silkb#isGround(?OBJ)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) , imp#directIsa(?OBJ, ?SPEC) .
 @{"urn:uuid:5e1190b7-ea04-411d-9cac-7bd5cb61746a"^^\iri} sbhlSentence(not(cycIsa(?TERM, ?COL))) :- %silkb#isGround(?TERM)@builtin , %silkb#isGround(?COL)@builtin , \naf sbhlSentence(cycIsa(?TERM, ?COL)) , imp#directIsa(?TERM, ?NEAR) , sbhlSentence(disjointWith(?NEAR, ?COL)) .
+// Added (ergo301-performance): a negative genls from disjointness, the
+// genls twin of the rule above and Cyc's SBHL behaviour.  ?GENL itself may
+// be the disjoint collection, so no reflexive genls (Collection) is needed.
+@{"urn:uuid:ergo301-performance-not-genls"^^\iri} sbhlSentence(not(genls(?SPEC, ?GENL))) :- %silkb#isGround(?SPEC)@builtin , %silkb#isGround(?GENL)@builtin , \naf sbhlSentence(genls(?SPEC, ?GENL)) , sbhlSentence(genls(?SPEC, ?A)) , imp#disjointWithLink(?A, ?B) , (?B = ?GENL ; sbhlSentence(genls(?GENL, ?B))) .
 @{"urn:uuid:5e494de1-7a7e-4244-8791-52abe73bc8e8"^^\iri} sbhlSentence(genls(?SPEC, ?GENL)) :- imp#directGenls(?SPEC, ?GENL) .
 @{"urn:uuid:c1233ba4-60e7-423c-b2b8-d5feaece6ccc"^^\iri} sbhlSentence(genls(?COL, ?COL)) :- sbhlSentence(cycIsa(?COL, Collection)) .
 @{"urn:uuid:d0fcf228-3425-4504-9ca5-5494157b5801"^^\iri} sbhlSentence(genls(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , imp#directGenls(?LOW, ?MID) , sbhlSentence(genls(?MID, ?HIGH)) .

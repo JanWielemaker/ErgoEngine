@@ -55,14 +55,14 @@ forwardSentence(properPhysicalPartTypeCount(?BIG, ?SMALL, 1)) :- removalSentence
 
 // Explicit Background Rules
 backwardSentence(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), cycIsa(?INSTANCE, ?TYPE1).
-backwardSentence(not(cycIsa(?INSTANCE, ?TYPE1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
-backwardSentence(not(relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), cycIsa(?INSTANCE, ?TYPE1), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
+backwardSentence(not(cycIsa(?INSTANCE, ?TYPE1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), \neg (relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
+backwardSentence(not(relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), cycIsa(?INSTANCE, ?TYPE1), \neg (relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
 forwardSentence(relationInstanceExistsCount(properPhysicalParts, ?CELL, EukaryoticChromosome, ?N)) :- removalSentence(cellHasNumberOfChromosomes(?CELL, ?N)).
 backwardSentence(cellHasNumberOfChromosomes(?OUTPUT, ?N)) :- mtVisible(BiologyMt), \naf backchainForbidden(cellHasNumberOfChromosomes), daughterCells(?CC, ?OUTPUT), parentCell(?CC, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), cycIsa(?CC, CellCycle).
-backwardSentence(not(cycIsa(?CC, CellCycle))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), daughterCells(?CC, ?OUTPUT), parentCell(?CC, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), not(cellHasNumberOfChromosomes(?OUTPUT, ?N)).
-backwardSentence(not(daughterCells(?CC, ?OUTPUT))) :- mtVisible(BiologyMt), \naf backchainForbidden(daughterCells), parentCell(?CC, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), cycIsa(?CC, CellCycle), not(cellHasNumberOfChromosomes(?OUTPUT, ?N)).
-backwardSentence(not(parentCell(?CC, ?INPUT))) :- mtVisible(BiologyMt), \naf backchainForbidden(parentCell), daughterCells(?CC, ?OUTPUT), cellHasNumberOfChromosomes(?INPUT, ?N), cycIsa(?CC, CellCycle), not(cellHasNumberOfChromosomes(?OUTPUT, ?N)).
-backwardSentence(not(cellHasNumberOfChromosomes(?INPUT, ?N))) :- mtVisible(BiologyMt), \naf backchainForbidden(cellHasNumberOfChromosomes), daughterCells(?CC, ?OUTPUT), parentCell(?CC, ?INPUT), cycIsa(?CC, CellCycle), not(cellHasNumberOfChromosomes(?OUTPUT, ?N)).
+backwardSentence(not(cycIsa(?CC, CellCycle))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), daughterCells(?CC, ?OUTPUT), parentCell(?CC, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), \neg (cellHasNumberOfChromosomes(?OUTPUT, ?N)).
+backwardSentence(not(daughterCells(?CC, ?OUTPUT))) :- mtVisible(BiologyMt), \naf backchainForbidden(daughterCells), parentCell(?CC, ?INPUT), cellHasNumberOfChromosomes(?INPUT, ?N), cycIsa(?CC, CellCycle), \neg (cellHasNumberOfChromosomes(?OUTPUT, ?N)).
+backwardSentence(not(parentCell(?CC, ?INPUT))) :- mtVisible(BiologyMt), \naf backchainForbidden(parentCell), daughterCells(?CC, ?OUTPUT), cellHasNumberOfChromosomes(?INPUT, ?N), cycIsa(?CC, CellCycle), \neg (cellHasNumberOfChromosomes(?OUTPUT, ?N)).
+backwardSentence(not(cellHasNumberOfChromosomes(?INPUT, ?N))) :- mtVisible(BiologyMt), \naf backchainForbidden(cellHasNumberOfChromosomes), daughterCells(?CC, ?OUTPUT), parentCell(?CC, ?INPUT), cycIsa(?CC, CellCycle), \neg (cellHasNumberOfChromosomes(?OUTPUT, ?N)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259985', HypotheticalContext)).

@@ -42,7 +42,7 @@ istAsserted(MicrobiologyMt, 'causes-SubSitTypeSubSitType'(MeiosisI, HomologousCh
 
 // Explicit Background Rules
 backwardSentence(properSubEventTypes(?SIT, ?Y)) :- mtVisible(BaseKB), \naf backchainForbidden(properSubEventTypes), 'causes-SubSitTypeSubSitType'(?SIT, ?XX, ?Y).
-backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT, ?XX, ?Y))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), not(properSubEventTypes(?SIT, ?Y)).
+backwardSentence(not('causes-SubSitTypeSubSitType'(?SIT, ?XX, ?Y))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), \neg (properSubEventTypes(?SIT, ?Y)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).

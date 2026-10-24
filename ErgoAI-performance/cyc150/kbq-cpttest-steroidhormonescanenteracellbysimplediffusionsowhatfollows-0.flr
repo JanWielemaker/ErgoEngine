@@ -39,10 +39,10 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 
 // Explicit Background Rules
 backwardSentence(typeBehaviorIncapable(?SIGNALING_MOLECULE, ChemicalBindingEventTypeWithTypesFn(ExtracellularSignalingChemicalObject, MembraneReceptorMolecule), objectActedOn)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(typeBehaviorIncapable), TypeCapableFn(behaviorCapable)(?SIGNALING_MOLECULE, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy).
-backwardSentence(not(TypeCapableFn(behaviorCapable)(?SIGNALING_MOLECULE, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(TypeCapableFn(behaviorCapable)), not(typeBehaviorIncapable(?SIGNALING_MOLECULE, ChemicalBindingEventTypeWithTypesFn(ExtracellularSignalingChemicalObject, MembraneReceptorMolecule), objectActedOn)).
+backwardSentence(not(TypeCapableFn(behaviorCapable)(?SIGNALING_MOLECULE, ChemicalObjectOfTypePenetratesMembraneOfTypeFn(ChemicalObject, LipidBilayer), doneBy))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(TypeCapableFn(behaviorCapable)), \neg (typeBehaviorIncapable(?SIGNALING_MOLECULE, ChemicalBindingEventTypeWithTypesFn(ExtracellularSignalingChemicalObject, MembraneReceptorMolecule), objectActedOn)).
 backwardSentence(typeBehaviorIncapable(?COLL_1, ?COLL_2, ?SPECPRED)) :- mtVisible(BaseKB), \naf backchainForbidden(typeBehaviorIncapable), typeBehaviorIncapable(?COLL_1, ?COLL_2, ?PRED), genlPreds(?SPECPRED, ?PRED).
-backwardSentence(not(genlPreds(?SPECPRED, ?PRED))) :- mtVisible(BaseKB), \naf backchainForbidden(genlPreds), typeBehaviorIncapable(?COLL_1, ?COLL_2, ?PRED), not(typeBehaviorIncapable(?COLL_1, ?COLL_2, ?SPECPRED)).
-backwardSentence(not(typeBehaviorIncapable(?COLL_1, ?COLL_2, ?PRED))) :- mtVisible(BaseKB), \naf backchainForbidden(typeBehaviorIncapable), genlPreds(?SPECPRED, ?PRED), not(typeBehaviorIncapable(?COLL_1, ?COLL_2, ?SPECPRED)).
+backwardSentence(not(genlPreds(?SPECPRED, ?PRED))) :- mtVisible(BaseKB), \naf backchainForbidden(genlPreds), typeBehaviorIncapable(?COLL_1, ?COLL_2, ?PRED), \neg (typeBehaviorIncapable(?COLL_1, ?COLL_2, ?SPECPRED)).
+backwardSentence(not(typeBehaviorIncapable(?COLL_1, ?COLL_2, ?PRED))) :- mtVisible(BaseKB), \naf backchainForbidden(typeBehaviorIncapable), genlPreds(?SPECPRED, ?PRED), \neg (typeBehaviorIncapable(?COLL_1, ?COLL_2, ?SPECPRED)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260193', HypotheticalContext)).

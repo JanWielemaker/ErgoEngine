@@ -49,8 +49,8 @@ istAsserted(BiologyMt, phasesAlternateInCycleType(TheCellCycle, CellEnlargementE
 
 // Explicit Background Rules
 backwardSentence(phasesAlternateInCycleType(?SPEC, ?SUB_SIT_1, ?SUB_SIT_2)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(phasesAlternateInCycleType), phasesAlternateInCycleType(?SIT, ?SUB_SIT_1, ?SUB_SIT_2), genls(?SPEC, ?SIT).
-backwardSentence(not(genls(?SPEC, ?SIT))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(genls), phasesAlternateInCycleType(?SIT, ?SUB_SIT_1, ?SUB_SIT_2), not(phasesAlternateInCycleType(?SPEC, ?SUB_SIT_1, ?SUB_SIT_2)).
-backwardSentence(not(phasesAlternateInCycleType(?SIT, ?SUB_SIT_1, ?SUB_SIT_2))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(phasesAlternateInCycleType), genls(?SPEC, ?SIT), not(phasesAlternateInCycleType(?SPEC, ?SUB_SIT_1, ?SUB_SIT_2)).
+backwardSentence(not(genls(?SPEC, ?SIT))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(genls), phasesAlternateInCycleType(?SIT, ?SUB_SIT_1, ?SUB_SIT_2), \neg (phasesAlternateInCycleType(?SPEC, ?SUB_SIT_1, ?SUB_SIT_2)).
+backwardSentence(not(phasesAlternateInCycleType(?SIT, ?SUB_SIT_1, ?SUB_SIT_2))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(phasesAlternateInCycleType), genls(?SPEC, ?SIT), \neg (phasesAlternateInCycleType(?SPEC, ?SUB_SIT_1, ?SUB_SIT_2)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).

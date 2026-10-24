@@ -44,8 +44,8 @@ forwardSentence(relationExistsAll(?PREDICATE, ?TYPE, ?SUB_COLLECTION)) :- remova
 
 // Explicit Background Rules
 backwardSentence(relationExistsInstance(?PRED, ?COL_1, ?OBJ)) :- mtVisible(BaseKB), \naf backchainForbidden(relationExistsInstance), relationExistsAll(?PRED, ?COL_1, ?COL_2), cycIsa(?OBJ, ?COL_2).
-backwardSentence(not(cycIsa(?OBJ, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationExistsAll(?PRED, ?COL_1, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
-backwardSentence(not(relationExistsAll(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationExistsAll), cycIsa(?OBJ, ?COL_2), not(relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
+backwardSentence(not(cycIsa(?OBJ, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationExistsAll(?PRED, ?COL_1, ?COL_2), \neg (relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
+backwardSentence(not(relationExistsAll(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationExistsAll), cycIsa(?OBJ, ?COL_2), \neg (relationExistsInstance(?PRED, ?COL_1, ?OBJ)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261253', HypotheticalContext)).

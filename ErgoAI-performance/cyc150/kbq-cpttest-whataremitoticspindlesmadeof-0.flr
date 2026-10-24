@@ -45,13 +45,13 @@ istAsserted(MicrobiologyMt, relationAllExistsCount(properPhysicalParts, MitoticS
 
 // Explicit Background Rules
 backwardSentence(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), greaterThan(?NUM, 0).
-backwardSentence(not(greaterThan(?NUM, 0))) :- mtVisible(BaseKB), \naf backchainForbidden(greaterThan), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)).
-backwardSentence(not(relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsMin), not(relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)), greaterThan(?NUM, 0).
+backwardSentence(not(greaterThan(?NUM, 0))) :- mtVisible(BaseKB), \naf backchainForbidden(greaterThan), relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM), \neg (relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)).
+backwardSentence(not(relationAllExistsMin(?SLOT, ?UNIV_COL, ?EXIST_COL, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsMin), \neg (relationAllExists(?SLOT, ?UNIV_COL, ?EXIST_COL)), greaterThan(?NUM, 0).
 backwardSentence(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsAndOnly), relationAllExists(?PRED, ?TYPE_1, ?TYPE_2), arg2Isa(?PRED, ?COL).
-backwardSentence(not(arg2Isa(?PRED, ?COL))) :- mtVisible(BaseKB), \naf backchainForbidden(arg2Isa), relationAllExists(?PRED, ?TYPE_1, ?TYPE_2), not(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
-backwardSentence(not(relationAllExists(?PRED, ?TYPE_1, ?TYPE_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), arg2Isa(?PRED, ?COL), not(relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
+backwardSentence(not(arg2Isa(?PRED, ?COL))) :- mtVisible(BaseKB), \naf backchainForbidden(arg2Isa), relationAllExists(?PRED, ?TYPE_1, ?TYPE_2), \neg (relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
+backwardSentence(not(relationAllExists(?PRED, ?TYPE_1, ?TYPE_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), arg2Isa(?PRED, ?COL), \neg (relationAllExistsAndOnly(?PRED, ?TYPE_1, ?COL)).
 backwardSentence(properPhysicalPartTypes(?COL1, ?COL2)) :- mtVisible(BaseKB), \naf backchainForbidden(properPhysicalPartTypes), relationAllExists(properPhysicalParts, ?COL1, ?COL2).
-backwardSentence(not(relationAllExists(properPhysicalParts, ?COL1, ?COL2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), not(properPhysicalPartTypes(?COL1, ?COL2)).
+backwardSentence(not(relationAllExists(properPhysicalParts, ?COL1, ?COL2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), \neg (properPhysicalPartTypes(?COL1, ?COL2)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).

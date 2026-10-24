@@ -66,9 +66,9 @@ istAsserted(BiochemistryMt, firstProperSubEventTypes('CellSignalingProcess-Local
 
 // Explicit Background Rules
 backwardSentence('causes-SubSitTypeSubSitType'(?SUPER, ?CAUSE, ?EFFECT)) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SubSitTypeSubSitType'), properPartTypes(?SUPER, ?CAUSE), properPartTypes(?SUPER, ?EFFECT), 'causes-SitTypeSitType'(?CAUSE, ?EFFECT).
-backwardSentence(not(properPartTypes(?SUPER, ?CAUSE))) :- mtVisible(BaseKB), \naf backchainForbidden(properPartTypes), properPartTypes(?SUPER, ?EFFECT), 'causes-SitTypeSitType'(?CAUSE, ?EFFECT), not('causes-SubSitTypeSubSitType'(?SUPER, ?CAUSE, ?EFFECT)).
-backwardSentence(not(properPartTypes(?SUPER, ?EFFECT))) :- mtVisible(BaseKB), \naf backchainForbidden(properPartTypes), properPartTypes(?SUPER, ?CAUSE), 'causes-SitTypeSitType'(?CAUSE, ?EFFECT), not('causes-SubSitTypeSubSitType'(?SUPER, ?CAUSE, ?EFFECT)).
-backwardSentence(not('causes-SitTypeSitType'(?CAUSE, ?EFFECT))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SitTypeSitType'), properPartTypes(?SUPER, ?CAUSE), properPartTypes(?SUPER, ?EFFECT), not('causes-SubSitTypeSubSitType'(?SUPER, ?CAUSE, ?EFFECT)).
+backwardSentence(not(properPartTypes(?SUPER, ?CAUSE))) :- mtVisible(BaseKB), \naf backchainForbidden(properPartTypes), properPartTypes(?SUPER, ?EFFECT), 'causes-SitTypeSitType'(?CAUSE, ?EFFECT), \neg ('causes-SubSitTypeSubSitType'(?SUPER, ?CAUSE, ?EFFECT)).
+backwardSentence(not(properPartTypes(?SUPER, ?EFFECT))) :- mtVisible(BaseKB), \naf backchainForbidden(properPartTypes), properPartTypes(?SUPER, ?CAUSE), 'causes-SitTypeSitType'(?CAUSE, ?EFFECT), \neg ('causes-SubSitTypeSubSitType'(?SUPER, ?CAUSE, ?EFFECT)).
+backwardSentence(not('causes-SitTypeSitType'(?CAUSE, ?EFFECT))) :- mtVisible(BaseKB), \naf backchainForbidden('causes-SitTypeSitType'), properPartTypes(?SUPER, ?CAUSE), properPartTypes(?SUPER, ?EFFECT), \neg ('causes-SubSitTypeSubSitType'(?SUPER, ?CAUSE, ?EFFECT)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).

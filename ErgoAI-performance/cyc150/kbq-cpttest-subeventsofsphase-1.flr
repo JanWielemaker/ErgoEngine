@@ -97,11 +97,11 @@ forwardSentence(uniqueProperSubEventTypes(?SUPER, ?SUB)) :- removalSentence(iter
 
 // Explicit Background Rules
 backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?COL_2)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExists), relationAllExists(?PRED, ?COL_1, ?COL_2), cycIsa(?OBJ, ?COL_1).
-backwardSentence(not(cycIsa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
-backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), cycIsa(?OBJ, ?COL_1), not(relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(not(cycIsa(?OBJ, ?COL_1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExists(?PRED, ?COL_1, ?COL_2), \neg (relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
+backwardSentence(not(relationAllExists(?PRED, ?COL_1, ?COL_2))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExists), cycIsa(?OBJ, ?COL_1), \neg (relationInstanceExists(?PRED, ?OBJ, ?COL_2)).
 backwardSentence(relationInstanceExists(?PRED, ?OBJ, ?TYPE)) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(relationInstanceExists), cycIsa(?INS, ?TYPE), ?PRED(?OBJ, ?INS).
-backwardSentence(not(cycIsa(?INS, ?TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(isa), ?PRED(?OBJ, ?INS), not(relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
-backwardSentence(not(?PRED(?OBJ, ?INS))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(?PRED), cycIsa(?INS, ?TYPE), not(relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
+backwardSentence(not(cycIsa(?INS, ?TYPE))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(isa), ?PRED(?OBJ, ?INS), \neg (relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
+backwardSentence(not(?PRED(?OBJ, ?INS))) :- mtVisible(UniversalVocabularyMt), \naf backchainForbidden(?PRED), cycIsa(?INS, ?TYPE), \neg (relationInstanceExists(?PRED, ?OBJ, ?TYPE)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260002', HypotheticalContext)).

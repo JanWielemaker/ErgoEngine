@@ -45,7 +45,7 @@ istAsserted(UniversalVocabularyMt, cycIsa(Chromatid, ChromosomeRegionType)).
 
 // Implicit Background Rules
 backwardSentence(relationAllExistsCount(parts, ?OBJ_TYPE, ?PART_TYPE, ?NUMBER)) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), partTypeCount(?OBJ_TYPE, ?PART_TYPE, ?NUMBER).
-backwardSentence(not(partTypeCount(?OBJ_TYPE, ?PART_TYPE, ?NUMBER))) :- mtVisible(BaseKB), \naf backchainForbidden(partTypeCount), not(relationAllExistsCount(parts, ?OBJ_TYPE, ?PART_TYPE, ?NUMBER)).
+backwardSentence(not(partTypeCount(?OBJ_TYPE, ?PART_TYPE, ?NUMBER))) :- mtVisible(BaseKB), \naf backchainForbidden(partTypeCount), \neg (relationAllExistsCount(parts, ?OBJ_TYPE, ?PART_TYPE, ?NUMBER)).
 forwardSentence(normalWholeTypeForPartType(?PART_TYPE, ?WHOLE_TYPE)) :- removalSentence(relationExistsAll(properPhysicalParts, ?WHOLE_TYPE, ?PART_TYPE)).
 forwardSentence(relationExistsUniqueAll(properPhysicalParts, Chromosome, ?REGION_TYPE)) :- removalSentence(cycIsa(?REGION_TYPE, ChromosomeRegionType)).
 
@@ -54,10 +54,10 @@ istAsserted(MolecularBiologyMt, normalWholeTypeForPartType(Chromatid, Duplicated
 
 // Explicit Background Rules
 backwardSentence(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), normalWholeTypeForPartType(?OTHER, ?GENL), genls(?TYPE, ?GENL).
-backwardSentence(not(normalWholeTypeForPartType(?OTHER, ?GENL))) :- mtVisible(BaseKB), \naf backchainForbidden(normalWholeTypeForPartType), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
-backwardSentence(not(genls(?TYPE, ?GENL))) :- mtVisible(BaseKB), \naf backchainForbidden(genls), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)), normalWholeTypeForPartType(?OTHER, ?GENL).
-backwardSentence(not(relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N))) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), normalWholeTypeForPartType(?OTHER, ?GENL), genls(?TYPE, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
-backwardSentence(not(relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), normalWholeTypeForPartType(?OTHER, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), not(relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
+backwardSentence(not(normalWholeTypeForPartType(?OTHER, ?GENL))) :- mtVisible(BaseKB), \naf backchainForbidden(normalWholeTypeForPartType), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), \neg (relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
+backwardSentence(not(genls(?TYPE, ?GENL))) :- mtVisible(BaseKB), \naf backchainForbidden(genls), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), evaluate(?TIMESFN, TimesFn(?M, ?N)), \neg (relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)), normalWholeTypeForPartType(?OTHER, ?GENL).
+backwardSentence(not(relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N))) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M), normalWholeTypeForPartType(?OTHER, ?GENL), genls(?TYPE, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), \neg (relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
+backwardSentence(not(relationAllExistsCount(parts, ?TYPE, ?OTHER, ?M))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), relationInstanceExistsCount(parts, ?INS, ?TYPE, ?N), genls(?TYPE, ?GENL), normalWholeTypeForPartType(?OTHER, ?GENL), evaluate(?TIMESFN, TimesFn(?M, ?N)), \neg (relationInstanceExistsCount(parts, ?INS, ?OTHER, ?TIMESFN)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-261170', HypotheticalContext)).

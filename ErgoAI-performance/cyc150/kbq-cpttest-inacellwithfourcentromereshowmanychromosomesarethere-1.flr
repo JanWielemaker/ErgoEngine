@@ -42,8 +42,8 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 
 // Explicit Background Rules
 backwardSentence(cellHasNumberOfChromosomes(?CELL, ?N)) :- mtVisible(BiologyMt), \naf backchainForbidden(cellHasNumberOfChromosomes), relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N), cycIsa(?CELL, EukaryoticCell).
-backwardSentence(not(cycIsa(?CELL, EukaryoticCell))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N), not(cellHasNumberOfChromosomes(?CELL, ?N)).
-backwardSentence(not(relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N))) :- mtVisible(BiologyMt), \naf backchainForbidden(relationInstanceExistsCount), cycIsa(?CELL, EukaryoticCell), not(cellHasNumberOfChromosomes(?CELL, ?N)).
+backwardSentence(not(cycIsa(?CELL, EukaryoticCell))) :- mtVisible(BiologyMt), \naf backchainForbidden(isa), relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N), \neg (cellHasNumberOfChromosomes(?CELL, ?N)).
+backwardSentence(not(relationInstanceExistsCount(properPhysicalParts, ?CELL, Centromere, ?N))) :- mtVisible(BiologyMt), \naf backchainForbidden(relationInstanceExistsCount), cycIsa(?CELL, EukaryoticCell), \neg (cellHasNumberOfChromosomes(?CELL, ?N)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259507', HypotheticalContext)).

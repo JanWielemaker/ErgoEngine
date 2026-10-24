@@ -41,8 +41,8 @@ istAsserted(UniversalVocabularyMt, genls(SteroidMolecule, LipidSolubleSignalingM
 
 // Explicit Background Rules
 backwardSentence(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(ligandForReceptorType), genls(?MOL, ExtracellularSignalingChemicalObject), genls(?MOL, HydrophobicChemicalObject).
-backwardSentence(not(genls(?MOL, ExtracellularSignalingChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(genls), genls(?MOL, HydrophobicChemicalObject), not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
-backwardSentence(not(genls(?MOL, HydrophobicChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(genls), genls(?MOL, ExtracellularSignalingChemicalObject), not(ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
+backwardSentence(not(genls(?MOL, ExtracellularSignalingChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(genls), genls(?MOL, HydrophobicChemicalObject), \neg (ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
+backwardSentence(not(genls(?MOL, HydrophobicChemicalObject))) :- mtVisible(MolecularBiologyMt), \naf backchainForbidden(genls), genls(?MOL, ExtracellularSignalingChemicalObject), \neg (ligandForReceptorType(?MOL, CytoplasmicReceptorMolecule)).
 
 // Query
 queryMt(MtSpace(CytologicalProcessesQueryMt, MtTimeDimFn(Now))).

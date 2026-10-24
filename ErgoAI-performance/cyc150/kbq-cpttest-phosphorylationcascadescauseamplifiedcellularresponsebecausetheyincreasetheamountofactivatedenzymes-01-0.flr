@@ -35,8 +35,8 @@ istAsserted(UniversalVocabularyMt, genls(PhosphorylationCascade, SignalTransduct
 
 // Explicit Background Rules
 backwardSentence('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')) :- mtVisible(BiochemistryMt), \naf backchainForbidden('causes-SitTypeSitType'), relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)), genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess').
-backwardSentence(not(genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'))) :- mtVisible(BiochemistryMt), \naf backchainForbidden(genls), relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)), not('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
-backwardSentence(not(relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)))) :- mtVisible(BiochemistryMt), \naf backchainForbidden(relationAllInstance), genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'), not('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
+backwardSentence(not(genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'))) :- mtVisible(BiochemistryMt), \naf backchainForbidden(genls), relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)), \neg ('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
+backwardSentence(not(relationAllInstance(increasesSlot, ?TRANSDUCTION, QuantitySlotForArg2Fn(ActivatedFormOfEnzymeFn(EnzymeMolecule), amountPresentAt)))) :- mtVisible(BiochemistryMt), \naf backchainForbidden(relationAllInstance), genls(?TRANSDUCTION, 'SignalTransduction-CellularProcess'), \neg ('causes-SitTypeSitType'(?TRANSDUCTION, 'CellularLevelResponseToSignal-Amplified')).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260153', HypotheticalContext)).

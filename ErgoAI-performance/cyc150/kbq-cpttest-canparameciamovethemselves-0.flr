@@ -45,8 +45,8 @@ forwardSentence(genls(?CELL, 'Cell-MotileByCilium')) :- removalSentence(relation
 
 // Explicit Background Rules
 backwardSentence(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)) :- mtVisible(BaseKB), \naf backchainForbidden(behaviorCapable), TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE), cycIsa(?INST, ?COL).
-backwardSentence(not(cycIsa(?INST, ?COL))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE), not(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
-backwardSentence(not(TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE))) :- mtVisible(BaseKB), \naf backchainForbidden(TypeCapableFn(behaviorCapable)), cycIsa(?INST, ?COL), not(behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
+backwardSentence(not(cycIsa(?INST, ?COL))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE), \neg (behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
+backwardSentence(not(TypeCapableFn(behaviorCapable)(?COL, ?EVENT_TYPE, ?ROLE))) :- mtVisible(BaseKB), \naf backchainForbidden(TypeCapableFn(behaviorCapable)), cycIsa(?INST, ?COL), \neg (behaviorCapable(?INST, ?EVENT_TYPE, ?ROLE)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259683', HypotheticalContext)).

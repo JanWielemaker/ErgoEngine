@@ -40,8 +40,8 @@ istAsserted(MicrobiologyMt, relationAllExistsCount(chromatids, DuplicatedChromos
 
 // Explicit Background Rules
 backwardSentence(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)) :- mtVisible(BaseKB), \naf backchainForbidden(relationInstanceExistsCount), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), cycIsa(?INSTANCE, ?TYPE1).
-backwardSentence(not(cycIsa(?INSTANCE, ?TYPE1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
-backwardSentence(not(relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), cycIsa(?INSTANCE, ?TYPE1), not(relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
+backwardSentence(not(cycIsa(?INSTANCE, ?TYPE1))) :- mtVisible(BaseKB), \naf backchainForbidden(isa), relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM), \neg (relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
+backwardSentence(not(relationAllExistsCount(?RELATION, ?TYPE1, ?TYPE2, ?NUM))) :- mtVisible(BaseKB), \naf backchainForbidden(relationAllExistsCount), cycIsa(?INSTANCE, ?TYPE1), \neg (relationInstanceExistsCount(?RELATION, ?INSTANCE, ?TYPE2, ?NUM)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-260122', HypotheticalContext)).

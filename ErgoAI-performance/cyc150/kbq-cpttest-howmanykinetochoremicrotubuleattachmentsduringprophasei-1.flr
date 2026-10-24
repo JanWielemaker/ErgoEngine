@@ -36,9 +36,9 @@ istAsserted(UniversalVocabularyMt, genlMt(CytologicalProcessesQueryMt, Reasoning
 
 // Explicit Background Rules
 backwardSentence(relationExistsCountInstance(eventOccursAt, MicrotubuleConnectsToKinetochore, ?CELL, ?N)) :- mtVisible(MicrobiologyMt), \naf backchainForbidden(relationExistsCountInstance), organismDiploidNumber(?ORG, ?N), cellSource(?CELL, ?ORG), cycIsa(?CELL, CellTypeByCellLifeStageFn(ProphaseI)).
-backwardSentence(not(cycIsa(?CELL, CellTypeByCellLifeStageFn(ProphaseI)))) :- mtVisible(MicrobiologyMt), \naf backchainForbidden(isa), organismDiploidNumber(?ORG, ?N), cellSource(?CELL, ?ORG), not(relationExistsCountInstance(eventOccursAt, MicrotubuleConnectsToKinetochore, ?CELL, ?N)).
-backwardSentence(not(cellSource(?CELL, ?ORG))) :- mtVisible(MicrobiologyMt), \naf backchainForbidden(cellSource), organismDiploidNumber(?ORG, ?N), cycIsa(?CELL, CellTypeByCellLifeStageFn(ProphaseI)), not(relationExistsCountInstance(eventOccursAt, MicrotubuleConnectsToKinetochore, ?CELL, ?N)).
-backwardSentence(not(organismDiploidNumber(?ORG, ?N))) :- mtVisible(MicrobiologyMt), \naf backchainForbidden(organismDiploidNumber), cellSource(?CELL, ?ORG), not(relationExistsCountInstance(eventOccursAt, MicrotubuleConnectsToKinetochore, ?CELL, ?N)), cycIsa(?CELL, CellTypeByCellLifeStageFn(ProphaseI)).
+backwardSentence(not(cycIsa(?CELL, CellTypeByCellLifeStageFn(ProphaseI)))) :- mtVisible(MicrobiologyMt), \naf backchainForbidden(isa), organismDiploidNumber(?ORG, ?N), cellSource(?CELL, ?ORG), \neg (relationExistsCountInstance(eventOccursAt, MicrotubuleConnectsToKinetochore, ?CELL, ?N)).
+backwardSentence(not(cellSource(?CELL, ?ORG))) :- mtVisible(MicrobiologyMt), \naf backchainForbidden(cellSource), organismDiploidNumber(?ORG, ?N), cycIsa(?CELL, CellTypeByCellLifeStageFn(ProphaseI)), \neg (relationExistsCountInstance(eventOccursAt, MicrotubuleConnectsToKinetochore, ?CELL, ?N)).
+backwardSentence(not(organismDiploidNumber(?ORG, ?N))) :- mtVisible(MicrobiologyMt), \naf backchainForbidden(organismDiploidNumber), cellSource(?CELL, ?ORG), \neg (relationExistsCountInstance(eventOccursAt, MicrotubuleConnectsToKinetochore, ?CELL, ?N)), cycIsa(?CELL, CellTypeByCellLifeStageFn(ProphaseI)).
 
 // Hypothesized Premises
 istAsserted(UniversalVocabularyMt, cycIsa('Hypothesis-HypotheticalContext-259630', HypotheticalContext)).
