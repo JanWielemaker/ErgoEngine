@@ -164,9 +164,9 @@ impPred(imp#isAtomic) .
 impPred(imp#arg0) .
 imp#arg0(?ARGNUM, ?TERM, ?ARG) :- arg0(?ARGNUM, ?TERM, ?ARG)@\prolog.
 impPred(imp#numberCodes) .
-imp#numberCodes(?N, ?CODES) :- number_codes(?N, ?CODES)@\prolog.
+imp#numberCodes(?N, ?CODES) :- catch{number_codes(?N, ?CODES)@\prolog, ?_, \false}.
 impPred(imp#atomCodes) .
-imp#atomCodes(?N, ?CODES) :- atom_codes(?N, ?CODES)@\prolog.
+imp#atomCodes(?N, ?CODES) :- catch{atom_codes(?N, ?CODES)@\prolog, ?_, \false}.
 impPred(imp#xsbWriteLn) .
 imp#xsbWriteLn(?TERM) :- writeln(?TERM)@\prolog.
 

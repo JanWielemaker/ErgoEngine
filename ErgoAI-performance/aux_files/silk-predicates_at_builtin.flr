@@ -11,8 +11,8 @@
 %silkb#isInteger(?X) :- integer(?X)@\prolog.
 %silkb#isList(?X) :- is_list(?X)@\prolog.
 %silkb#isSkolem(?X) :- \isskolem(?X).
-%silkb#isString(?X) :- atom(?X)@\plg.
-//%silkb#isString(?X) :- \string[isTypeOf(?X)]@\basetype.
+//%silkb#isString(?X) :- atom(?X)@\plg.
+%silkb#isString(?X) :- \string[isTypeOf(?X)]@\basetype.
 %silkb#isSymbol(?X) :- atom(?X)@\prolog.
 %silkb#isURI(?X) :- nonvar(?X), \iri[isTypeOf(?X)]@\basetype.
 %silkb#isVariable(?X) :- var(?X)@\prolog.

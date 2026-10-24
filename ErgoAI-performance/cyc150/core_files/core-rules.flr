@@ -33,11 +33,11 @@ impPred(imp#isNonAtomic) .
 impPred(formulaArity) .
 @{"urn:uuid:a4bd76f3-1169-44b9-aee8-6d5c421b89c8"^^\iri} formulaArity(?FORM, ?ARITY) :- imp#destructureFormula(?FORM, ?RELN, ?ARGS) , imp#listLength(?ARITY, ?ARGS) .
 impPred(operatorFormulas) .
-@{"urn:uuid:70dbc51e-da07-4458-a0db-066562d61e2a"^^\iri} operatorFormulas(?R, ?TERM) :- \naf %silkb#isGround(?TERM)@builtin , imp#destructureFormula(?TERM, ?R, ?_ARGS) , %silkb#isGround(?R)@builtin .
+@{"urn:uuid:70dbc51e-da07-4458-a0db-066562d61e2a"^^\iri} operatorFormulas(?R, ?TERM) :- \+ %silkb#isGround(?TERM)@builtin , imp#destructureFormula(?TERM, ?R, ?_ARGS) , %silkb#isGround(?R)@builtin .
 @{"urn:uuid:caf04260-9962-4d5e-bfcd-0b4ffb340901"^^\iri} operatorFormulas(?R, ?TERM) :- %silkb#isGround(?TERM)@builtin , imp#isNonAtomic(?TERM) , imp#arg0((1), ?TERM, ?R) .
 impPred(argN) .
 @{"urn:uuid:8e0efa42-b4f0-45ba-8830-a0533f9100b0"^^\iri} argN(?ARG, ?ARGNUM, ?NAT) :- %silkb#isGround(?ARGNUM)@builtin , %silkb#isInteger(?ARGNUM)@builtin , ?ARGNUM  >=  (0) , %silkb#isGround(?NAT)@builtin , imp#isNonAtomic(?NAT) , ?_INDEX \is (?ARGNUM  +  (1)) , imp#arg0(?_INDEX, ?NAT, ?ARG) .
-@{"urn:uuid:529fc17e-6feb-4f1d-9fda-8fe9766fffe8"^^\iri} argN(?ARG, ?ARGNUM, ?NAT) :- %silkb#isGround(?NAT)@builtin , imp#isNonAtomic(?NAT) , \naf %silkb#isGround(?ARGNUM)@builtin , %silkb#listMember([(1), (2), (3), (4), (5), (6)], ?_INDEX)@builtin , imp#arg0(?_INDEX, ?NAT, ?ARG) , ?ARGNUM \is (?_INDEX  -  (1)) .
+@{"urn:uuid:529fc17e-6feb-4f1d-9fda-8fe9766fffe8"^^\iri} argN(?ARG, ?ARGNUM, ?NAT) :- %silkb#isGround(?NAT)@builtin , imp#isNonAtomic(?NAT) , \+ %silkb#isGround(?ARGNUM)@builtin , %silkb#listMember([(1), (2), (3), (4), (5), (6)], ?_INDEX)@builtin , imp#arg0(?_INDEX, ?NAT, ?ARG) , ?ARGNUM \is (?_INDEX  -  (1)) .
 impPred(imp#listMember) .
 @{"urn:uuid:d152d97d-c321-45f5-969c-f87e4c79f150"^^\iri} imp#listMember(?X, [?X | ?_Y]) :- %silkb#isGround(?X)@builtin .
 @{"urn:uuid:959b8ecd-c1f5-4ab2-95d3-9821f90d06ac"^^\iri} imp#listMember(?X, [?_Y | ?Z]) :- imp#listMember(?X, ?Z) .
@@ -87,26 +87,26 @@ impPred(imp#disjointWithLink) .
 @{"urn:uuid:c67ecffd-4a25-4f4d-850d-97ebd6c4e300"^^\iri} sbhlSentence(cycIsa(?OBJ, ?COL)) :- imp#directIsa(?OBJ, ?COL) .
 @{"urn:uuid:5a51622c-d0a3-4060-8fbb-0a33d49ec4f7"^^\iri} sbhlSentence(cycIsa(?X, Thing)) :- %silkb#isGround(?X)@builtin .
 @{"urn:uuid:27f5c1fe-d5fc-401e-87df-e888792fa1bb"^^\iri} sbhlSentence(cycIsa(?OBJ, ?GENL)) :- %silkb#isGround(?OBJ)@builtin , imp#directIsa(?OBJ, ?SPEC) , sbhlSentence(genls(?SPEC, ?GENL)) .
-@{"urn:uuid:7a5a84e8-da90-4194-bf19-75e4d4716a6f"^^\iri} sbhlSentence(cycIsa(?OBJ, ?GENL)) :- %silkb#isGround(?GENL)@builtin , \naf %silkb#isGround(?OBJ)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) , imp#directIsa(?OBJ, ?SPEC) .
+@{"urn:uuid:7a5a84e8-da90-4194-bf19-75e4d4716a6f"^^\iri} sbhlSentence(cycIsa(?OBJ, ?GENL)) :- %silkb#isGround(?GENL)@builtin , \+ %silkb#isGround(?OBJ)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) , imp#directIsa(?OBJ, ?SPEC) .
 @{"urn:uuid:5e1190b7-ea04-411d-9cac-7bd5cb61746a"^^\iri} sbhlSentence(not(cycIsa(?TERM, ?COL))) :- %silkb#isGround(?TERM)@builtin , %silkb#isGround(?COL)@builtin , \naf sbhlSentence(cycIsa(?TERM, ?COL)) , imp#directIsa(?TERM, ?NEAR) , sbhlSentence(disjointWith(?NEAR, ?COL)) .
 @{"urn:uuid:5e494de1-7a7e-4244-8791-52abe73bc8e8"^^\iri} sbhlSentence(genls(?SPEC, ?GENL)) :- imp#directGenls(?SPEC, ?GENL) .
 @{"urn:uuid:c1233ba4-60e7-423c-b2b8-d5feaece6ccc"^^\iri} sbhlSentence(genls(?COL, ?COL)) :- sbhlSentence(cycIsa(?COL, Collection)) .
 @{"urn:uuid:d0fcf228-3425-4504-9ca5-5494157b5801"^^\iri} sbhlSentence(genls(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , imp#directGenls(?LOW, ?MID) , sbhlSentence(genls(?MID, ?HIGH)) .
-@{"urn:uuid:3544ee4f-d8d5-4c82-bd07-145c2a1340c8"^^\iri} sbhlSentence(genls(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \naf %silkb#isGround(?LOW)@builtin , imp#directGenls(?MID, ?HIGH) , sbhlSentence(genls(?LOW, ?MID)) .
-@{"urn:uuid:7c9c7e39-07aa-4775-8d62-25367ed2a4f5"^^\iri} sbhlSentence(disjointWith(?A, ?B)) :- \naf %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(disjointWith(?B, ?A)) .
+@{"urn:uuid:3544ee4f-d8d5-4c82-bd07-145c2a1340c8"^^\iri} sbhlSentence(genls(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \+ %silkb#isGround(?LOW)@builtin , imp#directGenls(?MID, ?HIGH) , sbhlSentence(genls(?LOW, ?MID)) .
+@{"urn:uuid:7c9c7e39-07aa-4775-8d62-25367ed2a4f5"^^\iri} sbhlSentence(disjointWith(?A, ?B)) :- \+ %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(disjointWith(?B, ?A)) .
 @{"urn:uuid:d60d5dee-a057-40c2-ac9e-cacfa0ede9ae"^^\iri} sbhlSentence(disjointWith(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genls(?LOWA, ?A)) , imp#disjointWithLink(?A, ?B) , sbhlSentence(genls(?LOWB, ?B)) .
 @{"urn:uuid:318e08e6-f4d2-4559-9958-cee75a7f610e"^^\iri} sbhlSentence(genlPreds(?SPEC, ?GENL)) :- lookupSentence(genlPreds(?SPEC, ?GENL)) .
 @{"urn:uuid:b87f6d16-65f3-4307-bb23-3a6a96dc03f6"^^\iri} sbhlSentence(genlPreds(?P, ?P)) :- sbhlSentence(cycIsa(?P, Predicate)) .
 @{"urn:uuid:8ee5e7d3-dc76-4480-b18b-06d3bbba536a"^^\iri} sbhlSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , lookupSentence(genlPreds(?LOW, ?MID)) , sbhlSentence(genlPreds(?MID, ?HIGH)) .
-@{"urn:uuid:da5afe52-54ef-4a62-b0e2-e76cf2831d7a"^^\iri} sbhlSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \naf %silkb#isGround(?LOW)@builtin , lookupSentence(genlPreds(?MID, ?HIGH)) , sbhlSentence(genlPreds(?LOW, ?MID)) .
+@{"urn:uuid:da5afe52-54ef-4a62-b0e2-e76cf2831d7a"^^\iri} sbhlSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \+ %silkb#isGround(?LOW)@builtin , lookupSentence(genlPreds(?MID, ?HIGH)) , sbhlSentence(genlPreds(?LOW, ?MID)) .
 @{"urn:uuid:3b48cb23-6fff-4cca-a551-aa3f5cb321c1"^^\iri} sbhlSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , lookupSentence(genlInverse(?LOW, ?MID)) , sbhlSentence(genlInverse(?MID, ?HIGH)) .
-@{"urn:uuid:b6a117f6-e62a-4e1e-b056-ca0e543053f2"^^\iri} sbhlSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \naf %silkb#isGround(?LOW)@builtin , lookupSentence(genlInverse(?MID, ?HIGH)) , sbhlSentence(genlInverse(?LOW, ?MID)) .
+@{"urn:uuid:b6a117f6-e62a-4e1e-b056-ca0e543053f2"^^\iri} sbhlSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \+ %silkb#isGround(?LOW)@builtin , lookupSentence(genlInverse(?MID, ?HIGH)) , sbhlSentence(genlInverse(?LOW, ?MID)) .
 @{"urn:uuid:bcea6e1d-b5c7-4ab6-9818-33e5a43c1f21"^^\iri} sbhlSentence(genlInverse(?SPEC, ?GENL)) :- lookupSentence(genlInverse(?SPEC, ?GENL)) .
 @{"urn:uuid:799c3444-8898-46b3-9a94-87df645feea0"^^\iri} sbhlSentence(genlInverse(?P, ?P)) :- sbhlSentence(cycIsa(?P, SymmetricBinaryPredicate)) .
 @{"urn:uuid:6614797b-c388-43e5-b65a-551b5e1f9400"^^\iri} sbhlSentence(genlInverse(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , lookupSentence(genlPreds(?LOW, ?MID)) , sbhlSentence(genlInverse(?MID, ?HIGH)) .
-@{"urn:uuid:65ed24d6-6a9a-4ecd-bfb9-504e7c0504b0"^^\iri} sbhlSentence(genlInverse(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \naf %silkb#isGround(?LOW)@builtin , lookupSentence(genlPreds(?MID, ?HIGH)) , sbhlSentence(genlInverse(?LOW, ?MID)) .
+@{"urn:uuid:65ed24d6-6a9a-4ecd-bfb9-504e7c0504b0"^^\iri} sbhlSentence(genlInverse(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \+ %silkb#isGround(?LOW)@builtin , lookupSentence(genlPreds(?MID, ?HIGH)) , sbhlSentence(genlInverse(?LOW, ?MID)) .
 @{"urn:uuid:bf673502-8f94-4907-a879-cfcfd5056478"^^\iri} sbhlSentence(genlInverse(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , lookupSentence(genlInverse(?LOW, ?MID)) , sbhlSentence(genlPreds(?MID, ?HIGH)) .
-@{"urn:uuid:e529f3f2-e731-482f-a25f-b011b4588bf7"^^\iri} sbhlSentence(genlInverse(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \naf %silkb#isGround(?LOW)@builtin , lookupSentence(genlInverse(?MID, ?HIGH)) , sbhlSentence(genlPreds(?LOW, ?MID)) .
+@{"urn:uuid:e529f3f2-e731-482f-a25f-b011b4588bf7"^^\iri} sbhlSentence(genlInverse(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \+ %silkb#isGround(?LOW)@builtin , lookupSentence(genlInverse(?MID, ?HIGH)) , sbhlSentence(genlPreds(?LOW, ?MID)) .
 impPred(imp#negationPredsLink) .
 @{"urn:uuid:fb077766-347e-45d3-b834-ab6125747dfb"^^\iri} imp#negationPredsLink(?A, ?B) :- lookupSentence(negationPreds(?A, ?B)) .
 @{"urn:uuid:5f8e4147-1c32-4704-8220-d9c5bd54b1ec"^^\iri} imp#negationPredsLink(?A, ?B) :- lookupSentence(negationPreds(?B, ?A)) .
@@ -114,12 +114,12 @@ impPred(imp#negationInverseLink) .
 @{"urn:uuid:0e980f45-d14b-4ff7-98fd-91f8f9b9ad13"^^\iri} imp#negationInverseLink(?A, ?B) :- lookupSentence(negationInverse(?A, ?B)) .
 @{"urn:uuid:d128cacf-2645-4274-9074-fe4f357b2390"^^\iri} imp#negationInverseLink(?A, ?B) :- lookupSentence(negationInverse(?B, ?A)) .
 @{"urn:uuid:a3498bc6-f187-4444-8fcb-f728756e7bd9"^^\iri} imp#negationInverseLink(?A, ?A) :- sbhlSentence(cycIsa(?A, AsymmetricBinaryPredicate)) .
-@{"urn:uuid:58d10c33-e6e0-47f4-813f-564c3701f655"^^\iri} sbhlSentence(negationPreds(?A, ?B)) :- \naf %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(negationPreds(?B, ?A)) .
+@{"urn:uuid:58d10c33-e6e0-47f4-813f-564c3701f655"^^\iri} sbhlSentence(negationPreds(?A, ?B)) :- \+ %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(negationPreds(?B, ?A)) .
 @{"urn:uuid:016ab3ee-7aee-4260-bf67-28f8213cd32a"^^\iri} sbhlSentence(negationPreds(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genlPreds(?LOWA, ?A)) , imp#negationPredsLink(?A, ?B) , sbhlSentence(genlPreds(?LOWB, ?B)) .
 @{"urn:uuid:13c5ad66-8940-4a3d-bfc0-6cfb6072641d"^^\iri} sbhlSentence(negationPreds(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genlPreds(?LOWA, ?A)) , imp#negationInverseLink(?A, ?B) , sbhlSentence(genlInverse(?LOWB, ?B)) .
 @{"urn:uuid:aac79801-6d08-4d55-a91e-9b1c3c2985fb"^^\iri} sbhlSentence(negationPreds(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genlInverse(?LOWA, ?A)) , imp#negationPredsLink(?A, ?B) , sbhlSentence(genlInverse(?LOWB, ?B)) .
 @{"urn:uuid:046f0b63-2169-43c0-844b-4ee68207c02c"^^\iri} sbhlSentence(negationPreds(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genlInverse(?LOWA, ?A)) , imp#negationInverseLink(?A, ?B) , sbhlSentence(genlPreds(?LOWB, ?B)) .
-@{"urn:uuid:610ed3cc-ede1-4b9d-bf48-37de912aadbe"^^\iri} sbhlSentence(negationInverse(?A, ?B)) :- \naf %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(negationInverse(?B, ?A)) .
+@{"urn:uuid:610ed3cc-ede1-4b9d-bf48-37de912aadbe"^^\iri} sbhlSentence(negationInverse(?A, ?B)) :- \+ %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(negationInverse(?B, ?A)) .
 @{"urn:uuid:b24ffecc-2ea2-42a3-9907-af315be5a652"^^\iri} sbhlSentence(negationInverse(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genlPreds(?LOWA, ?A)) , imp#negationInverseLink(?A, ?B) , sbhlSentence(genlPreds(?LOWB, ?B)) .
 @{"urn:uuid:f0690d00-585d-450a-8ee4-868f081511c0"^^\iri} sbhlSentence(negationInverse(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genlPreds(?LOWA, ?A)) , imp#negationPredsLink(?A, ?B) , sbhlSentence(genlInverse(?LOWB, ?B)) .
 @{"urn:uuid:5f985aad-65d4-4e1c-91a5-62d9f535d3a5"^^\iri} sbhlSentence(negationInverse(?LOWA, ?LOWB)) :- %silkb#isGround(?LOWA)@builtin , sbhlSentence(genlInverse(?LOWA, ?A)) , imp#negationPredsLink(?A, ?B) , sbhlSentence(genlPreds(?LOWB, ?B)) .
@@ -133,14 +133,14 @@ impPred(imp#directGenlMt) .
 @{"urn:uuid:d5cd84e9-fab9-4561-aabb-0ca8cc1b7617"^^\iri} sbhlSentence(genlMt(?SPEC, ?GENL)) :- imp#directGenlMt(?SPEC, ?GENL) .
 @{"urn:uuid:ed9740a2-ddaf-469c-b399-6aad11ca2a79"^^\iri} sbhlSentence(genlMt(?MT, ?MT)) :- sbhlSentence(cycIsa(?MT, Microtheory)) .
 @{"urn:uuid:5e2db1ce-63d7-485e-b82a-f367d8a33bb4"^^\iri} sbhlSentence(genlMt(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , imp#directGenlMt(?LOW, ?MID) , sbhlSentence(genlMt(?MID, ?HIGH)) .
-@{"urn:uuid:4ad11376-3ed4-4429-aa2b-ed33ef51b51a"^^\iri} sbhlSentence(genlMt(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \naf %silkb#isGround(?LOW)@builtin , imp#directGenlMt(?MID, ?HIGH) , sbhlSentence(genlMt(?LOW, ?MID)) .
+@{"urn:uuid:4ad11376-3ed4-4429-aa2b-ed33ef51b51a"^^\iri} sbhlSentence(genlMt(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \+ %silkb#isGround(?LOW)@builtin , imp#directGenlMt(?MID, ?HIGH) , sbhlSentence(genlMt(?LOW, ?MID)) .
 impPred(imp#indirectIsa) .
 @{"urn:uuid:d0681dbe-9730-44e0-8df3-46b887eb432c"^^\iri} imp#indirectIsa(?OBJ, ?FAR) :- %silkb#isGround(?OBJ)@builtin , imp#directIsa(?OBJ, ?NEAR) , sbhlSentence(genls(?NEAR, ?FAR)) , ?FAR != ?NEAR .
-@{"urn:uuid:6981c945-a4e1-4ba6-a551-311d881d1c22"^^\iri} imp#indirectIsa(?OBJ, ?FAR) :- \naf %silkb#isGround(?OBJ)@builtin , %silkb#isGround(?FAR)@builtin , sbhlSentence(genls(?NEAR, ?FAR)) , imp#directIsa(?OBJ, ?NEAR) , ?FAR != ?NEAR .
+@{"urn:uuid:6981c945-a4e1-4ba6-a551-311d881d1c22"^^\iri} imp#indirectIsa(?OBJ, ?FAR) :- \+ %silkb#isGround(?OBJ)@builtin , %silkb#isGround(?FAR)@builtin , sbhlSentence(genls(?NEAR, ?FAR)) , imp#directIsa(?OBJ, ?NEAR) , ?FAR != ?NEAR .
 @{"urn:uuid:5c5e7f6f-dfdf-49d7-875f-f748cf1ea8d1"^^\iri} sbhlSentence(nearestIsa(?OBJ, ?NEAR)) :- imp#directIsa(?OBJ, ?NEAR) , \naf imp#indirectIsa(?OBJ, ?NEAR) .
 impPred(imp#indirectGenls) .
 @{"urn:uuid:a7898f0b-e4a2-4fda-b194-a8f12974a15d"^^\iri} imp#indirectGenls(?COL, ?FAR) :- %silkb#isGround(?COL)@builtin , imp#directGenls(?COL, ?NEAR) , sbhlSentence(genls(?NEAR, ?FAR)) , ?FAR != ?NEAR .
-@{"urn:uuid:ff99f80f-73c6-4732-afa7-e5f45082e752"^^\iri} imp#indirectGenls(?COL, ?FAR) :- \naf %silkb#isGround(?COL)@builtin , %silkb#isGround(?FAR)@builtin , sbhlSentence(genls(?NEAR, ?FAR)) , imp#directGenls(?COL, ?NEAR) , ?FAR != ?NEAR .
+@{"urn:uuid:ff99f80f-73c6-4732-afa7-e5f45082e752"^^\iri} imp#indirectGenls(?COL, ?FAR) :- \+ %silkb#isGround(?COL)@builtin , %silkb#isGround(?FAR)@builtin , sbhlSentence(genls(?NEAR, ?FAR)) , imp#directGenls(?COL, ?NEAR) , ?FAR != ?NEAR .
 @{"urn:uuid:09e19066-04ad-4798-b592-b37cc43b2914"^^\iri} sbhlSentence(nearestGenls(?COL, ?NEAR)) :- imp#directGenls(?COL, ?NEAR) , \naf imp#indirectGenls(?COL, ?NEAR) .
 impPred(imp#quotedDefnAdmits) .
 @{"urn:uuid:24507ab2-cce2-46ad-8b51-ec3b79444b71"^^\iri} imp#quotedDefnAdmits(?X, SubLInteger) :- %silkb#isGround(?X)@builtin , %silkb#isInteger(?X)@builtin .
@@ -197,14 +197,14 @@ impPred(imp#transitivityFanoutArg) .
 @{"urn:uuid:82e72a06-32d7-48c3-bec4-694f6109e11f"^^\iri} imp#transitivityFanoutArg(?PRED, ?N) :- lookupSentence(fanOutArg(?PRED, ?N)) .
 @{"urn:uuid:778e4aa4-015d-40f8-89ed-28079a1650d2"^^\iri} imp#transitivityFanoutArg(?PRED, (1)) :- sbhlSentence(cycIsa(?PRED, BinaryPredicate)) , \naf imp#transitivityFanoutArg(?PRED, (2)) .
 impPred(transitivitySentence) .
-@{"urn:uuid:2de9f1bb-1761-4f89-b003-304542c675e6"^^\iri} transitivitySentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , %silkb#isGround(?A)@builtin , \naf %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , imp#transitivityLink(?PTRANS(?A, ?B)) , imp#transitivityWalk1to2(?PTRANS(?B, ?C)) .
-@{"urn:uuid:23e579e4-ee8c-4398-a643-9a22270d2e0d"^^\iri} transitivitySentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf %silkb#isGround(?A)@builtin , %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , imp#transitivityLink(?PTRANS(?B, ?C)) , imp#transitivityWalk2to1(?PTRANS(?A, ?B)) .
+@{"urn:uuid:2de9f1bb-1761-4f89-b003-304542c675e6"^^\iri} transitivitySentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , %silkb#isGround(?A)@builtin , \+ %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , imp#transitivityLink(?PTRANS(?A, ?B)) , imp#transitivityWalk1to2(?PTRANS(?B, ?C)) .
+@{"urn:uuid:23e579e4-ee8c-4398-a643-9a22270d2e0d"^^\iri} transitivitySentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \+ %silkb#isGround(?A)@builtin , %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , imp#transitivityLink(?PTRANS(?B, ?C)) , imp#transitivityWalk2to1(?PTRANS(?A, ?B)) .
 @{"urn:uuid:bb091e87-6314-4fef-84a6-5091badfe057"^^\iri} transitivitySentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , %silkb#isGround(?A)@builtin , %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , imp#transitivityFanoutArg(?PTRANS, (1)) , imp#transitivityLink(?PTRANS(?A, ?B)) , imp#transitivityWalk1to2(?PTRANS(?B, ?C)) .
 @{"urn:uuid:e824077c-46ec-4710-843d-1271b28d51a1"^^\iri} transitivitySentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , %silkb#isGround(?A)@builtin , %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , imp#transitivityFanoutArg(?PTRANS, (2)) , imp#transitivityLink(?PTRANS(?B, ?C)) , imp#transitivityWalk2to1(?PTRANS(?A, ?B)) .
 impPred(imp#decidableAsent) .
 @{"urn:uuid:13940e1c-8870-4743-a0e3-03e28fec8d12"^^\iri} imp#decidableAsent(?ASENT) :- %silkb#isGround(?ASENT)@builtin , imp#isAtomicSentence(?ASENT) , operatorFormulas(?PRED, ?ASENT) , gpLookupSentence(completeExtentDecidable(?PRED)) .
-@{"urn:uuid:c2ec6dd3-a302-443a-8236-2f187bfa841d"^^\iri} imp#decidableAsent(?ASENT) :- \naf %silkb#isGround(?ASENT)@builtin , imp#isAtomicSentence(?ASENT) , operatorFormulas(?PRED, ?ASENT) , gpLookupSentence(completeExtentEnumerable(?PRED)) .
-@{"urn:uuid:4512910d-c87f-4964-9b4d-5ecff60c2a6a"^^\iri} imp#decidableAsent(cycIsa(?OBJ, ?COL)) :- \naf %silkb#isGround(?OBJ)@builtin , %silkb#isGround(?COL)@builtin , gpLookupSentence(completelyEnumerableCollection(?COL)) .
+@{"urn:uuid:c2ec6dd3-a302-443a-8236-2f187bfa841d"^^\iri} imp#decidableAsent(?ASENT) :- \+ %silkb#isGround(?ASENT)@builtin , imp#isAtomicSentence(?ASENT) , operatorFormulas(?PRED, ?ASENT) , gpLookupSentence(completeExtentEnumerable(?PRED)) .
+@{"urn:uuid:4512910d-c87f-4964-9b4d-5ecff60c2a6a"^^\iri} imp#decidableAsent(cycIsa(?OBJ, ?COL)) :- \+ %silkb#isGround(?OBJ)@builtin , %silkb#isGround(?COL)@builtin , gpLookupSentence(completelyEnumerableCollection(?COL)) .
 @{"urn:uuid:8207616a-16f9-43c0-8f3f-90963e25ebb2"^^\iri} imp#decidableAsent(cycIsa(?OBJ, ?COL)) :- %silkb#isGround(?OBJ)@builtin , %silkb#isGround(?COL)@builtin , gpLookupSentence(completelyDecidableCollection(?COL)) .
 impPred(imp#tvaPredicate) .
 @{"urn:uuid:45fe44df-f478-4538-8a18-09f27bd98c28"^^\iri} imp#tvaPredicate(?PRED) :- \naf hlPred(?PRED) , assertedSentence(transitiveViaArg(?PRED, ?_TRANS, ?_ARGNUM)) .
@@ -265,21 +265,21 @@ impPred(removalSentence) .
 @{"urn:uuid:063f2a64-dd5a-4338-b4d5-0ea9e46259c6"^^\iri} removalSentence(not(?P(?ARG1, ?ARG2))) :- \naf hlPred(?P) , sbhlSentence(negationInverse(?P, ?NOTP)) , lookupSentence(?NOTP(?ARG2, ?ARG1)) .
 @{"urn:uuid:390148ed-24fc-4cf6-80f3-693ae0b704ab"^^\iri} removalSentence(cycIsa(?OBJ, ?COL)) :- %silkb#isGround(?OBJ)@builtin , %silkb#isGround(?COL)@builtin , sbhlSentence(cycIsa(?OBJ, ?COL)) .
 @{"urn:uuid:5b4804f7-f615-40a9-9e23-01eb55ba2b91"^^\iri} removalSentence(not(cycIsa(?OBJ, ?COL))) :- %silkb#isGround(?OBJ)@builtin , %silkb#isGround(?COL)@builtin , sbhlSentence(not(cycIsa(?OBJ, ?COL))) .
-@{"urn:uuid:d7f8ae2e-34e2-4af1-98ba-27c736bbacff"^^\iri} removalSentence(cycIsa(?OBJ, ?COL)) :- %silkb#isGround(?OBJ)@builtin , \naf %silkb#isGround(?COL)@builtin , sbhlSentence(cycIsa(?OBJ, ?COL)) .
-@{"urn:uuid:480cfe4b-cbe1-4863-babb-fd26bd641652"^^\iri} removalSentence(cycIsa(?OBJ, ?COL)) :- %silkb#isGround(?COL)@builtin , \naf %silkb#isGround(?OBJ)@builtin , sbhlSentence(cycIsa(?OBJ, ?COL)) .
-@{"urn:uuid:21b86352-f58c-4fd2-870b-746a664f2e62"^^\iri} removalSentence(nearestIsa(?OBJ, ?COL)) :- %silkb#isGround(?OBJ)@builtin , \naf %silkb#isGround(?COL)@builtin , sbhlSentence(nearestIsa(?OBJ, ?COL)) .
+@{"urn:uuid:d7f8ae2e-34e2-4af1-98ba-27c736bbacff"^^\iri} removalSentence(cycIsa(?OBJ, ?COL)) :- %silkb#isGround(?OBJ)@builtin , \+ %silkb#isGround(?COL)@builtin , sbhlSentence(cycIsa(?OBJ, ?COL)) .
+@{"urn:uuid:480cfe4b-cbe1-4863-babb-fd26bd641652"^^\iri} removalSentence(cycIsa(?OBJ, ?COL)) :- %silkb#isGround(?COL)@builtin , \+ %silkb#isGround(?OBJ)@builtin , sbhlSentence(cycIsa(?OBJ, ?COL)) .
+@{"urn:uuid:21b86352-f58c-4fd2-870b-746a664f2e62"^^\iri} removalSentence(nearestIsa(?OBJ, ?COL)) :- %silkb#isGround(?OBJ)@builtin , \+ %silkb#isGround(?COL)@builtin , sbhlSentence(nearestIsa(?OBJ, ?COL)) .
 @{"urn:uuid:abc186b8-6744-481f-89a9-ad8a4c7d0056"^^\iri} removalSentence(genls(?SPEC, ?GENL)) :- %silkb#isGround(?SPEC)@builtin , %silkb#isGround(?GENL)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) .
 @{"urn:uuid:967caafe-abb7-4c63-b653-7ebfaa47be84"^^\iri} removalSentence(not(genls(?SPEC, ?GENL))) :- %silkb#isGround(?SPEC)@builtin , %silkb#isGround(?GENL)@builtin , sbhlSentence(not(genls(?SPEC, ?GENL))) .
-@{"urn:uuid:6a5e568c-8d48-4e76-86db-10ab83d6a306"^^\iri} removalSentence(genls(?SPEC, ?GENL)) :- %silkb#isGround(?SPEC)@builtin , \naf %silkb#isGround(?GENL)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) .
-@{"urn:uuid:78ded7fe-5298-4db4-bd9c-57dc97847f48"^^\iri} removalSentence(genls(?SPEC, ?GENL)) :- %silkb#isGround(?GENL)@builtin , \naf %silkb#isGround(?SPEC)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) .
+@{"urn:uuid:6a5e568c-8d48-4e76-86db-10ab83d6a306"^^\iri} removalSentence(genls(?SPEC, ?GENL)) :- %silkb#isGround(?SPEC)@builtin , \+ %silkb#isGround(?GENL)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) .
+@{"urn:uuid:78ded7fe-5298-4db4-bd9c-57dc97847f48"^^\iri} removalSentence(genls(?SPEC, ?GENL)) :- %silkb#isGround(?GENL)@builtin , \+ %silkb#isGround(?SPEC)@builtin , sbhlSentence(genls(?SPEC, ?GENL)) .
 @{"urn:uuid:5cdb9924-46cb-4043-8a30-49ee741ce669"^^\iri} removalSentence(disjointWith(?COL1, ?COL2)) :- %silkb#isGround(?COL1)@builtin , %silkb#isGround(?COL2)@builtin , sbhlSentence(disjointWith(?COL1, ?COL2)) .
 @{"urn:uuid:93315c9a-9e09-4a82-af17-07e88c8f832e"^^\iri} removalSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlPreds(?LOW, ?HIGH)) .
-@{"urn:uuid:7fdd2f35-0fb6-4d18-942b-e6316c6e27c6"^^\iri} removalSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , \naf %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlPreds(?LOW, ?HIGH)) .
-@{"urn:uuid:d04acc41-ce85-4cc8-abb4-ae69ecbaa89a"^^\iri} removalSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \naf %silkb#isGround(?LOW)@builtin , sbhlSentence(genlPreds(?LOW, ?HIGH)) .
+@{"urn:uuid:7fdd2f35-0fb6-4d18-942b-e6316c6e27c6"^^\iri} removalSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , \+ %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlPreds(?LOW, ?HIGH)) .
+@{"urn:uuid:d04acc41-ce85-4cc8-abb4-ae69ecbaa89a"^^\iri} removalSentence(genlPreds(?LOW, ?HIGH)) :- %silkb#isGround(?HIGH)@builtin , \+ %silkb#isGround(?LOW)@builtin , sbhlSentence(genlPreds(?LOW, ?HIGH)) .
 @{"urn:uuid:30413899-b817-4487-be8d-4af27f673cb8"^^\iri} removalSentence(negationPreds(?A, ?B)) :- %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(negationPreds(?A, ?B)) .
 @{"urn:uuid:19ce5380-0166-455a-9fd3-ea9a93ab3592"^^\iri} removalSentence(genlMt(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlMt(?LOW, ?HIGH)) .
-@{"urn:uuid:e335a652-c248-409d-8fa0-ba332d2f2882"^^\iri} removalSentence(genlMt(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , \naf %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlMt(?LOW, ?HIGH)) .
-@{"urn:uuid:491c6059-87f7-4fd9-9fcd-ccc4f58b32ce"^^\iri} removalSentence(genlMt(?LOW, ?HIGH)) :- \naf %silkb#isGround(?LOW)@builtin , %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlMt(?LOW, ?HIGH)) .
+@{"urn:uuid:e335a652-c248-409d-8fa0-ba332d2f2882"^^\iri} removalSentence(genlMt(?LOW, ?HIGH)) :- %silkb#isGround(?LOW)@builtin , \+ %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlMt(?LOW, ?HIGH)) .
+@{"urn:uuid:491c6059-87f7-4fd9-9fcd-ccc4f58b32ce"^^\iri} removalSentence(genlMt(?LOW, ?HIGH)) :- \+ %silkb#isGround(?LOW)@builtin , %silkb#isGround(?HIGH)@builtin , sbhlSentence(genlMt(?LOW, ?HIGH)) .
 @{"urn:uuid:4ad8891a-6faf-4105-8350-7155675edccc"^^\iri} removalSentence(termOfUnit(?NART, ?NAUT)) :- %silkb#isGround(?NART)@builtin , assertedSentence(termOfUnit(?NART, ?NAUT)) .
 @{"urn:uuid:b2ae7a3c-a578-4a22-8899-6758c95a579d"^^\iri} removalSentence(natFunction(?NART, ?F)) :- assertedSentence(termOfUnit(?NART, ?NAUT)) , operatorFormulas(?F, ?NAUT) .
 @{"urn:uuid:50bdfb61-fc12-4d06-a446-3ed2317955d3"^^\iri} removalSentence(?EVASENT) :- %silkb#isGround(?EVASENT)@builtin , operatorFormulas(?P, ?EVASENT) , imp#evaluatablePredicate(?P) , imp#evaluateSentence(?EVASENT) .
@@ -287,23 +287,23 @@ impPred(removalSentence) .
 @{"urn:uuid:37f40abc-99e7-45e6-9576-5f2a0f98ccaa"^^\iri} removalSentence(evaluate(?ANS, ?EVAEXP)) :- %silkb#isGround(?EVAEXP)@builtin , operatorFormulas(?F, ?EVAEXP) , imp#evaluatableFunction(?F) , imp#evaluateTerm(?ANS, ?EVAEXP) .
 @{"urn:uuid:9e354031-ae44-446d-bcb9-5b1e1ddf852e"^^\iri} removalSentence(?ASENT) :- %silkb#isGround(?ASENT)@builtin , operatorFormulas(?PRED, ?ASENT) , %silkb#isGround(?PRED)@builtin , \naf hlPred(?PRED) , imp#tvaPredicate(?PRED) , tvaSentence(?ASENT) .
 @{"urn:uuid:05f6b313-7fad-4a88-a247-f79786c443bb"^^\iri} removalSentence(memberOfList(?X, ?LIST)) :- %silkb#isGround(?X)@builtin , %silkb#isGround(?LIST)@builtin , %silkb#isList(?LIST)@builtin , imp#listMember(?X, ?LIST) .
-@{"urn:uuid:05ee1ef7-a1de-49cd-bded-2d30c864ebfa"^^\iri} removalSentence(memberOfList(?X, ?LIST)) :- \naf %silkb#isGround(?X)@builtin , %silkb#isGround(?LIST)@builtin , %silkb#isList(?LIST)@builtin , imp#listMember(?X, ?LIST) .
+@{"urn:uuid:05ee1ef7-a1de-49cd-bded-2d30c864ebfa"^^\iri} removalSentence(memberOfList(?X, ?LIST)) :- \+ %silkb#isGround(?X)@builtin , %silkb#isGround(?LIST)@builtin , %silkb#isList(?LIST)@builtin , imp#listMember(?X, ?LIST) .
 @{"urn:uuid:d0977c9f-b273-4ce1-b197-cc9115167348"^^\iri} removalSentence(extentCardinality(?SET, ?CARD)) :- %silkb#isGround(?SET)@builtin , imp#setCardinality(?CARD, ?SET) .
 @{"urn:uuid:e67085b3-79dd-4fc4-8ca4-9c1093b187e0"^^\iri} removalSentence(lengthOfList(?LIST, ?LEN)) :- %silkb#isGround(?LIST)@builtin , imp#listLength(?LEN, ?LIST) .
 @{"urn:uuid:4bd85fbc-4587-479b-8a45-cb96c3661520"^^\iri} removalSentence(elementOf(?X, ?SET)) :- %silkb#isGround(?X)@builtin , %silkb#isGround(?SET)@builtin , imp#setElement(?X, ?SET) .
-@{"urn:uuid:e6537c80-6fab-4e20-9d97-76870f5fdf80"^^\iri} removalSentence(elementOf(?X, ?SET)) :- \naf %silkb#isGround(?X)@builtin , %silkb#isGround(?SET)@builtin , imp#setElement(?X, ?SET) .
-@{"urn:uuid:afa8ec4a-d840-4c23-8cee-1e68a8c7842f"^^\iri} removalSentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , %silkb#isGround(?A)@builtin , \naf %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , transitivitySentence(?PTRANS(?A, ?C)) .
-@{"urn:uuid:6c33f633-0808-4084-82b7-c36277990e64"^^\iri} removalSentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , \naf %silkb#isGround(?A)@builtin , %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , transitivitySentence(?PTRANS(?A, ?C)) .
+@{"urn:uuid:e6537c80-6fab-4e20-9d97-76870f5fdf80"^^\iri} removalSentence(elementOf(?X, ?SET)) :- \+ %silkb#isGround(?X)@builtin , %silkb#isGround(?SET)@builtin , imp#setElement(?X, ?SET) .
+@{"urn:uuid:afa8ec4a-d840-4c23-8cee-1e68a8c7842f"^^\iri} removalSentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , %silkb#isGround(?A)@builtin , \+ %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , transitivitySentence(?PTRANS(?A, ?C)) .
+@{"urn:uuid:6c33f633-0808-4084-82b7-c36277990e64"^^\iri} removalSentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS)@builtin , \naf hlPred(?PTRANS) , \+ %silkb#isGround(?A)@builtin , %silkb#isGround(?C)@builtin , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , transitivitySentence(?PTRANS(?A, ?C)) .
 @{"urn:uuid:330e377b-e906-4ff9-9603-52717a27785d"^^\iri} removalSentence(?PTRANS(?A, ?C)) :- %silkb#isGround(?PTRANS(?A, ?C))@builtin , \naf hlPred(?PTRANS) , sbhlSentence(cycIsa(?PTRANS, TransitiveBinaryPredicate)) , transitivitySentence(?PTRANS(?A, ?C)) .
-@{"urn:uuid:87b3990b-4757-4b84-b3c2-0c6323f504b7"^^\iri} removalSentence(?PREF(?A, ?B)) :- %silkb#isGround(?PREF)@builtin , \naf hlPred(?PREF) , %silkb#isGround(?A)@builtin , \naf %silkb#isGround(?B)@builtin , sbhlSentence(cycIsa(?PREF, ReflexiveBinaryPredicate)) , ?A = ?B .
-@{"urn:uuid:7488b9cc-92b2-48d7-a32f-15f636929069"^^\iri} removalSentence(?PREF(?A, ?B)) :- %silkb#isGround(?PREF)@builtin , \naf hlPred(?PREF) , \naf %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(cycIsa(?PREF, ReflexiveBinaryPredicate)) , ?A = ?B .
+@{"urn:uuid:87b3990b-4757-4b84-b3c2-0c6323f504b7"^^\iri} removalSentence(?PREF(?A, ?B)) :- %silkb#isGround(?PREF)@builtin , \naf hlPred(?PREF) , %silkb#isGround(?A)@builtin , \+ %silkb#isGround(?B)@builtin , sbhlSentence(cycIsa(?PREF, ReflexiveBinaryPredicate)) , ?A = ?B .
+@{"urn:uuid:7488b9cc-92b2-48d7-a32f-15f636929069"^^\iri} removalSentence(?PREF(?A, ?B)) :- %silkb#isGround(?PREF)@builtin , \naf hlPred(?PREF) , \+ %silkb#isGround(?A)@builtin , %silkb#isGround(?B)@builtin , sbhlSentence(cycIsa(?PREF, ReflexiveBinaryPredicate)) , ?A = ?B .
 @{"urn:uuid:4fa9e48c-3069-4a1c-96db-7ae278ec65c2"^^\iri} removalSentence(?PREF(?A, ?A)) :- %silkb#isGround(?PREF)@builtin , \naf hlPred(?PREF) , %silkb#isGround(?A)@builtin , sbhlSentence(cycIsa(?PREF, ReflexiveBinaryPredicate)) .
 @{"urn:uuid:703058b6-1365-4f05-9daa-fbd731421ff8"^^\iri} removalSentence(?PSYM(?A, ?B)) :- %silkb#isGround(?PSYM)@builtin , \naf hlPred(?PSYM) , sbhlSentence(cycIsa(?PSYM, SymmetricBinaryPredicate)) , lookupSentence(?PSYM(?B, ?A)) .
 @{"urn:uuid:8880a8e3-dc06-4609-89cc-cc0e62ed8a59"^^\iri} removalSentence(equalSymbols(?X, ?Y)) :- %silkb#isGround(?X)@builtin , %silkb#isGround(?Y)@builtin , ?X = ?Y .
-@{"urn:uuid:b871c2d4-8c83-40d1-a2c4-de36eec3fcef"^^\iri} removalSentence(equalSymbols(?X, ?Y)) :- %silkb#isGround(?X)@builtin , \naf %silkb#isGround(?Y)@builtin , ?X = ?Y .
-@{"urn:uuid:5c1bd044-8ee6-49e8-b489-1f26b280eb05"^^\iri} removalSentence(equalSymbols(?X, ?Y)) :- \naf %silkb#isGround(?X)@builtin , %silkb#isGround(?Y)@builtin , ?X = ?Y .
+@{"urn:uuid:b871c2d4-8c83-40d1-a2c4-de36eec3fcef"^^\iri} removalSentence(equalSymbols(?X, ?Y)) :- %silkb#isGround(?X)@builtin , \+ %silkb#isGround(?Y)@builtin , ?X = ?Y .
+@{"urn:uuid:5c1bd044-8ee6-49e8-b489-1f26b280eb05"^^\iri} removalSentence(equalSymbols(?X, ?Y)) :- \+ %silkb#isGround(?X)@builtin , %silkb#isGround(?Y)@builtin , ?X = ?Y .
 @{"urn:uuid:2cc6e14d-96c5-4526-a78b-d342df665bcd"^^\iri} removalSentence(?PRED(?INS, ?VAL)) :- %silkb#isGround(?PRED)@builtin , %silkb#isGround(?INS)@builtin , %silkb#isGround(?VAL)@builtin , lookupSentence(relationAllInstance(?PRED, ?COL, ?VAL)) , sbhlSentence(cycIsa(?INS, ?COL)) .
-@{"urn:uuid:7e176bf2-5ec9-40b1-b3d9-216f47ff1f06"^^\iri} removalSentence(?PRED(?INS, ?VAL)) :- %silkb#isGround(?PRED)@builtin , %silkb#isGround(?INS)@builtin , \naf %silkb#isGround(?VAL)@builtin , sbhlSentence(cycIsa(?INS, ?COL)) , lookupSentence(relationAllInstance(?PRED, ?COL, ?VAL)) .
+@{"urn:uuid:7e176bf2-5ec9-40b1-b3d9-216f47ff1f06"^^\iri} removalSentence(?PRED(?INS, ?VAL)) :- %silkb#isGround(?PRED)@builtin , %silkb#isGround(?INS)@builtin , \+ %silkb#isGround(?VAL)@builtin , sbhlSentence(cycIsa(?INS, ?COL)) , lookupSentence(relationAllInstance(?PRED, ?COL, ?VAL)) .
 @{"urn:uuid:9a4c9cb8-6336-4d89-9d1a-7f46e2c9e849"^^\iri} removalSentence(not(?ASENT)) :- %silkb#isGround(?ASENT)@builtin , imp#isAtomicSentence(?ASENT) , imp#wffRejectedSentence(?ASENT) .
 @{"urn:uuid:8bb22294-0612-4ae0-b644-098b902a7ee8"^^\iri} removalSentence(not(?ASENT)) :- %silkb#isGround(?ASENT)@builtin , imp#decidableAsent(?ASENT) , \naf removalSentence(?ASENT) .
 @{"urn:uuid:fb85a34e-4c26-4a03-a6ed-3758955d2324"^^\iri} removalSentence(trueSentence(?ASENT)) :- %silkb#isGround(?ASENT)@builtin , imp#isAtomicSentence(?ASENT) , removalSentence(?ASENT) .
